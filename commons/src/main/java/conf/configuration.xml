@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<configuration>
+  <component>
+    <key>org.exoplatform.commons.utils.ExoExpression</key>
+  	<type>org.exoplatform.commons.utils.ExoExpression</type>
+  </component>   
+</configuration>

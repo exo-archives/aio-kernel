@@ -1,0 +1,31 @@
+<project>
+  <parent>
+    <groupId>org.exoplatform.kernel</groupId>
+    <artifactId>config</artifactId>
+    <version>2.0.3</version>
+  </parent> 
+
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>component.command</artifactId>
+  <packaging>jar</packaging>
+  <version>${org.exoplatform.kernel.version}</version>
+  <name>Command service impl</name>
+  <description>exoplatform command services implementation</description>
+
+  <dependencies>
+    
+    <dependency>
+      <groupId>org.exoplatform.kernel</groupId>
+      <artifactId>component.common</artifactId>
+      <version>${org.exoplatform.kernel.version}</version>
+      <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-chain</groupId>
+      <artifactId>commons-chain</artifactId>
+      <version>1.0</version>
+      <scope>compile</scope>
+    </dependency>
+  </dependencies>   
+</project>

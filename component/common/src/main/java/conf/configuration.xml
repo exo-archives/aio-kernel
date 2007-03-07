@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<configuration>
+  <component>
+    <type>org.exoplatform.services.scheduler.impl.QuartzSheduler</type>
+  </component>
+
+  <component>
+    <key>org.exoplatform.services.log.LogService</key>
+    <jmx-name>monitor:type=LogService</jmx-name>
+    <type>org.exoplatform.services.log.impl.LogServiceImpl</type>
+    <!--Valid value: FATAL, ERROR, WARN, INFO, DEBUG, TRACE-->
+    <init-params>
+      <properties-param>
+        <name>log.level.config</name>
+        <property name="org.exoplatform.services.log" value="DEBUG"/>
+        <property name="org.exoplatform.services.templates" value="WARN"/>
+      </properties-param>
+    </init-params>
+  </component>
+
+  <component>
+    <key>org.exoplatform.services.log.LogConfigurationInitializer</key>
+    <type>org.exoplatform.services.log.LogConfigurationInitializer</type>
+    <init-params>
+
+      <value-param>
+        <name>logger</name>
+        <value>org.exoplatform.services.log.impl.BufferedSimpleLog</value>
+      </value-param>
+      <value-param>
+        <name>configurator</name>
+        <value>org.exoplatform.services.log.impl.SimpleLogConfigurator</value>
+      </value-param>
+      <properties-param>
+        <name>properties</name>
+        <description>SimpleLog properties</description>
+        <property name="org.apache.commons.logging.simplelog.defaultlog" value="info"/>
+        <!-- property name="org.apache.commons.logging.simplelog.log.ecm.UIDocumentInfo" value="debug"/ -->
+        <!-- property name="org.apache.commons.logging.simplelog.log.jcr.TransactionableDataManager" value="debug"/ -->
+        <property name="org.apache.commons.logging.simplelog.showdatetime" value="true"/>
+      </properties-param>
+
+    </init-params>
+  </component>
+  <!-- component>
+    <key>org.exoplatform.services.naming.InitialContextInitializer</key>
+    <type>org.exoplatform.services.naming.InitialContextInitializer</type>
+    <init-params>
+      <properties-param>
+        <name>default-properties</name>
+        <description>Default initial context properties</description>
+        <property name="java.naming.factory.initial" value="org.exoplatform.services.naming.SimpleContextFactory"/>
+      </properties-param>
+    </init-params>
+  </component -->     
+
+</configuration>
