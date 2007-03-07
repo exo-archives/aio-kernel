@@ -6,7 +6,7 @@
   </parent> 
 
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>component.command</artifactId>
+  <artifactId>exo.kernel.component.command</artifactId>
   <packaging>jar</packaging>
   <version>${org.exoplatform.kernel.version}</version>
   <name>Command service impl</name>
@@ -16,7 +16,7 @@
     
     <dependency>
       <groupId>org.exoplatform.kernel</groupId>
-      <artifactId>component.common</artifactId>
+      <artifactId>exo.kernel.component.common</artifactId>
       <version>${org.exoplatform.kernel.version}</version>
       <scope>compile</scope>
     </dependency>

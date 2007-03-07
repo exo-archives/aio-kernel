@@ -6,7 +6,7 @@
   </parent> 
 
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>container</artifactId>
+  <artifactId>exo.kernel.container</artifactId>
   <version>${org.exoplatform.kernel.version}</version>
   <packaging>jar</packaging>
   <name>eXo Container</name>
@@ -16,30 +16,26 @@
   <dependencies>   
     <dependency>
       <groupId>org.exoplatform.kernel</groupId>
-      <artifactId>commons</artifactId>
+      <artifactId>exo.kernel.commons</artifactId>
       <version>${org.exoplatform.kernel.version}</version>
-      <scope>compile</scope>
     </dependency>
     
     <dependency>
       <groupId>org.exoplatform.tool</groupId>
-      <artifactId>framework.junit</artifactId>
+      <artifactId>exo.tool.framework.junit</artifactId>
       <version>${org.exoplatform.tool.version}</version>
-      <scope>compile</scope>
     </dependency>
     
     <dependency>
       <groupId>picocontainer</groupId>
       <artifactId>picocontainer</artifactId>
       <version>1.1</version>
-      <scope>compile</scope>
     </dependency> 
 
     <dependency>
       <groupId>drools</groupId>
       <artifactId>drools-core</artifactId>
       <version>2.0</version>  
-      <scope>compile</scope>
     </dependency>    
 
     <dependency>
@@ -67,35 +63,30 @@
       <groupId>commons-beanutils</groupId>
       <artifactId>commons-beanutils</artifactId>
       <version>1.6</version>
-      <scope>compile</scope>
     </dependency>
     
     <dependency>
       <groupId>jibx</groupId>
       <artifactId>jibx-run</artifactId>
       <version>1.0</version>
-      <scope>compile</scope>
     </dependency>
 
     <dependency>
       <groupId>jibx</groupId>
       <artifactId>jibx-bind</artifactId>
       <version>1.0</version>
-      <scope>compile</scope>
     </dependency>
 
     <dependency>
       <groupId>bcel</groupId>
       <artifactId>bcel</artifactId>
       <version>5.1</version>
-      <scope>compile</scope>
     </dependency>
 
     <dependency>
       <groupId>xerces</groupId>
       <artifactId>xercesImpl</artifactId>
       <version>2.6.2</version>
-      <scope>compile</scope>
     </dependency>
   </dependencies>
   
