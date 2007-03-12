@@ -4,8 +4,6 @@
  **************************************************************************/
 package org.exoplatform.services.net.test;
 
-import java.net.URL;
-
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.services.net.NetService;
 import org.exoplatform.test.BasicTestCase;

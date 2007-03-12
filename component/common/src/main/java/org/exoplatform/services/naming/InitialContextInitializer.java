@@ -51,7 +51,6 @@ public class InitialContextInitializer {
    * @throws ConfigurationException if no context factory initialized and no context-factory nor default-context-factory configured 
    */
   public InitialContextInitializer(InitParams params) throws NamingException, ConfigurationException {
-
     for (Iterator propsParams = params.getPropertiesParamIterator(); propsParams.hasNext();) {
       PropertiesParam propParam = (PropertiesParam) propsParams.next();
       boolean isDefault = propParam.getName().equals(PROPERTIES_DEFAULT);
