@@ -88,19 +88,5 @@
       <version>1.0</version>
       <scope>compile</scope>
     </dependency>
-
-    <dependency>
-      <groupId>directory-naming</groupId>
-      <artifactId>naming-core</artifactId>
-      <version>0.8</version>
-      <scope>compile</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>directory-naming</groupId>
-      <artifactId>naming-java</artifactId>
-      <version>0.8</version>
-      <scope>compile</scope>
-    </dependency>
   </dependencies>
 </project>

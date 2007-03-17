@@ -99,23 +99,9 @@
       <properties-param>
         <name>default-properties</name>
         <description>Default initial context properties</description>
-        <property name="java.naming.factory.initial" value="org.exoplatform.services.naming.SimpleContextFactory"/>
+        <property name="java.naming.factory.initial" 
+                  value="org.exoplatform.services.naming.SimpleContextFactory"/>
       </properties-param>
     </init-params>
   </component>     
-     
-  <component>
-    <key>org.exoplatform.services.naming.NamingService</key>
-    <type>org.exoplatform.services.naming.NamingService</type>
-    <init-params>
-      <properties-param>
-        <name>environment</name>
-        <description>the  environment  properties</description>
-        <property name='java.naming.factory.initial' value='org.apache.naming.java.javaURLContextFactory'/>
-        <property name='java.naming.factory.url.pkgs' value='org.apache.naming'/>
-      </properties-param>
-    </init-params>
-  </component>
-<!--
--->
 </configuration>
