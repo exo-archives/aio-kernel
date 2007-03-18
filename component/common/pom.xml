@@ -21,9 +21,9 @@
     </dependency>
 
     <dependency>
-      <groupId>mail</groupId>
+      <groupId>javax.activation</groupId>
       <artifactId>activation</artifactId>
-      <version>1.0</version>
+      <version>1.1</version>
       <scope>compile</scope>
     </dependency>
 
@@ -54,12 +54,14 @@
       </exclusions>
     </dependency>
 
+    <!--
     <dependency>
       <groupId>javax.resource</groupId>
       <artifactId>connector-api</artifactId>
       <version>1.5</version>
       <scope>provided</scope>
     </dependency>
+    -->
 
     <dependency>
       <groupId>quartz</groupId>
@@ -69,9 +71,9 @@
     </dependency>
 
     <dependency>
-      <groupId>mail</groupId>
+      <groupId>javax.mail</groupId>
       <artifactId>mail</artifactId>
-      <version>1.3.3</version>
+      <version>1.4</version>
       <scope>compile</scope>
     </dependency>
 
