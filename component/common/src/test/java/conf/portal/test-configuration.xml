@@ -3,7 +3,30 @@
 	<component>
     <key>org.exoplatform.services.compress.CompressData</key>
     <type>org.exoplatform.services.compress.CompressData</type>
-     </component> 
+  </component> 
+  
+  <component>
+    <key>org.exoplatform.services.listener.ListenerService</key>
+    <type>org.exoplatform.services.listener.ListenerService</type>
+    <component-plugins>
+      <component-plugin>
+	      <name>new.bean</name>
+	      <set-method>addListener</set-method>
+	      <type>org.exoplatform.services.listener.BeanListener</type>
+	      <description>add new listener to listener service</description>
+	    </component-plugin>
+    </component-plugins>
+  </component>
+  
+  <external-component-plugins>
+    <target-component>org.exoplatform.services.listener.ListenerService</target-component>
+    <component-plugin>
+  	  <name>set.value.bean</name>
+		  <set-method>addListener</set-method>
+	  	<type>org.exoplatform.services.listener.SetValueBeanListener</type>
+	  	<description>set value listener</description>
+		</component-plugin>
+  </external-component-plugins>
        
   <external-component-plugins>
     <target-component>org.exoplatform.services.scheduler.JobSchedulerService</target-component>

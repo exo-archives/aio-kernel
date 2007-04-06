@@ -27,6 +27,7 @@ import org.exoplatform.services.mail.Message;
  * Dec 23, 2005
  */
 public class MailServiceImpl implements MailService {
+  
   private Session    mailSession_;
 
   private Properties props_;

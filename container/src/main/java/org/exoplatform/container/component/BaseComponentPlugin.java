@@ -10,8 +10,9 @@ package org.exoplatform.container.component;
  * @version $Id: BaseComponentPlugin.java 5799 2006-05-28 17:55:42Z geaz $
  */
 public class BaseComponentPlugin implements ComponentPlugin {
-  private String name ;
-  private String desc ;
+  
+  protected String name ;
+  protected String desc ;
   
   public String getName() { return name ; }
   public void   setName(String s) { name = s ; } 
