@@ -5,7 +5,6 @@
 package org.exoplatform.commons.utils;
 
 import java.util.*;
-import org.exoplatform.commons.xml.ExoXPPParser;
 
 /**
  * Jul 20, 2004 
@@ -46,18 +45,7 @@ public class ExoProperties extends HashMap {
     return b.toString() ;
   }
   
-  public void addPropertiesFromXml(String xml) {
-    try {
-      ExoXPPParser xpp = ExoXPPParser.getInstance()  ;
-      xpp.setInput(new java.io.StringReader(xml)) ;
-      xpp.mandatoryNode("properties") ;
-      while(xpp.node("property")) {
-        put(xpp.getNodeAttributeValue("key"), xpp.getNodeAttributeValue("value")) ;
-      }
-    } catch (Exception ex) {
-      ex.printStackTrace() ;
-    }
-  }
+
   
   public String toXml() {
     StringBuffer b = new StringBuffer() ;
