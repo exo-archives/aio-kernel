@@ -9,12 +9,18 @@ package org.exoplatform.services.listener;
  *          nhudinhthuan@exoplatform.com
  * Apr 6, 2007  
  */
-public abstract class Event <T> {
+public abstract class Event<T> {
   
-  protected T value;
+  private T source;
   
-  public T getData() { return value; }
+  protected T value ;
   
-  public void setData(T t) { value = t; }
+  public T getBean() { return value; }
+  
+  public void setBean(T t) { value = t; }
+
+  public T getSource() { return source; }
+
+  public void setSource(T source) { this.source = source; }
   
 }

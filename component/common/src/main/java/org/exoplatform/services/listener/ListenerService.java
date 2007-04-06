@@ -39,12 +39,13 @@ public class ListenerService {
   }
   
   @SuppressWarnings("unchecked")
-  public void invoke(String name, Event<?> event) {
+  public <T extends Event> void broadcast(String name, T event) {
     List<Listener> list = map.get(name);
     if(list == null || list.size() < 1)  return;
     for(Listener listener : list) {
-      listener.handle(event);
+      listener.onEvent(event);
     }    
   }
+ 
   
 }

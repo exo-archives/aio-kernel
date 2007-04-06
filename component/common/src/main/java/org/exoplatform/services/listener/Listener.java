@@ -4,7 +4,7 @@
  **************************************************************************/
 package org.exoplatform.services.listener;
 
-import org.exoplatform.container.component.ComponentPlugin;
+import org.exoplatform.container.component.BaseComponentPlugin;
 
 /**
  * Created by The eXo Platform SARL
@@ -12,8 +12,8 @@ import org.exoplatform.container.component.ComponentPlugin;
  *          nhudinhthuan@exoplatform.com
  * Apr 6, 2007  
  */
-public interface Listener<T> extends ComponentPlugin {
+public abstract class Listener<T> extends BaseComponentPlugin {
   
-  public void handle(Event<T> event) ;
+  public abstract void onEvent(Event<T> event) ;
   
 }

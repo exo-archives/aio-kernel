@@ -40,12 +40,12 @@ public class TestListenerService extends BasicTestCase {
     
     public BeanHandler() throws Exception {
       bean = new Bean("test", "listener1");
-      service_.invoke("new.bean", new BeanEvent(bean));
+      service_.broadcast("new.bean", new BeanEvent(bean));
     }
     
     public void setValue(String value) throws Exception {
       bean.value = value;
-      service_.invoke("set.value.bean", new BeanEvent(bean));
+      service_.broadcast("set.value.bean", new BeanEvent(bean));
     }
     
   }

@@ -4,7 +4,6 @@
  **************************************************************************/
 package org.exoplatform.services.listener;
 
-import org.exoplatform.container.component.BaseComponentPlugin;
 
 /**
  * Created by The eXo Platform SARL
@@ -12,13 +11,13 @@ import org.exoplatform.container.component.BaseComponentPlugin;
  *          nhudinhthuan@exoplatform.com
  * Apr 6, 2007  
  */
-public class BeanListener extends BaseComponentPlugin implements Listener<TestListenerService.Bean> {
+public class BeanListener extends Listener<TestListenerService.Bean> {
   
   public BeanListener( ){
     name = "new.bean";
   }
 
-  public void handle(Event<TestListenerService.Bean> event) {
+  public void onEvent(Event<TestListenerService.Bean> event) {
     System.out.println("\n creating new bean handler..."+event+"\n");
   }
 

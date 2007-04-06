@@ -4,7 +4,6 @@
  **************************************************************************/
 package org.exoplatform.services.listener;
 
-import org.exoplatform.container.component.BaseComponentPlugin;
 
 /**
  * Created by The eXo Platform SARL
@@ -12,14 +11,14 @@ import org.exoplatform.container.component.BaseComponentPlugin;
  *          nhudinhthuan@exoplatform.com
  * Apr 6, 2007  
  */
-public class SetValueBeanListener extends BaseComponentPlugin implements Listener<TestListenerService.Bean> {
+public class SetValueBeanListener extends Listener<TestListenerService.Bean> {
   
   public SetValueBeanListener( ){
     name = "set.value.bean";
   }
 
-  public void handle(Event<TestListenerService.Bean> event) {
-    TestListenerService.Bean bean  = event.getData(); 
+  public void onEvent(Event<TestListenerService.Bean> event) {
+    TestListenerService.Bean bean  = event.getBean(); 
     System.out.println("\n set value "+bean.getValue()+"\n\n");
   }
 
