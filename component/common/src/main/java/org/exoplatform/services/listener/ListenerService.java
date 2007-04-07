@@ -39,8 +39,8 @@ public class ListenerService {
   }
   
   @SuppressWarnings("unchecked")
-  public <T extends Event> void broadcast(String name, T event) {
-    List<Listener> list = map.get(name);
+  public <T extends Event> void broadcast(T event) {
+    List<Listener> list = map.get(event.getEventName());
     if(list == null || list.size() < 1)  return;
     for(Listener listener : list) {
       listener.onEvent(event);

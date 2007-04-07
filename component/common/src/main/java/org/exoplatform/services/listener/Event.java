@@ -9,18 +9,25 @@ package org.exoplatform.services.listener;
  *          nhudinhthuan@exoplatform.com
  * Apr 6, 2007  
  */
-public abstract class Event<T> {
+public class Event<E, V> {
   
-  private T source;
+  protected String eventName ;
   
-  protected T value ;
+  protected E source; 
   
-  public T getBean() { return value; }
-  
-  public void setBean(T t) { value = t; }
+  protected V data ;
+   
+  public Event(String name, E source, V data){
+    this.eventName = name;
+    this.source = source;
+    this.data = data;
+  }
 
-  public T getSource() { return source; }
+  public String getEventName(){ return eventName; }
+  
+  public V getData() { return data; }
+  
+  public E getSource() { return source; }
 
-  public void setSource(T source) { this.source = source; }
   
 }

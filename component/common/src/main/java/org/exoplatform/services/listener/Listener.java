@@ -14,6 +14,6 @@ import org.exoplatform.container.component.BaseComponentPlugin;
  */
 public abstract class Listener<T> extends BaseComponentPlugin {
   
-  public abstract void onEvent(Event<T> event) ;
+  public abstract void onEvent(Event<T, ?> event) ;
   
 }

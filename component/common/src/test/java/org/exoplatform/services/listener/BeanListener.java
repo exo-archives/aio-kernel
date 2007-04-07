@@ -11,13 +11,13 @@ package org.exoplatform.services.listener;
  *          nhudinhthuan@exoplatform.com
  * Apr 6, 2007  
  */
-public class BeanListener extends Listener<TestListenerService.Bean> {
+public class BeanListener extends Listener<TestListenerService.BeanHandler> {
   
   public BeanListener( ){
     name = "new.bean";
   }
 
-  public void onEvent(Event<TestListenerService.Bean> event) {
+  public void onEvent(Event<TestListenerService.BeanHandler, ?> event) {
     System.out.println("\n creating new bean handler..."+event+"\n");
   }
 

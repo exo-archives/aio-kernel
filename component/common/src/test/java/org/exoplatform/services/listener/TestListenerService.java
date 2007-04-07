@@ -34,33 +34,27 @@ public class TestListenerService extends BasicTestCase {
     handler.setValue("thuan");    
   }
   
-  private class BeanHandler {
+  public class BeanHandler {
     
     private Bean bean;
     
     public BeanHandler() throws Exception {
       bean = new Bean("test", "listener1");
-      service_.broadcast("new.bean", new BeanEvent(bean));
+      service_.broadcast(new Event<BeanHandler, Bean>("new.bean", this, bean));
     }
     
     public void setValue(String value) throws Exception {
       bean.value = value;
-      service_.broadcast("set.value.bean", new BeanEvent(bean));
-    }
-    
-  }
-  
-  private class BeanEvent extends Event<Bean> {
-    
-    public BeanEvent(Bean bean){
-      value = bean;
+      service_.broadcast(new Event<BeanHandler, Bean>("set.value.bean", this, bean));
     }
     
   }
   
   static class Bean {
     
+    @SuppressWarnings("unused")
     private String name;
+    
     private String value;
     
     Bean(String n, String v) {
@@ -69,6 +63,8 @@ public class TestListenerService extends BasicTestCase {
     }
     
     String getValue() { return value; }
+    
+    String getName() { return name; }
   }
   
 }
