@@ -38,14 +38,17 @@ public class ListenerService {
     addListener(listener);
   }
   
+  final public <E, V> void broadcast(String name, E source, V data) throws Exception {
+    broadcast(new Event<E, V>(name, source, data)) ;
+  }
+  
   @SuppressWarnings("unchecked")
-  public <T extends Event> void broadcast(T event) {
+  final public <T extends Event> void broadcast(T event) throws Exception {
     List<Listener> list = map.get(event.getEventName());
-    if(list == null || list.size() < 1)  return;
-    for(Listener listener : list) {
-      listener.onEvent(event);
-    }    
+    if(list == null)  return;
+    for(Listener listener : list) listener.onEvent(event);    
   }
  
+  
   
 }
