@@ -4,8 +4,8 @@
  **************************************************************************/
 package org.exoplatform.commons.exception;
 
-import java.util.ResourceBundle ;
-import org.exoplatform.commons.utils.Formater;
+import java.text.MessageFormat;
+import java.util.ResourceBundle;
 /*
  * @author: Tuan Nguyen
  * @version: $Id: ExoMessageException.java,v 1.2 2004/11/03 01:24:55 tuan08 Exp $
@@ -13,7 +13,6 @@ import org.exoplatform.commons.utils.Formater;
  * @email: tuan08@yahoo.com
  */
 public class ExoMessageException extends ExoException {
-  private static Formater ft_ = Formater.getDefaultFormater() ;
   
   private String messageKey_ ;
   private Object[] args_ ;
@@ -35,7 +34,7 @@ public class ExoMessageException extends ExoException {
     if(args_ == null) {
       return res.getString(messageKey_) ;
     } 
-    return ft_.format(res.getString(messageKey_) , args_) ; 
+    return MessageFormat.format(res.getString(messageKey_) , args_) ; 
   }
   
   public String getExceptionDescription() {

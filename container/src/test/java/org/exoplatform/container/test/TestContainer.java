@@ -57,9 +57,9 @@ public class TestContainer extends BasicTestCase {
     mservice.executeRule(list, true) ;
   }
   
-  public void testClientType() throws Exception  {
-  System.setProperty("javax.xml.parsers.DocumentBuilderFactory",
-                      "javax.xml.parsers.DocumentBuilderFactory") ;
-    ClientTypeMap.getInstance() ;
-  }
+//  public void testClientType() throws Exception  {
+//  System.setProperty("javax.xml.parsers.DocumentBuilderFactory",
+//                      "javax.xml.parsers.DocumentBuilderFactory") ;
+//    ClientTypeMap.getInstance() ;
+//  }
 }
