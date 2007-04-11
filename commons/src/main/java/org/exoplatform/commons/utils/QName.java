@@ -21,7 +21,7 @@ public class QName {
 
   protected final String name;
   
-  protected String stringName;
+  protected final String stringName;
   
   protected int hashCode;
 
@@ -33,16 +33,6 @@ public class QName {
     
     this.stringName = ("[" + this.namespace + "]" + this.name).intern();
     this.hashCode = 31 * stringName.hashCode();
-  }
-  
-  public QName(String namespace, String name, boolean internal) {
-    this.namespace = (namespace != null ? namespace : "").intern();
-    this.name = (name != null ? name : "").intern();
-    
-    if (!internal) {
-      this.stringName = ("[" + this.namespace + "]" + this.name).intern();
-      this.hashCode = 31 * stringName.hashCode();
-    }
   }
 
   public String getNamespace() {
