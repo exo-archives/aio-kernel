@@ -35,6 +35,7 @@ public class Constants {
   public static final String WINDOW_STATE_PARAMETER = PARAMETER_ENCODER + "windowState";
   public static final String PORTLET_MODE_PARAMETER = PARAMETER_ENCODER + "portletMode";
   public static final String RESOURCE_ID_PARAMETER = PARAMETER_ENCODER + "resourceID";
+  public static final String RESOURCE_CACHELEVEL_PARAMETER = PARAMETER_ENCODER + "cacheLevel";
   public static final String SECURE_PARAMETER = PARAMETER_ENCODER + "isSecure";
   public static final String LANGUAGE_PARAMETER = PARAMETER_ENCODER + "lang" ;
 
