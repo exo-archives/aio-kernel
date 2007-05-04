@@ -6,6 +6,7 @@
 package org.exoplatform.services.transaction.impl.jotm;
 
 import java.rmi.RemoteException;
+import java.util.List;
 
 import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
@@ -34,7 +35,7 @@ import org.objectweb.transaction.jta.ResourceManagerEvent;
  * @version $Id: $
  */
  
-public class TransactionServiceJotmImpl implements TransactionService {
+public class TransactionServiceJotmImpl implements TransactionService{
   
   protected static Log log = ExoLogger.getLogger("transaction.TransactionServiceJotmImpl");
   
@@ -113,5 +114,29 @@ public class TransactionServiceJotmImpl implements TransactionService {
   public void setTransactionTimeout(int seconds) throws SystemException {
     current.setTransactionTimeout(seconds);
   }
+  
 
+  /**
+   * Push a new event list on the stack of thread local resource event sets.
+   * The list must contain only <code>ResourceManagerEvent</code> objects.
+   * 
+   * @param eventList the possibly null list of events to store forecoming
+   * <code>ResourceManagerEvent</code> events occuring in the current thread.
+   */
+  public void pushThreadLocalRMEventList(List eventList){
+    current.pushThreadLocalRMEventList(eventList);
+  };
+
+  /**
+   * Pop the current set from the stack of thread local resource event sets
+   * The list contains <code>ResourceManagerEvent</code> objects.
+   * 
+   * @return The possibly null <code>ResourceManagerEvent</code> 
+   * list of events that have occured in the  current thread since the last 
+   * call of <code>pushThreadLocalRMEventList</code> or since the thread 
+   * started.
+   */
+  public  List popThreadLocalRMEventList(){
+    return current.popThreadLocalRMEventList();
+  };
 }
