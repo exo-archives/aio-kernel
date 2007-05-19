@@ -11,14 +11,14 @@ package org.exoplatform.services.listener;
  *          nhudinhthuan@exoplatform.com
  * Apr 6, 2007  
  */
-public class SetValueBeanListener extends Listener<TestListenerService.BeanHandler> {
+public class SetValueBeanListener extends Listener<TestListenerService, TestListenerService.Bean> {
   
   public SetValueBeanListener( ){
     name = "set.value.bean";
   }
 
-  public void onEvent(Event<TestListenerService.BeanHandler, ?> event) {
-    TestListenerService.Bean bean  = (TestListenerService.Bean)event.getData(); 
+  public void onEvent(Event<TestListenerService, TestListenerService.Bean> event) {
+    TestListenerService.Bean bean  = event.getData(); 
     System.out.println("\n set value "+bean.getValue()+"\n\n");
   }
 

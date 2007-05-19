@@ -2,7 +2,6 @@
  * Copyright 2001-2006 The eXo Platform SARL         All rights reserved.  *
  * Please look at license.txt in info directory for more license detail.   *
  */
-
 package org.exoplatform.services.naming;
 
 import java.util.ArrayList;
@@ -23,14 +22,12 @@ import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.PropertiesParam;
 import org.exoplatform.container.xml.Property;
 import org.exoplatform.services.log.ExoLogger;
-
 /**
  * Created by The eXo Platform SARL        .<br/>
  * Initializer for Context.INITIAL_CONTEXT_FACTORY
  * @author Gennady Azarenkov
  * @version $Id: InitialContextInitializer.java 9867 2006-10-30 08:01:12Z geaz $
  */
-
 public class InitialContextInitializer {
   
   final public static String PROPERTIES_DEFAULT = "default-properties";

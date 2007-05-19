@@ -15,7 +15,6 @@ import org.apache.commons.logging.LogFactory;
  */
 
 public class ExoLogger {
-
   /**
    * @param name
    * @return logger by name

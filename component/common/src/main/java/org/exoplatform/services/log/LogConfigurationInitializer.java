@@ -13,7 +13,6 @@ import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.PropertiesParam;
 import org.exoplatform.container.xml.ValueParam;
 import org.picocontainer.Startable;
-
 /**
  * Created by The eXo Platform SARL        .
  * <br/> The component for commons based logging configuration initialization.
