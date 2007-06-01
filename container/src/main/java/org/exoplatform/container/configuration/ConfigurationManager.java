@@ -32,4 +32,6 @@ public interface ConfigurationManager {
   public InputStream getInputStream(String url) throws Exception  ;
   
   public boolean isDefault(String value) ;
+  
+  public  URL getURL(String uri) throws Exception;
 }

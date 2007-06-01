@@ -141,7 +141,7 @@ public class ConfigurationManagerImpl implements ConfigurationManager {
     return url.openStream();
   }
 
-  protected URL getURL(String url) throws Exception {
+  public URL getURL(String url) throws Exception {
     if (url.startsWith("jar:")) {
       String path = removePrefix("jar:/", url);
       ClassLoader cl = Thread.currentThread().getContextClassLoader();

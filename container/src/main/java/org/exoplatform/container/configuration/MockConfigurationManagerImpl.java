@@ -21,7 +21,7 @@ public class MockConfigurationManagerImpl extends ConfigurationManagerImpl {
     confDir_ = System.getProperty("mock.portal.dir")  + "/WEB-INF" ;
   }
   
-  protected URL getURL(String uri) throws Exception {
+  public  URL getURL(String uri) throws Exception {
     if(uri.startsWith("jar:")) {
       String path = removePrefix("jar:/", uri) ;
       ClassLoader cl = Thread.currentThread().getContextClassLoader() ;
