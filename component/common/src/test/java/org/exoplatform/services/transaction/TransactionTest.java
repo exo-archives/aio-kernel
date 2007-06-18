@@ -32,7 +32,7 @@ public class TransactionTest extends TestCase {
   
   public void setUp() throws Exception {
     
-    StandaloneContainer.setConfigurationPath("src/java/conf/standalone/test-configuration.xml");
+    StandaloneContainer.setConfigurationPath("src/test/java/conf/standalone/test-configuration.xml");
   	
     container = StandaloneContainer.getInstance();
     
