@@ -51,6 +51,7 @@ public class LogConfigurationInitializer implements Startable {
     if(p != null)
      properties = p.getProperties();  
     
+    initLogger();
   }
   
   /**
@@ -114,11 +115,6 @@ public class LogConfigurationInitializer implements Startable {
    * @see org.picocontainer.Startable#start()
    */
   public void start() {
-    try {
-      initLogger();
-    } catch (Exception e) {
-      e.printStackTrace();
-    }  
   }
 
   /* (non-Javadoc)
