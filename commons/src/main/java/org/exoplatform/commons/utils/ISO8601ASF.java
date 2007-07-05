@@ -45,6 +45,8 @@ import java.util.TimeZone;
  *           in the form of +hh:mm or -hh:mm
  * </pre>
  */
+
+@Deprecated
 public final class ISO8601ASF {
     /**
      * misc. numeric formats used in formatting
