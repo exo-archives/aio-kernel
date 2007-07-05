@@ -129,13 +129,13 @@ import java.util.Date;
      * Complete date plus hours, minutes, seconds and a decimal fraction of a second
      * YYYY-MM-DDThh:mm:ss.sTZD (eg 1997-07-16T19:20:30.45+01:00)
      */
-    protected static final String COMPLETE_DATETIMEMSZ_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS" + TZD;
+    public static final String COMPLETE_DATETIMEMSZ_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS" + TZD;
     
     /**
      * Possible formats list.
      * ISO 8601, RFC822 + simple formats in order of priority of parse
      */
-    protected static final String[] FORMATS = {
+    public static final String[] FORMATS = {
       COMPLETE_DATETIMEMSZ_FORMAT,
       COMPLETE_DATETIMEMSZRFC822_FORMAT,
       SIMPLE_DATETIMEMS_FORMAT,
@@ -150,7 +150,7 @@ import java.util.Date;
       YEAR_FORMAT 
       };
     
-    protected class ISODateFormat {
+    protected static class ISODateFormat {
       
       private final SimpleDateFormat formater; 
       private final String format;
@@ -210,8 +210,22 @@ import java.util.Date;
      * @param date
      * @return
      */
-    public String format(Calendar date) {
+    public static String format(Calendar date) {
       return new ISODateFormat(COMPLETE_DATETIMEMSZ_FORMAT).format(date);
+    }
+    
+    /**
+     * Parse string using possible formats list.
+     * 
+     * @param dateString - date string
+     * @return - calendar or null if dateString is inparseable text 
+     */  
+    public static Calendar parse(String dateString) {
+      try {
+        return parse(dateString, FORMATS);
+      } catch (ParseException e) {
+        return null;
+      }
     }
     
     /**
@@ -221,7 +235,7 @@ import java.util.Date;
      * @return - calendar
      * @throws ParseException, NumberFormatException
      */  
-    public Calendar parse(String dateString) throws ParseException, NumberFormatException {
+    public static Calendar parseEx(String dateString) throws ParseException, NumberFormatException {
       return parse(dateString, FORMATS);
     }
     
@@ -234,7 +248,7 @@ import java.util.Date;
      * @throws ParseException
      * @throws NumberFormatException
      */
-    public Calendar parse(String dateString, String[] formats) throws ParseException {
+    public static Calendar parse(String dateString, String[] formats) throws ParseException {
       String problems = "";
       int errOffset = 0;
       for (String format: formats) {
