@@ -9,9 +9,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.apache.commons.logging.Log;
-import org.exoplatform.services.log.ExoLogger;
-
   /**
    * Created by The eXo Platform SAS
    * Author : Peter Nedonosko
@@ -56,8 +53,6 @@ import org.exoplatform.services.log.ExoLogger;
    */
   
   public class ISO8601 {
-    
-    public static Log log = ExoLogger.getLogger("jcr.ISO8601");
     
     /**
      * ISO 8601 time zone designator
