@@ -49,7 +49,7 @@ import java.util.Date;
          like -8000       
    * 
    * @author <a href="mailto:peter.nedonosko@exoplatform.com.ua">Peter Nedonosko</a>
-   * @version $Id: ISO8601.java 12841 2007-02-16 08:58:38Z peterit $
+   * @version $Id$
    */
   
   public class ISO8601 {
