@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <configuration>
   <container-lifecycle-plugin>
     <type>org.exoplatform.container.monitor.jvm.AddJVMComponentsToRootContainer</type>
@@ -14,11 +14,11 @@
     <key>org.exoplatform.container.monitor.jvm.JVMRuntimeInfo</key>
     <jmx-name>info:type=JVMRuntimeInfo</jmx-name>
     <type>org.exoplatform.container.monitor.jvm.JVMRuntimeInfoImpl</type>
-      <init-params>
-		   <properties-param>
-		     <name>add.system.properties</name>
-		     <property name="org.apache.lucene.maxClauseCount" value="3000"/>
-		   </properties-param>
-      </init-params>
+	  <init-params>
+	    <properties-param>
+	      <name>add.system.properties</name>
+	      <property name="org.apache.lucene.maxClauseCount" value="3000"/>
+	    </properties-param>
+	  </init-params>
   </component>
 </configuration>

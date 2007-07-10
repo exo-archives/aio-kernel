@@ -12,6 +12,7 @@ import org.exoplatform.container.xml.InitParams;
  * @version $Id: ContainerLifecyclePlugin.java 5799 2006-05-28 17:55:42Z geaz $
  */
 public interface ContainerLifecyclePlugin {
+  
   public String getName() ;
   public void   setName(String s) ;
   

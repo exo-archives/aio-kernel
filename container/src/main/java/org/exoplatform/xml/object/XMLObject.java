@@ -26,6 +26,8 @@ public class XMLObject {
   public static String CURRENT_VERSION = "1.0" ;
   static Map cacheFields_  = new HashMap() ; 
   
+//  private static String encoding = "UTF-8";
+  
   private Map fields_ = new HashMap() ;
   private String type ;
   
@@ -128,12 +130,7 @@ public class XMLObject {
   }
   
   public String toXML(String encoding) throws Exception {
-    IBindingFactory bfact = BindingDirectory.getFactory(XMLObject.class);
-    IMarshallingContext mctx = bfact.createMarshallingContext();
-    mctx.setIndent(2);
-    ByteArrayOutputStream os = new ByteArrayOutputStream() ;
-    mctx.marshalDocument(this, encoding, null,  os) ;
-    return new String(os.toByteArray(), encoding) ;
+    return new String(toByteArray(encoding), encoding) ;
   }
   
   public byte[] toByteArray() throws Exception {
@@ -152,7 +149,7 @@ public class XMLObject {
   static public XMLObject getXMLObject(InputStream is) throws Exception {
     IBindingFactory bfact = BindingDirectory.getFactory(XMLObject.class);
     IUnmarshallingContext uctx = bfact.createUnmarshallingContext();
-    XMLObject xmlobject = (XMLObject) uctx.unmarshalDocument(is , null) ;
+    XMLObject xmlobject = (XMLObject) uctx.unmarshalDocument(is , "UTF-8") ;
     return xmlobject ;
   }
   

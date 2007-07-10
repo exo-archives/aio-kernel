@@ -43,7 +43,7 @@ public class TestConfigurationService extends BasicTestCase {
     IBindingFactory bfact = BindingDirectory.getFactory(Configuration.class);
     IUnmarshallingContext uctx = bfact.createUnmarshallingContext();
     Object obj = 
-      uctx.unmarshalDocument(new FileInputStream(basedir +"/src/resources/configuration.xml"), null);
+      uctx.unmarshalDocument(new FileInputStream(basedir +"/src/main/resources/configuration.xml"), null);
     System.out.print(obj) ;
     
     IMarshallingContext mctx = bfact.createMarshallingContext();

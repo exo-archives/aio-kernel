@@ -9,7 +9,7 @@ package org.exoplatform.xml.object;
  * @since Apr 11, 2005
  * @version $Id: XMLKey.java 5799 2006-05-28 17:55:42Z geaz $
  */
-public class XMLKey extends XMLBaseObject{
+public class XMLKey extends XMLBaseObject {
   
   public XMLKey() {  }
   

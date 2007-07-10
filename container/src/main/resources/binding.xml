@@ -1,6 +1,6 @@
 <binding>
   <!-- xml object mapping -->
-  <mapping class="org.exoplatform.xml.object.XMLBaseObject" label="base-object" abstract="true">
+  <mapping class="org.exoplatform.xml.object.XMLBaseObject" abstract="true" label="base-object">
     <value name="string" usage="optional" get-method="getString" set-method="setString"/>
     <value name="int"  usage="optional" get-method="getInt" set-method="setInt"/>
     <value name="long"  usage="optional" get-method="getLong" set-method="setLong"/>
@@ -19,8 +19,8 @@
 
   <mapping name="value" 
            class="org.exoplatform.xml.object.XMLValue" 
-           enstends="org.exoplatform.xml.object.XMLBaseObject">
-    <structure map-as="org.exoplatform.xml.object.XMLBaseObject"/>
+           extends="org.exoplatform.xml.object.XMLBaseObject">
+    <structure using="base-object"/>
   </mapping>
 
   <mapping name="entry" class="org.exoplatform.xml.object.XMLEntry">
@@ -41,29 +41,28 @@
 
   <mapping name="native-array"
            class="org.exoplatform.xml.object.XMLNativeArray" 
-           enstends="org.exoplatform.xml.object.XMLBaseObject"
-           get-method="getArray" set-method="setArray">
+           extends="org.exoplatform.xml.object.XMLBaseObject">
     <value name="type" field="type" style="attribute"/>
     <value name="array"  usage="optional" style="element"
            get-method="getArray" set-method="setArray"/>
   </mapping>
 
-  <mapping name="field" label="field" 
+  <mapping name="field" 
            class="org.exoplatform.xml.object.XMLField" 
-           enstends="org.exoplatform.xml.object.XMLBaseObject">
+           extends="org.exoplatform.xml.object.XMLBaseObject">
     <value name="name" field="name" style="attribute"/>
     <structure map-as="org.exoplatform.xml.object.XMLBaseObject"/>
   </mapping>
 
-  <mapping name="object" label="object" class="org.exoplatform.xml.object.XMLObject">
+  <mapping name="object" class="org.exoplatform.xml.object.XMLObject">
     <value name="type" field="type" style="attribute"/>
     <collection  add-method="addField" iter-method="getFieldIterator"/>
   </mapping>
             
  <!-- old container configuration mapping , This configuration will be removed in version 2.0-->
   <mapping name="property" class="org.exoplatform.container.xml.Property">
-    <value name="name"  field="name" style="attribute"/>
-    <value name="value"  field="value" style="attribute"/>
+    <value name="name" style="attribute" field="name" />
+    <value name="value" style="attribute" field="value" />
   </mapping>
 
   <mapping class="org.exoplatform.container.xml.Parameter" abstract="true">
@@ -73,23 +72,23 @@
 
   <mapping name="value-param" 
            class="org.exoplatform.container.xml.ValueParam" 
-           enstends="org.exoplatform.container.xml.Paramter">
+           extends="org.exoplatform.container.xml.Parameter">
     <structure map-as="org.exoplatform.container.xml.Parameter"/>
     <value name="value"  field="value"/>
   </mapping>
 
   <mapping name="values-param" 
            class="org.exoplatform.container.xml.ValuesParam" 
-           enstends="org.exoplatform.container.xml.Paramter">
+           extends="org.exoplatform.container.xml.Parameter">
     <structure map-as="org.exoplatform.container.xml.Parameter"/>
-    <collection  field="values">
+    <collection item-type="java.lang.String" field="values">
       <value name="value" style="element"/>
     </collection>
   </mapping>
 
   <mapping name="properties-param" 
            class="org.exoplatform.container.xml.PropertiesParam" 
-           enstends="org.exoplatform.container.xml.Paramter">
+           extends="org.exoplatform.container.xml.Parameter">
     <structure map-as="org.exoplatform.container.xml.Parameter"/>
     <collection item-type="org.exoplatform.container.xml.Property" 
                 add-method="addProperty" iter-method="getPropertyIterator"/>
@@ -98,13 +97,13 @@
   <!-- new container configuration mapping -->
   <mapping name="object-param" 
            class="org.exoplatform.container.xml.ObjectParameter" 
-           enstends="org.exoplatform.container.xml.Paramter">
+           extends="org.exoplatform.container.xml.Parameter">
     <structure map-as="org.exoplatform.container.xml.Parameter"/>
     <structure map-as="org.exoplatform.xml.object.XMLObject"
                get-method="getXMLObject" set-method="setXMLObject"/>
   </mapping>
 
-  <mapping name="init-params" class="org.exoplatform.container.xml.InitParams" label="init-params">
+  <mapping name="init-params" class="org.exoplatform.container.xml.InitParams">
     <collection item-type="org.exoplatform.container.xml.ValueParam" 
                 add-method="addParam" iter-method="getValueParamIterator"/>
     <collection item-type="org.exoplatform.container.xml.ValuesParam" 
@@ -120,7 +119,7 @@
     <value name="set-method"  field="setMethod" />
     <value name="type"  field="type" />
     <value name="description" field="description" usage="optional" />
-    <structure name="init-params" using="init-params" usage="optional" 
+    <structure map-as="org.exoplatform.container.xml.InitParams" usage="optional" 
                get-method="getInitParams" set-method="setInitParams"/>
   </mapping>
 
@@ -129,7 +128,7 @@
     <value name="type"  field="type" />
     <value name="rule-declaration"  field="ruleDeclaration" />
     <value name="description" field="description" usage="optional" />
-    <structure name="init-params" using="init-params" usage="optional" 
+    <structure map-as="org.exoplatform.container.xml.InitParams" usage="optional" 
                get-method="getInitParams" set-method="setInitParams"/>
   </mapping>
 
@@ -140,22 +139,22 @@
 
   <mapping name="container-lifecycle-plugin" class="org.exoplatform.container.xml.ContainerLifecyclePlugin">
     <value name="type"  field="type" />
-    <structure name="init-params" using="init-params" usage="optional" 
+    <structure map-as="org.exoplatform.container.xml.InitParams" usage="optional" 
                get-method="getInitParams" set-method="setInitParams"/>
   </mapping>
 
-  <mapping name="manageable-components" label="manageable-components"
+  <mapping name="manageable-components"
            class="org.exoplatform.container.xml.ManageableComponents">
-    <collection  field="componentsType">
+    <collection item-type="java.lang.String"  field="componentsType">
       <value name="component-type" style="element"/>
     </collection>
   </mapping>
 
   <mapping name="component-lifecycle-plugin" class="org.exoplatform.container.xml.ComponentLifecyclePlugin">
     <value name="type"  field="type" />
-    <structure name="manageable-components" using="manageable-components"
+    <structure map-as="org.exoplatform.container.xml.ManageableComponents"
                get-method="getManageableComponents" set-method="setManageableComponents"/>
-    <structure name="init-params" using="init-params" usage="optional" 
+    <structure map-as="org.exoplatform.container.xml.InitParams" usage="optional" 
                get-method="getInitParams" set-method="setInitParams"/>
   </mapping>
 
@@ -169,7 +168,7 @@
                 item-type="org.exoplatform.container.xml.ComponentPlugin" />
     <collection name="rule-plugins" field="rulePlugins" usage="optional"
                 item-type="org.exoplatform.container.xml.RulePlugin" />
-    <structure name="init-params" using="init-params" usage="optional" 
+    <structure map-as="org.exoplatform.container.xml.InitParams" usage="optional" 
                get-method="getInitParams" set-method="setInitParams"/>
   </mapping>
 
@@ -190,12 +189,12 @@
     <collection item-type="org.exoplatform.container.xml.ExternalComponentPlugins" usage="optional"
                 add-method="addExternalComponentPlugins" iter-method="getExternalComponentPluginsIterator"
                 test-method="hasExternalComponentPlugins"/>
-    <collection field="imports_" usage="optional">
+    <collection item-type="java.lang.String" field="imports_" usage="optional">
       <value name="import" style="element"/>
     </collection>
 
-    <collection  field="removeConfiguration_" usage="optional">
+    <collection item-type="java.lang.String"  field="removeConfiguration_" usage="optional">
       <value name="remove-configuration" style="element"/>
     </collection>
-  </mapping>
+  </mapping> 
 </binding>

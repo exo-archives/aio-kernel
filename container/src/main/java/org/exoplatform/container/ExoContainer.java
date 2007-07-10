@@ -40,7 +40,8 @@ import org.picocontainer.defaults.DefaultPicoContainer;
  * Time: 12:15:28 AM
  */
 public class ExoContainer extends DefaultPicoContainer {
-  private Map componentLifecylePlugin_ = new HashMap();
+  
+  private Map<String, ComponentLifecyclePlugin> componentLifecylePlugin_ = new HashMap<String, ComponentLifecyclePlugin>();
   private List<ContainerLifecyclePlugin> containerLifecyclePlugin_ = new ArrayList<ContainerLifecyclePlugin>();
   protected ExoContainerContext context;
   
@@ -103,15 +104,16 @@ public class ExoContainer extends DefaultPicoContainer {
     containerLifecyclePlugin_.add(plugin) ;
   }
   
-  public Object createComponent(Class clazz) throws Exception {
+  public <T> T createComponent(Class<T> clazz) throws Exception {
     return createComponent(clazz, null) ;
   }
   
-  public Object createComponent(Class clazz, InitParams params) throws Exception {
-    Constructor[] constructors = ContainerUtil.getSortedConstructors(clazz) ;
+  public <T> T createComponent(Class<T> clazz, InitParams params) throws Exception {
+    Constructor<?>[] constructors = ContainerUtil.getSortedConstructors(clazz) ;
+    Class<?> unknownParameter = null;
     for(int k = 0; k < constructors.length; k++) {
-      Constructor constructor =  constructors[k];
-      Class[] parameters = constructor.getParameterTypes() ;
+      Constructor<?> constructor =  constructors[k];
+      Class<?>[] parameters = constructor.getParameterTypes() ;
       Object[] args = new Object[parameters.length] ;
       boolean satisfied = true ;
       for (int i = 0; i < args.length; i++) {
@@ -121,15 +123,15 @@ public class ExoContainer extends DefaultPicoContainer {
           args[i] = getComponentInstanceOfType(parameters[i]) ;
           if (args[i] == null) {
             satisfied = false ;
+            unknownParameter = parameters[i];
             break ;
           }
         }
       }
-      if(satisfied) {
-        return  constructor.newInstance(args) ;
-      }
+      if(satisfied) return  clazz.cast(constructor.newInstance(args)) ;
     }
-    throw new Exception("Cannot find a satisfying constructor for " + clazz) ;
+    throw new Exception("Cannot find a satisfying constructor for " + clazz 
+                        + " with parameter "+unknownParameter) ;
   }
   
   public void manageMBean(Component component, String componentKey,  Object bean)  {

@@ -23,12 +23,13 @@ import org.exoplatform.container.xml.ContainerLifecyclePlugin;
  * @version $Id: ContainerUtil.java 9894 2006-10-31 02:52:41Z tuan08 $
  */
 public class ContainerUtil {
-  static public Constructor[] getSortedConstructors(Class clazz) {
-    Constructor[] constructors = clazz.getConstructors() ;
+  
+  static public Constructor<?>[] getSortedConstructors(Class<?> clazz) {
+    Constructor<?>[] constructors = clazz.getConstructors() ;
     for(int i = 0 ; i < constructors.length; i++) {
       for(int j = i + 1 ; j < constructors.length; j++) {
         if(constructors[i].getParameterTypes().length < constructors[j].getParameterTypes().length) {
-          Constructor tmp = constructors[i] ;
+          Constructor<?> tmp = constructors[i] ;
           constructors[i] = constructors[j] ;
           constructors[j] = tmp ; 
         }

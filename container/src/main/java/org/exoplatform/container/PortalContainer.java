@@ -24,6 +24,7 @@ import org.picocontainer.defaults.DuplicateComponentKeyRegistrationException;
  * Time: 12:15:28 AM
  */
 public class PortalContainer extends ExoContainer implements SessionManagerContainer {
+  
   private static ThreadLocal currentContainer_ = new ThreadLocal() ;
   
   private MBeanServer mbeanServer ;
@@ -111,7 +112,8 @@ public class PortalContainer extends ExoContainer implements SessionManagerConta
     return super.getComponentInstancesOfType(componentType) ;
   }
   
-  public static void setInstance(PortalContainer instance) {  currentContainer_.set(instance) ;  
+  public static void setInstance(PortalContainer instance) {  
+    currentContainer_.set(instance) ;  
     ExoContainerContext.setCurrentContainer(instance);
   }
   

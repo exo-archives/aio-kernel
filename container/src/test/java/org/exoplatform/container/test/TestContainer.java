@@ -5,15 +5,21 @@ import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.RootContainer;
-import org.exoplatform.container.client.http.ClientTypeMap;
 import org.exoplatform.mocks.MockService;
 import org.exoplatform.test.BasicTestCase;
+
 /**
  * Created by the Exo Development team.
  * Author : Mestrallet Benjamin
  * benjamin.mestrallet@exoplatform.com
  */
+
 public class TestContainer extends BasicTestCase {
+  
+  public void setUp() throws Exception {
+    System.setProperty("maven.exoplatform.dir", TestContainer.class.getResource("/").getFile());
+  }
+  
   public void testPortalContainer() throws Exception  {
 		RootContainer rootContainer = RootContainer.getInstance() ;
     PortalContainer pcontainer = rootContainer.getPortalContainer("portal") ;

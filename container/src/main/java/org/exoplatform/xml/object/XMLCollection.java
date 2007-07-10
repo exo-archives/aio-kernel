@@ -53,12 +53,7 @@ public class XMLCollection {
   public Iterator getIterator() {  return list_.iterator()  ;  }
   
   public String toXML(String encoding) throws Exception {
-    IBindingFactory bfact = BindingDirectory.getFactory(XMLObject.class);
-    IMarshallingContext mctx = bfact.createMarshallingContext();
-    mctx.setIndent(2);
-    ByteArrayOutputStream os = new ByteArrayOutputStream() ;
-    mctx.marshalDocument(this, encoding, null,  os) ;
-    return new String(os.toByteArray(), encoding) ;
+    return new String(toByteArray(encoding), encoding) ;
   }
   
   public byte[] toByteArray(String encoding) throws Exception {
@@ -77,9 +72,6 @@ public class XMLCollection {
   }
   
   static public Collection getCollection(InputStream is) throws Exception {
-    IBindingFactory bfact = BindingDirectory.getFactory(XMLObject.class);
-    IUnmarshallingContext uctx = bfact.createUnmarshallingContext();
-    XMLCollection xmlobject = (XMLCollection) uctx.unmarshalDocument(is , null) ;
-    return xmlobject.getCollection();
+    return getXMLCollection(is).getCollection();
   }
 }

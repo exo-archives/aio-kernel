@@ -5,8 +5,12 @@
 
 package org.exoplatform.xml.test;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -15,7 +19,6 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
-import org.exoplatform.commons.debug.ObjectDebuger;
 import org.exoplatform.xml.object.XMLCollection;
 import org.exoplatform.xml.object.XMLObject;
 import org.jibx.runtime.BindingDirectory;
@@ -32,7 +35,7 @@ public class TestDataXML extends TestCase{
     String projectdir = System.getProperty("basedir") ;
     IBindingFactory bfact = BindingDirectory.getFactory(XMLObject.class);
     IUnmarshallingContext uctx = bfact.createUnmarshallingContext();
-    Object obj = uctx.unmarshalDocument(new FileInputStream(projectdir + "/src/resources/object.xml"), null);
+    Object obj = uctx.unmarshalDocument(new FileInputStream(projectdir + "/src/main/resources/object.xml"), null);
     System.out.print(obj) ;
     
     IMarshallingContext mctx = bfact.createMarshallingContext();
@@ -43,14 +46,26 @@ public class TestDataXML extends TestCase{
   public void testConvert() throws Exception {
     String projectdir = System.getProperty("basedir") ;
     XMLObject xmlobj = new XMLObject(new TestObject());
-    FileOutputStream os = new FileOutputStream(projectdir + "/target/test-object-1.xml") ;
     String xml1 = new String(xmlobj.toByteArray("UTF-8")) ;
+    FileOutputStream os = new FileOutputStream(projectdir + "/target/test-object-1.xml") ;
     os.write(xml1.getBytes()) ;
     os.close() ;
     System.out.println("---------XML Object------------------------") ;
-    System.out.println(ObjectDebuger.asString(xmlobj.toObject())) ;
-    FileInputStream is = new FileInputStream(projectdir + "/target/test-object-1.xml") ;
-    TestObject tobject = (TestObject)XMLObject.getObject(is) ;
+//    System.out.println(ObjectDebuger.asString(xmlobj.toObject())) ;
+    
+    File file  = new File(projectdir + "/target/test-object-1.xml");
+    FileInputStream is = new FileInputStream(file) ;
+    
+    FileChannel fchan = is.getChannel();
+    ByteBuffer buff = ByteBuffer.allocate((int)file.length());      
+    fchan.read(buff);
+    buff.rewind();      
+    byte[] data = buff.array();      
+    buff.clear();      
+    fchan.close();        
+    is.close();  
+    
+    TestObject tobject = (TestObject)XMLObject.getObject(new ByteArrayInputStream(data)) ;
     assertTrue(tobject.nested.intarray.length == 10) ;
     os = new FileOutputStream(projectdir +  "/target/test-object-2.xml") ;
     xmlobj = new XMLObject(tobject);
@@ -59,6 +74,7 @@ public class TestDataXML extends TestCase{
     os.close() ;
     assertTrue(xml1.equals(xml2)) ;
     is.close();
+    
     List list = new ArrayList() ;
     list.add("test.....................") ;
     list.add(new Date()) ;
@@ -76,7 +92,7 @@ public class TestDataXML extends TestCase{
   
   static public class TestObject {
     final static public String staticField = "staticField";
-    String field = "field";
+    String field = "hello";
     String method ;
     Map map = new HashMap() ;
     List list = new ArrayList() ;

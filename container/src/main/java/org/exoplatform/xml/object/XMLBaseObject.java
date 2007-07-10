@@ -15,6 +15,7 @@ import java.util.Map;
  * @version $Id: XMLBaseObject.java 5799 2006-05-28 17:55:42Z geaz $
  */
 public class XMLBaseObject {
+  
   final static public String STRING = "string" ;
   final static public String INT = "int" ;
   final static public String LONG = "long" ;
