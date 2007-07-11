@@ -40,8 +40,6 @@ public class InitialContextInitializer {
   private String defaultContextFactory;
   
   private final InitialContext initialContext;
-  
-  
   /**
    * @param params
    * @throws NamingException
@@ -82,9 +80,8 @@ public class InitialContextInitializer {
   
   // for out-of-container testing
   private InitialContextInitializer(String name, Reference reference) throws NamingException {
-    if(System.getProperty(Context.INITIAL_CONTEXT_FACTORY) == null)
-      System.setProperty(Context.INITIAL_CONTEXT_FACTORY,
-          defaultContextFactory);
+    if(System.getProperty(Context.INITIAL_CONTEXT_FACTORY) == null) 
+      System.setProperty(Context.INITIAL_CONTEXT_FACTORY, defaultContextFactory);
     initialContext = new InitialContext();
     initialContext.rebind(name, reference);
     

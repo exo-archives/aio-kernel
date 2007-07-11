@@ -36,66 +36,66 @@ import org.picocontainer.defaults.AbstractComponentAdapter;
  */
 public class MX4JComponentAdapter extends AbstractComponentAdapter {
   private Object instance_ ;
-	
-	public MX4JComponentAdapter(Object key, Class implementation) {
+
+  public MX4JComponentAdapter(Object key, Class implementation) {
     super(key, implementation) ;
-	}
-	
-	public Object getComponentInstance(PicoContainer container) {
+  }
+
+  public Object getComponentInstance(PicoContainer container) {
     if(instance_ != null ) return instance_ ;
     ExoContainer exocontainer = (ExoContainer) container ;
     try {
-      synchronized(container) {
-        Object key = getComponentKey() ;
-        String componentKey = null ;
-        if(key instanceof String)  componentKey = (String) key ;
-        else  componentKey = ((Class)key).getName() ;
-        ConfigurationManager manager = 
-          (ConfigurationManager) exocontainer.getComponentInstanceOfType(ConfigurationManager.class);
-        Component component =  manager.getComponent(componentKey) ;
-        InitParams params = null ;
-        boolean debug =  false ;
-        if(component != null) {
-          params = component.getInitParams() ;
-          debug = component.getShowDeployInfo() ;
-        }
-        instance_ = exocontainer.createComponent(getComponentImplementation(), params) ;
-        if(debug) print("==> create  component : " + instance_) ;
-        if(component != null && component.getComponentPlugins() != null) {
-          addComponentPlugin(debug,instance_, component.getComponentPlugins(),exocontainer);
-        }
-        ExternalComponentPlugins ecplugins = 
-        	manager.getConfiguration().getExternalComponentPlugins(componentKey) ;
-        if(ecplugins != null) {
-          addComponentPlugin(debug, instance_, ecplugins.getComponentPlugins(), exocontainer) ;
-        }
-        //check  if component implement  the RulePlugable 
-        if(instance_ instanceof RulePlugable) {
-          RulePlugable rplugable = (RulePlugable) instance_ ;
-          addRulePlugin(rplugable, component.getRulePlugins(), exocontainer) ;
-        }
-        //check  if component implement  the ComponentLifecycle 
-        exocontainer.manageMBean(component,componentKey, instance_) ;
-        if(debug) print("==> add " + component + " to a mbean server") ;
-        if(instance_ instanceof ComponentLifecycle) {
-          ComponentLifecycle lc  = (ComponentLifecycle) instance_ ;
-          lc.initComponent(exocontainer) ;
-        }
+      Object key = getComponentKey() ;
+      String componentKey = null ;
+      if(key instanceof String)  componentKey = (String) key ;
+      else  componentKey = ((Class)key).getName() ;
+      ConfigurationManager manager = 
+        (ConfigurationManager) exocontainer.getComponentInstanceOfType(ConfigurationManager.class);
+      Component component =  manager.getComponent(componentKey) ;
+      InitParams params = null ;
+      boolean debug =  false ;
+      if(component != null) {
+        params = component.getInitParams() ;
+        debug = component.getShowDeployInfo() ;
+      }
+      
+      instance_ = exocontainer.createComponent(getComponentImplementation(), params) ;
+      
+      if(debug) print("==> create  component : " + instance_) ;
+      if(component != null && component.getComponentPlugins() != null) {
+        addComponentPlugin(debug,instance_, component.getComponentPlugins(),exocontainer);
+      }
+      ExternalComponentPlugins ecplugins = 
+        manager.getConfiguration().getExternalComponentPlugins(componentKey) ;
+      if(ecplugins != null) {
+        addComponentPlugin(debug, instance_, ecplugins.getComponentPlugins(), exocontainer) ;
+      }
+      //check  if component implement  the RulePlugable 
+      if(instance_ instanceof RulePlugable) {
+        RulePlugable rplugable = (RulePlugable) instance_ ;
+        addRulePlugin(rplugable, component.getRulePlugins(), exocontainer) ;
+      }
+      //check  if component implement  the ComponentLifecycle 
+      exocontainer.manageMBean(component,componentKey, instance_) ;
+      if(debug) print("==> add " + component + " to a mbean server") ;
+      if(instance_ instanceof ComponentLifecycle) {
+        ComponentLifecycle lc  = (ComponentLifecycle) instance_ ;
+        lc.initComponent(exocontainer) ;
       }
     } catch (Exception ex) {
       throw new RuntimeException("Cannot instantiate component " + getComponentImplementation(), ex) ;
     }
-		return instance_ ;
-	}
-	
-	private void addComponentPlugin(boolean debug, Object component,  
-                                  List<org.exoplatform.container.xml.ComponentPlugin> plugins, 
-	                                ExoContainer container) throws Exception {
-	  if(plugins == null) return ;
-	  for(org.exoplatform.container.xml.ComponentPlugin plugin : plugins) {
-	    Class clazz = Class.forName(plugin.getType()) ;
-	    ComponentPlugin cplugin = 
-	      (ComponentPlugin)container.createComponent(clazz, plugin.getInitParams()) ;
+    return instance_ ;
+  }
+
+  private void addComponentPlugin(boolean debug, Object component,  
+      List<org.exoplatform.container.xml.ComponentPlugin> plugins, 
+      ExoContainer container) throws Exception {
+    if(plugins == null) return ;
+    for(org.exoplatform.container.xml.ComponentPlugin plugin : plugins) {
+      Class clazz = Class.forName(plugin.getType()) ;
+      ComponentPlugin cplugin = 
+        (ComponentPlugin)container.createComponent(clazz, plugin.getInitParams()) ;
       cplugin.setName(plugin.getName()) ;
       cplugin.setDescription(plugin.getDescription()) ;
       clazz =  component.getClass() ;
@@ -105,33 +105,33 @@ public class MX4JComponentAdapter extends AbstractComponentAdapter {
         m.invoke(component,params) ;
         if(debug) print("==> add component plugin: " + cplugin) ;
       } catch (Exception ex) {
-//        System. err.println("Error while invoking set method : " + plugin.getSetMethod()+ 
-//                           " of component : " + component.getClass().getName());
+//      System. err.println("Error while invoking set method : " + plugin.getSetMethod()+ 
+//      " of component : " + component.getClass().getName());
         throw ex ;
       }
-      
-	    cplugin.setName(plugin.getName()) ;
-	    cplugin.setDescription(plugin.getDescription()) ;
-	  }
-	}
-  
-  
+
+      cplugin.setName(plugin.getName()) ;
+      cplugin.setDescription(plugin.getDescription()) ;
+    }
+  }
+
+
   private Method  getSetMethod(Class  clazz ,  String name) {
     Method[] methods  = clazz.getMethods() ;
     for(Method m : methods) {
       if(name.equals(m.getName())) {
         Class[] types = m.getParameterTypes() ;
         if(types != null && types.length == 1 &&  
-           ComponentPlugin.class.isAssignableFrom(types[0])) {
+            ComponentPlugin.class.isAssignableFrom(types[0])) {
           return m ;
         }
       }
     }
     return null ;
   }
-  
+
   private void addRulePlugin(RulePlugable plugable,  List<RulePlugin> plugins, 
-                             ExoContainer container) throws Exception {
+      ExoContainer container) throws Exception {
     if(plugins == null) return ;
     ConfigurationManager cmanager = 
       (ConfigurationManager) container.getComponentInstanceOfType(ConfigurationManager.class) ;
@@ -148,10 +148,10 @@ public class MX4JComponentAdapter extends AbstractComponentAdapter {
       plugable.addRule(rplugin) ;
     }
   }
-  
+
   public void verify(PicoContainer container)  {  }
-  
+
   private void print(String message) {
-//    System .out.println(message) ;
+//  System .out.println(message) ;
   }
 }
