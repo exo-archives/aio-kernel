@@ -26,6 +26,9 @@ public class Constants {
   final static public String PORTLET_META_DATA_ENCODER = "/";
   final static public String PORTLET_HANDLE_ENCODER = "/";
 
+  final static public String PROPERTY_ENCODER = "property:";
+
+
   public static final String PORTAL_CONTEXT = PARAMETER_ENCODER + "ctx";
   final static public String EXO_PORTAL_INFO = "javax.portlet.exo-portal-info"  ;
   public static final String PORTAL_ACTION = PARAMETER_ENCODER + "action";
