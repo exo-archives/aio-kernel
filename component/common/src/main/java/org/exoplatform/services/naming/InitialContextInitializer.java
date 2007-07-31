@@ -145,7 +145,5 @@ public class InitialContextInitializer {
   // for out-of-container testing
   public static void initialize(String name, Reference reference) throws NamingException {
     new InitialContextInitializer(name, reference);
-  }
-
-  
+  } 
 }
