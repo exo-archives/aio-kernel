@@ -1,5 +1,5 @@
 /***************************************************************************
- * Copyright 2001-2003 The eXo Platform SARL         All rights reserved.  *
+ * Copyright 2001-2007 The eXo Platform SAS         All rights reserved.  *
  * Please look at license.txt in info directory for more license detail.   *
  **************************************************************************/
 package org.exoplatform.container.util;
@@ -17,11 +17,7 @@ import org.exoplatform.container.configuration.ConfigurationManager;
 import org.exoplatform.container.xml.Component;
 import org.exoplatform.container.xml.ComponentLifecyclePlugin;
 import org.exoplatform.container.xml.ContainerLifecyclePlugin;
-/**
- * @author Tuan Nguyen (tuan08@users.sourceforge.net)
- * @since Oct 28, 2004
- * @version $Id: ContainerUtil.java 9894 2006-10-31 02:52:41Z tuan08 $
- */
+
 public class ContainerUtil {
   
   static public Constructor<?>[] getSortedConstructors(Class<?> clazz) {
@@ -55,10 +51,10 @@ public class ContainerUtil {
     }
     
     i = map.values().iterator();
-    while(i.hasNext()) {
-      URL url = (URL) i.next() ;
-      System.out.println("==> Add " + url);
-    }
+//    while(i.hasNext()) {
+//      URL url = (URL) i.next() ;
+//      System.out.println("==> Add " + url);
+//    }
     return map.values() ;
   }
   
