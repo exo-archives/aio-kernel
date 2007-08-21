@@ -10,15 +10,15 @@ import java.io.InputStream;
 public class ExoWurflSource /*implements WurflSource*/ {
 
 	public InputStream getWurflInputStream() {
-        ClassLoader cl = Thread.currentThread().getContextClassLoader() ;
-        java.net.URL wurflUrl = cl.getResource("conf/wurfl.xml") ;
-        try {
-            return wurflUrl.openStream();
-        }
-        catch (Exception e) {
-        	e.printStackTrace();
-    		return null;
-        }
+	  ClassLoader cl = Thread.currentThread().getContextClassLoader() ;
+	  java.net.URL wurflUrl = cl.getResource("conf/wurfl.xml") ;
+	  try {
+	    return wurflUrl.openStream();
+	  }
+	  catch (Exception e) {
+	    e.printStackTrace();
+	    return null;
+	  }
 	}
     
 	public InputStream getWurflPatchInputStream() {

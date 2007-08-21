@@ -70,7 +70,7 @@
       </value-param>
     </init-params>
   </component>
-
+  
   <import>1</import>
   <import>2</import>
   <remove-configuration>1</remove-configuration>

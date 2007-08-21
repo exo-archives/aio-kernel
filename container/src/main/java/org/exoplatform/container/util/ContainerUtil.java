@@ -18,6 +18,12 @@ import org.exoplatform.container.xml.Component;
 import org.exoplatform.container.xml.ComponentLifecyclePlugin;
 import org.exoplatform.container.xml.ContainerLifecyclePlugin;
 
+import org.picocontainer.defaults.ConstructorInjectionComponentAdapter;
+/**
+ * @author Tuan Nguyen (tuan08@users.sourceforge.net)
+ * @since Oct 28, 2004
+ * @version $Id: ContainerUtil.java 9894 2006-10-31 02:52:41Z tuan08 $
+ */
 public class ContainerUtil {
   
   static public Constructor<?>[] getSortedConstructors(Class<?> clazz) {
@@ -105,11 +111,23 @@ public class ContainerUtil {
       try {
         Class classType = loader.loadClass(type) ;
         if(key == null) {
-          container.registerComponentImplementation(classType) ;
+          if (component.isMultiInstance()) {
+            container.registerComponent(
+                new ConstructorInjectionComponentAdapter(classType, classType));
+            System.out.println("===>>> Thread local component " + classType.getName() + " registered.");
+          } else {
+            container.registerComponentImplementation(classType) ;
+          }
         } else {
           try {
             Class keyType = loader.loadClass(key) ;
-            container.registerComponentImplementation(keyType, classType) ;
+            if (component.isMultiInstance()) {
+              container.registerComponent(
+                  new ConstructorInjectionComponentAdapter(keyType, classType));  
+              System.out.println("===>>> Thread local component " + classType.getName() + " registered.");
+            } else {
+              container.registerComponentImplementation(keyType, classType) ;
+            }
           } catch (Exception ex) {
             container.registerComponentImplementation(key, classType) ;
           }

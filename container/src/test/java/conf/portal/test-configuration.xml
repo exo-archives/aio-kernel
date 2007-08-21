@@ -52,4 +52,14 @@
     <key>org.exoplatform.mocks.MockServiceB</key>
     <type>org.exoplatform.mocks.MockServiceBImp</type>
   </component> 
+
+  <component>
+    <type>org.exoplatform.container.test.MultibleComponent</type>
+		<multi-instance>true</multi-instance>
+  </component> 
+
+  <component>
+    <type>org.exoplatform.container.test.DefaultComponent</type>
+  </component> 
+
 </configuration>

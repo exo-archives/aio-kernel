@@ -59,7 +59,7 @@ public class ConfigurationManagerImpl implements ConfigurationManager {
   }
 
   public void addConfiguration(URL url) throws Exception {
-    //System.out.println("parse configuration: " + url) ;
+//    System.out.println("parse configuration: " + url) ;
     if (url == null)
       return;
     try {

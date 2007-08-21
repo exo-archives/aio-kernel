@@ -7,7 +7,6 @@
   <component>
     <key>MockService</key>
     <type>org.exoplatform.mocks.MockService</type>
-
     <component-plugins>
       <component-plugin>
         <name>internal.component.plugin.1</name>
@@ -23,7 +22,7 @@
         </init-params>
       </component-plugin>
     </component-plugins>
-    
+
     <!--
     <plugins>
       <plugin>

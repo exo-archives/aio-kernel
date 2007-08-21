@@ -22,6 +22,7 @@ public class Component {
   ArrayList<RulePlugin> rulePlugins ;
   InitParams initParams ;
   boolean showDeployInfo = false ;
+  boolean multiInstance = false;
    
   public String getKey() {  return key; }
   public void setKey(String s) {   this.key = s; }
@@ -55,4 +56,7 @@ public class Component {
   public boolean getShowDeployInfo() {  return showDeployInfo ; }
   public void    setShowDeployInfo(boolean b) { showDeployInfo = b ; }
   
+  public boolean isMultiInstance() {  return multiInstance; }
+  public void    setMultiInstance(boolean b) { multiInstance = b ; }
+
 }

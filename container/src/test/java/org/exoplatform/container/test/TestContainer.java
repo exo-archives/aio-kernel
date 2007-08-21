@@ -63,6 +63,43 @@ public class TestContainer extends BasicTestCase {
     mservice.executeRule(list, true) ;
   }
   
+  public void testComponent2() throws Exception  {
+    System.out.println("-------------------------MULTIBLE COMPONENT-------------------------") ;
+    RootContainer rootContainer = RootContainer.getInstance() ;
+    PortalContainer pcontainer = (PortalContainer)rootContainer.getComponentInstance("portal");
+    assertNotNull(pcontainer);
+    MultibleComponent c =
+      (MultibleComponent)pcontainer.getComponentInstanceOfType(MultibleComponent.class) ;
+    assertNotNull(c);
+    System.out.println("First instance MultibleComponent:  " + c.hash());
+    c = (MultibleComponent)pcontainer.getComponentInstanceOfType(MultibleComponent.class) ;
+    assertNotNull(c);
+    System.out.println("Second instance MultibleComponent: " + c.hash());
+    c = (MultibleComponent)pcontainer.getComponentInstanceOfType(MultibleComponent.class) ;
+    assertNotNull(c);
+    System.out.println("Third instance MultibleComponent:  " + c.hash());
+    System.out.println("-------------------------------------------------------------------------") ;
+  }
+
+  public void testComponent3() throws Exception  {
+    System.out.println("-------------------------DEFAULT COMPONENT-------------------------") ;
+    RootContainer rootContainer = RootContainer.getInstance() ;
+    PortalContainer pcontainer = (PortalContainer)rootContainer.getComponentInstance("portal");
+    assertNotNull(pcontainer);
+    DefaultComponent c =
+      (DefaultComponent)pcontainer.getComponentInstanceOfType(DefaultComponent.class) ;
+    assertNotNull(c);
+    System.out.println("First instance DefaultComponent:  " + c.hash());
+    c = (DefaultComponent)pcontainer.getComponentInstanceOfType(DefaultComponent.class) ;
+    assertNotNull(c);
+    System.out.println("Second instance DefaultComponent: " + c.hash());
+    c = (DefaultComponent)pcontainer.getComponentInstanceOfType(DefaultComponent.class) ;
+    assertNotNull(c);
+    System.out.println("Third instance DefaultComponent:  " + c.hash());
+    System.out.println("-------------------------------------------------------------------------") ;
+  }
+  
+  
 //  public void testClientType() throws Exception  {
 //  System.setProperty("javax.xml.parsers.DocumentBuilderFactory",
 //                      "javax.xml.parsers.DocumentBuilderFactory") ;

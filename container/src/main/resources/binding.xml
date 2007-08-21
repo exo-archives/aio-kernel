@@ -58,7 +58,7 @@
     <value name="type" field="type" style="attribute"/>
     <collection  add-method="addField" iter-method="getFieldIterator"/>
   </mapping>
-            
+	
  <!-- old container configuration mapping , This configuration will be removed in version 2.0-->
   <mapping name="property" class="org.exoplatform.container.xml.Property">
     <value name="name" style="attribute" field="name" />
@@ -164,6 +164,9 @@
     <value name="type"  field="type" />
     <value name="description" field="description" usage="optional" />
     <value name="show-deploy-info" field="showDeployInfo" usage="optional" />
+    <!-- threadlocal components -->
+    <value name="multi-instance" field="multiInstance" usage="optional"/>
+
     <collection name="component-plugins" field="componentPlugins" usage="optional"
                 item-type="org.exoplatform.container.xml.ComponentPlugin" />
     <collection name="rule-plugins" field="rulePlugins" usage="optional"
