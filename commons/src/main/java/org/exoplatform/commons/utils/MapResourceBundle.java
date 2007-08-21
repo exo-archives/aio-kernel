@@ -114,7 +114,7 @@ public class MapResourceBundle extends ResourceBundle implements Serializable {
   private String recursivedResolving(String key, Pattern pattern){                  
     String resolved = key;
     StringBuffer sB = new StringBuffer();
-    while(resolved.indexOf('#') != -1){  
+    while(resolved.indexOf("#{") != -1){  
       sB.setLength(0) ;
       int firstIndex = resolved.indexOf('#');      
       int lastIndex = resolved.indexOf('}', firstIndex);
