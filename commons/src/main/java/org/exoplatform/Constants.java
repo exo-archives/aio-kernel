@@ -8,19 +8,13 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Fri, May 30, 2003 @
  * @author : Mestrallet Benjamin
- * @email:   benjmestrallet@users.sourceforge.net
- * @author: Tuan Nguyen
- * @version: $Id: Constants.java,v 1.16 2004/07/13 02:46:20 tuan08 Exp $
- * @email: tuan08@yahoo.com
  */
 public class Constants {
   final static public List EMPTY_LIST = new java.util.ArrayList() ;
   final static public Map EMPTY_MAP = new java.util.HashMap() ;
   
   final static  public String AMPERSAND = "&amp;" ;
-  final static public String DEFAUL_PORTAL_OWNER = "exo";
   
   final static public String PARAMETER_ENCODER = "portal:";
   final static public String PORTLET_META_DATA_ENCODER = "/";
@@ -31,8 +25,12 @@ public class Constants {
 
   public static final String PORTAL_CONTEXT = PARAMETER_ENCODER + "ctx";
   final static public String EXO_PORTAL_INFO = "javax.portlet.exo-portal-info"  ;
-  public static final String PORTAL_ACTION = PARAMETER_ENCODER + "action";
+  
+  public static final String PORTAL_PROCESS_ACTION =  "action";
+  public static final String PORTAL_SERVE_RESOURCE = "resource";
+  public static final String PORTAL_RENDER = "render";
 
+  
   public static final String COMPONENT_PARAMETER = PARAMETER_ENCODER + "componentId";
   public static final String TYPE_PARAMETER = PARAMETER_ENCODER + "type";
   public static final String WINDOW_STATE_PARAMETER = PARAMETER_ENCODER + "windowState";
@@ -53,9 +51,7 @@ public class Constants {
   
   public static final String APPLICATION_RESOURCE = "javax.portlet.application-resource";
 
-
-  final static public String ADMIN_USER = "admin" ;
-  final static public String ANON_USER =  "demo" ;
+  final static public String ANON_USER =  "anon" ;  
 
   //portlets
   public static final String FORWARD_PAGE = "org.exoplatform.portal.portlet.ForwardPage" ;
@@ -63,6 +59,8 @@ public class Constants {
   public static final String USER_ROLE = "user" ;
   public static final String ADMIN_ROLE = "admin" ;
   public static final String GUEST_ROLE = "guest" ;
+  
+  public static final String DEFAUL_PORTAL_OWNER = "exo";
 
   //security
   public static final String PUBLIC = "public" ;
