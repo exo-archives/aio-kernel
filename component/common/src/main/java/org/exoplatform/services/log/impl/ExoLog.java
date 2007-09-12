@@ -20,22 +20,22 @@ import org.exoplatform.services.log.LogMessage;
  * Time: 21:47:20
  */
 public class ExoLog implements Log {
-  static public int FATAL = 0 ;
-  static public int ERROR = 1 ;
-  static public int WARN = 2 ;
-  static public int INFO = 3 ;
-  static public int DEBUG = 4 ;
-  static public int TRACE = 5 ;
+  static public int FATAL = 0;
+  static public int ERROR = 1;
+  static public int WARN = 2;
+  static public int INFO = 3;
+  static public int DEBUG = 4;
+  static public int TRACE = 5;
 
   static final String EXO_PREFIX = " - ";
   
-  static private Log log_ = LogFactory.getLog("eXo");  
+  static private Log log_ = LogFactory.getLog("eXo");
   
-  static public int LOG_BUFFER_SIZE = 2000 ;
-  static public int ERROR_BUFFER_SIZE = 1500 ;
+  static public int LOG_BUFFER_SIZE = 2000;
+  static public int ERROR_BUFFER_SIZE = 1500;
 
-  static private List logBuffer_ = new ArrayList(LOG_BUFFER_SIZE * 2) ;
-  static private List errorBuffer_ = new ArrayList(ERROR_BUFFER_SIZE * 2) ;
+  static private List logBuffer_;
+  static private List errorBuffer_;
   
   private String category_ ;
   private int level_ ;
@@ -164,27 +164,40 @@ public class ExoLog implements Log {
   public final boolean isWarnEnabled() { return level_ >= WARN; }
   
   private void addLogMessage(LogMessage lm) {
-    logBuffer_.add(lm) ;
-    if (logBuffer_.size() == LOG_BUFFER_SIZE * 2) {
+    getLogBuffer().add(lm) ;
+    if (getLogBuffer().size() == LOG_BUFFER_SIZE * 2) {
       List list = new ArrayList(LOG_BUFFER_SIZE * 2) ;
-      for (int i = LOG_BUFFER_SIZE; i < logBuffer_.size(); i++) {
-        list.add(logBuffer_.get(i)) ;
+      for (int i = LOG_BUFFER_SIZE; i < getLogBuffer().size(); i++) {
+        list.add(getLogBuffer().get(i)) ;
       }
       logBuffer_ = list ;
     }
     
     if (lm.getType() == ERROR) {
-      errorBuffer_.add(lm) ;
-      if (errorBuffer_.size() == ERROR_BUFFER_SIZE  * 2) {
+      getErrorBuffer().add(lm) ;
+      if (getErrorBuffer().size() == ERROR_BUFFER_SIZE  * 2) {
         List list = new ArrayList(ERROR_BUFFER_SIZE * 2) ;
-        for (int i = ERROR_BUFFER_SIZE; i < errorBuffer_.size(); i++) {
-          list.add(errorBuffer_.get(i)) ;
+        for (int i = ERROR_BUFFER_SIZE; i < getErrorBuffer().size(); i++) {
+          list.add(getErrorBuffer().get(i)) ;
         }
         errorBuffer_ = list ;
       }
     }
   }
 
-  static public List getLogBuffer() { return logBuffer_ ; }
-  static public List getErrorBuffer() { return errorBuffer_ ; }
+  static public List getLogBuffer() {
+    if (logBuffer_ == null) {
+      LOG_BUFFER_SIZE = 2000;
+      logBuffer_ = new ArrayList(LOG_BUFFER_SIZE * 2);
+    }
+    return logBuffer_;
+  }
+
+  static public List getErrorBuffer() {
+    if (errorBuffer_ == null) {
+      ERROR_BUFFER_SIZE = 1500;
+      errorBuffer_ = new ArrayList(ERROR_BUFFER_SIZE * 2);
+    }
+    return errorBuffer_;
+  }
 }
