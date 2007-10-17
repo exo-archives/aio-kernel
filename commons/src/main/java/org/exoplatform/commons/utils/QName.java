@@ -31,7 +31,7 @@ public class QName {
     this.namespace = (namespace != null ? namespace : "").intern();
     this.name = (name != null ? name : "").intern();
     
-    this.stringName = ("[" + this.namespace + "]" + this.name).intern();
+    this.stringName = ("[" + this.namespace + "]" + this.name); // .intern()
     this.hashCode = 31 * stringName.hashCode();
   }
 
