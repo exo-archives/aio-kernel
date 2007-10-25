@@ -252,6 +252,7 @@ public class StandaloneContainer extends ExoContainer implements SessionManagerC
   }
 
   private void initDefaultConf() throws Exception {
+    configurationManager.addConfiguration(ContainerUtil.getConfigurationURL("conf/configuration.xml")) ;
     configurationManager.addConfiguration(ContainerUtil.getConfigurationURL("conf/portal/configuration.xml")) ;
     try {
       configurationManager.addConfiguration("war:/conf/configuration.xml") ;
