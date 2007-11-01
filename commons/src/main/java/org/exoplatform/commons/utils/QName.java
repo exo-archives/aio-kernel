@@ -47,9 +47,14 @@ public class QName {
     return stringName;
   }
   
+  /** For toString() use */
+  protected String asString() {
+    return stringName;
+  }
+  
   @Override
   public String toString() {
-    return super.toString() + " (" + getAsString() + ")";
+    return super.toString() + " (" + asString() + ")";
   }
 
   @Override
