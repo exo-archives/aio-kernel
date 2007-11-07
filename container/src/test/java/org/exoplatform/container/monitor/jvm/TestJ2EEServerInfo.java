@@ -61,8 +61,8 @@ public class TestJ2EEServerInfo extends TestCase{
     
     initConfigurationURL(null);
     
-    System.out.println(configurationURL.getPath());
-    assertEquals(configurationURL.getPath(), confPath);
+    System.out.println(configurationURL.getFile());
+    assertEquals(configurationURL.getFile(), confPath);
     
     System.clearProperty(systemProperty);
   }
