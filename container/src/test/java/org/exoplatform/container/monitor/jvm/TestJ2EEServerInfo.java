@@ -14,34 +14,33 @@ import junit.framework.TestCase;
 import org.exoplatform.container.configuration.ConfigurationException;
 
 /**
- * Created by The eXo Platform SARL
- * Author : Alex Reshetnyak
- *          alex.reshetnyak@exoplatform.com.ua
- *          reshetnyak.alex@exoplatform.com.ua
- * Nov 7, 2007  
+ * Created by The eXo Platform SARL Author : Alex Reshetnyak
+ * alex.reshetnyak@exoplatform.com.ua reshetnyak.alex@exoplatform.com.ua Nov 7,
+ * 2007
  */
-public class TestJ2EEServerInfo extends TestCase{
-  
+public class TestJ2EEServerInfo extends TestCase {
+
   private static URL configurationURL = null;
-  
-  private File confFile;
-  
-  private String confPath;
-  
-  private String confDir;
-  
+
+  private File       confFile;
+
+  private String     confPath;
+
+  private String     confDir;
+
   public void setUp() {
     try {
       confFile = new File("exo-configuration.xml");
-      if (confFile.createNewFile()) { 
+      if (confFile.createNewFile()) {
         confPath = confFile.getAbsolutePath();
-        confDir = confPath.replace(System.getProperty("file.separator")+"exo-configuration.xml", "");
+        confDir = confPath.replace(System.getProperty("file.separator") + "exo-configuration.xml",
+            "");
       }
     } catch (IOException e) {
       e.printStackTrace();
     }
   }
-  
+
   public void testServerDirs() throws Exception {
     try {
       testServerDir("catalina.home");
@@ -55,55 +54,60 @@ public class TestJ2EEServerInfo extends TestCase{
       e.printStackTrace();
     }
   }
-  
+
   private void testServerDir(String systemProperty) throws Exception {
     System.setProperty(systemProperty, confDir);
-    
+
     initConfigurationURL(null);
-    
+
     System.out.println(configurationURL.getFile());
-    assertEquals(configurationURL.getFile(), confPath);
-    
+
+    if (!System.getProperty("file.separator").equals("/")) {
+      String sTemp = confPath.replace(System.getProperty("file.separator"), "/");
+      assertEquals(configurationURL.getFile(), sTemp);
+    } else
+      assertEquals(configurationURL.getFile(), confPath);
+
     System.clearProperty(systemProperty);
   }
-  
+
   public void tearDown() {
-   if(confFile.delete())
-     System.out.println("deleate ok!");
+    if (confFile.delete())
+      System.out.println("deleate ok!");
   }
-  
-  
-  private static void initConfigurationURL(ClassLoader configClassLoader) throws MalformedURLException, ConfigurationException {
+
+  private static void initConfigurationURL(ClassLoader configClassLoader)
+      throws MalformedURLException, ConfigurationException {
     // (1) set by setConfigurationURL or setConfigurationPath
     // or
     if (configurationURL == null) {
 
       // (2) exo-configuration.xml in AS (standalone) home directory
-      configurationURL = new URL("file:"
-            + (new J2EEServerInfo()).getServerHome() + "/exo-configuration.xml");
-      
+      configurationURL = new URL("file:" + (new J2EEServerInfo()).getServerHome()
+          + "/exo-configuration.xml");
+
       // (3) conf/exo-configuration.xml in war/ear(?)
-      if(!fileExists(configurationURL) && configClassLoader != null) {
+      if (!fileExists(configurationURL) && configClassLoader != null) {
         configurationURL = configClassLoader.getResource("conf/exo-configuration.xml");
       }
 
       // (4) conf/standalone/configuration.xml in jar
-      // Note: this option may be suitable for test only as there can be more than
+      // Note: this option may be suitable for test only as there can be more
+      // than
       // one jars with conf/standalone/configuration.xml file
-/*
-      if(!fileExists(configurationURL)) {
-        configurationURL = Thread.currentThread().getContextClassLoader().getResource("conf/standalone/configuration.xml");
-
-        if (configurationURL == null)
-          throw new ConfigurationException(
-            "No StandaloneContainer config found. Check if conf/standalone/configuration.xml exists !");
-      }
-*/
-//      container.getContext().setAttribute(CONFIGURATION_URL_ATTR, configurationURL);
+      /*
+       * if(!fileExists(configurationURL)) { configurationURL =
+       * Thread.currentThread().getContextClassLoader().getResource("conf/standalone/configuration.xml");
+       * if (configurationURL == null) throw new ConfigurationException( "No
+       * StandaloneContainer config found. Check if
+       * conf/standalone/configuration.xml exists !"); }
+       */
+      // container.getContext().setAttribute(CONFIGURATION_URL_ATTR,
+      // configurationURL);
     }
 
   }
-  
+
   private static boolean fileExists(URL url) {
     try {
       url.openStream().close();
