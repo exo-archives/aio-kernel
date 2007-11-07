@@ -73,7 +73,7 @@ public class TestJ2EEServerInfo extends TestCase {
 
   public void tearDown() {
     if (confFile.delete())
-      System.out.println("deleate ok!");
+      System.out.println("delete ok!");
   }
 
   private static void initConfigurationURL(ClassLoader configClassLoader)
