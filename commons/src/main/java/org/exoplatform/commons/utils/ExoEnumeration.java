@@ -18,7 +18,7 @@ import java.util.Enumeration;
  * @since Nov 9, 2003 4:01:29 PM
  */
 public class ExoEnumeration implements Enumeration {
-  private Iterator  iterator_ ;
+  private Iterator iterator_ ;
 
   public ExoEnumeration(Iterator i) {
     iterator_ = i ;

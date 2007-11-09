@@ -71,7 +71,7 @@ public class IOUtil {
     return getStreamContentAsBytes(is) ;
   }
 
-	static public  byte[] serialize(Object obj) throws Exception {
+	static public byte[] serialize(Object obj) throws Exception {
 	  //long start = System.currentTimeMillis() ;
 	  ByteArrayOutputStream bytes = new  ByteArrayOutputStream() ;
 	  ObjectOutputStream out = new ObjectOutputStream(bytes);
