@@ -54,13 +54,6 @@ public class TestContainer extends BasicTestCase {
     MockService mservice = (MockService)rootContainer.getComponentInstance("MockService") ;
     assertTrue(mservice != null);
     assertTrue(mservice.getPlugins().size() == 2 ) ;
-    
-    List list = new ArrayList() ;
-    list.add(new State( "A" ));
-    list.add(new State( "B" ));
-    list.add(new State( "C" ));
-    list.add(new State( "D" ));
-    mservice.executeRule(list, true) ;
   }
   
   public void testComponent2() throws Exception  {

@@ -17,14 +17,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.exoplatform.container.component.ComponentPlugin;
-import org.exoplatform.container.component.RulePlugable;
-import org.exoplatform.container.component.RulePlugin;
 import org.exoplatform.container.xml.InitParams;
 
-public class MockService implements  RulePlugable { 
+public class MockService { 
   Map plugins_ = new HashMap() ;
   Map listeners_ = new HashMap() ;
-  RulePlugin rplugin ;
   
   public MockService(InitParams params) {
     System.out.println("MockService constructor, init params: " + params);
@@ -46,13 +43,4 @@ public class MockService implements  RulePlugable {
 
   public Collection getPlugins() {  return plugins_.values() ; }
 
-
-  
-  public void addRule(RulePlugin plugin) { 
-    rplugin =  plugin ;
-  }
-  
-  public  void  executeRule(Collection facts, boolean dynamic) throws Exception {
-    rplugin.execute(facts, dynamic) ;
-  }
 }

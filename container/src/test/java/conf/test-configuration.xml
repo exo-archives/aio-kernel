@@ -55,22 +55,6 @@
     </listeners>
     -->
 
-    <rule-plugins>
-      <rule-plugin>
-        <name>rule.plugin</name>
-        <type>org.exoplatform.container.component.DroolRulePlugin</type>
-        <rule-declaration>jar:/org/exoplatform/container/test/state.java.drl</rule-declaration>
-        <description>description</description>
-        <init-params>
-          <value-param>
-            <name>name</name>
-            <description>description</description>
-            <value>a value</value>
-          </value-param>
-        </init-params>
-      </rule-plugin>
-    </rule-plugins>
-
     <init-params>
       <value-param>
         <name>new.user.configuration</name>

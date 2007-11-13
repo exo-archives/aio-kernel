@@ -269,10 +269,4 @@ public class StandaloneContainer extends ExoContainer implements SessionManagerC
     ContainerUtil.addComponents(this, configurationManager);
   }
 
-  private void populateGroovy(URL conf) throws Exception {
-    configurationManager.addConfiguration(conf);
-    configurationManager.processRemoveConfiguration();
-  //ContainerUtil.populateGroovy(this, configurationManager);
-  }
-
 }

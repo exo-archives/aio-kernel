@@ -46,22 +46,6 @@
       </component-plugin>
     </component-plugins>
 
-    <rule-plugins>
-      <rule-plugin>
-        <name>name plugin 1</name>
-        <type>class.type</type>
-        <rule-declaration>a.url</rule-declaration>
-        <description>description</description>
-        <init-params>
-          <value-param>
-            <name>name</name>
-            <description>description</description>
-            <value>a value</value>
-          </value-param>
-        </init-params>
-      </rule-plugin>
-    </rule-plugins>
-
     <init-params>
       <value-param>
         <name>name</name>

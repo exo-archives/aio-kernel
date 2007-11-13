@@ -12,14 +12,9 @@
  */
 package org.exoplatform.mocks;
 
-import org.exoplatform.container.component.RulePlugable;
-import org.exoplatform.container.component.RulePlugin;
-
-
-public class MockServiceAImp implements MockServiceA, RulePlugable {
+public class MockServiceAImp implements MockServiceA {
 
   MockServiceB service;
-  RulePlugin rplugin ;
 
   public MockServiceAImp(MockServiceB service) {
     System.out.println("MockServiceAImp constructor");
@@ -33,9 +28,5 @@ public class MockServiceAImp implements MockServiceA, RulePlugable {
 
   public void testArguments(String test, int num) {
     System.out.println("testArguments, test = " + test + ", num = " + num);
-  }
-  
-  public void addRule(RulePlugin plugin) {
-    rplugin =  plugin ;
   }
 }

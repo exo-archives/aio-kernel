@@ -19,7 +19,6 @@ public class Component {
   ArrayList plugins ;
   ArrayList<ComponentPlugin> componentPlugins ;
   ArrayList listeners ;
-  ArrayList<RulePlugin> rulePlugins ;
   InitParams initParams ;
   boolean showDeployInfo = false ;
   boolean multiInstance = false;
@@ -46,9 +45,6 @@ public class Component {
   
   public List getListeners() {   return listeners; }
   public void setListeners(ArrayList list) { listeners = list; }
-  
-  public List<RulePlugin> getRulePlugins() {   return rulePlugins; }
-  public void setRulePlugins(ArrayList<RulePlugin> list) { rulePlugins = list; }
   
   public InitParams getInitParams() {  return initParams; }
   public void setInitParams(InitParams ips) { initParams = ips; }

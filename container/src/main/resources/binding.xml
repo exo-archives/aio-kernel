@@ -123,15 +123,6 @@
                get-method="getInitParams" set-method="setInitParams"/>
   </mapping>
 
-  <mapping name="rule-plugin" class="org.exoplatform.container.xml.RulePlugin">
-    <value name="name"  field="name" />
-    <value name="type"  field="type" />
-    <value name="rule-declaration"  field="ruleDeclaration" />
-    <value name="description" field="description" usage="optional" />
-    <structure map-as="org.exoplatform.container.xml.InitParams" usage="optional" 
-               get-method="getInitParams" set-method="setInitParams"/>
-  </mapping>
-
   <mapping name="external-component-plugins" class="org.exoplatform.container.xml.ExternalComponentPlugins">
     <value name="target-component"  field="targetComponent" />
     <collection item-type="org.exoplatform.container.xml.ComponentPlugin" field="componentPlugins"/>
@@ -169,8 +160,6 @@
 
     <collection name="component-plugins" field="componentPlugins" usage="optional"
                 item-type="org.exoplatform.container.xml.ComponentPlugin" />
-    <collection name="rule-plugins" field="rulePlugins" usage="optional"
-                item-type="org.exoplatform.container.xml.RulePlugin" />
     <structure map-as="org.exoplatform.container.xml.InitParams" usage="optional" 
                get-method="getInitParams" set-method="setInitParams"/>
   </mapping>
