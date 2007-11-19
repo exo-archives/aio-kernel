@@ -16,6 +16,8 @@ import org.exoplatform.services.scheduler.Task;
  * Author : Hoa  Pham
  *          hoapham@exoplatform.com,phamvuxuanhoa@yahoo.com
  * Oct 7, 2005
+ * 
+ * @version $Id$
  */
 public class QueueTaskJob extends BaseJob {  
   public void  execute(JobContext  context) throws Exception {      

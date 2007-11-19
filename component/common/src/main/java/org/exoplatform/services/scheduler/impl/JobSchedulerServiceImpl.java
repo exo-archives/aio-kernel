@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
 
+import org.exoplatform.container.StandaloneContainer;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.container.xml.PortalContainerInfo;
 import org.exoplatform.services.scheduler.CronJob;
@@ -35,11 +36,13 @@ import org.quartz.TriggerListener;
  * Author : Hoa  Pham
  *          hoapham@exoplatform.com
  * Oct 5, 2005
+ * 
+ * @version $Id$
  */
 public class JobSchedulerServiceImpl implements JobSchedulerService, Startable {
-	private Scheduler scheduler_ ;
-  private String containerName_ ;
-  private QueueTasks qtasks_ ;
+	private final Scheduler scheduler_ ;
+  private final String containerName_ ;
+  private final QueueTasks qtasks_ ;
 	
 	public JobSchedulerServiceImpl(PortalContainerInfo pinfo, 
                                  QuartzSheduler quartzSchduler,
@@ -48,6 +51,18 @@ public class JobSchedulerServiceImpl implements JobSchedulerService, Startable {
     containerName_ = pinfo.getContainerName() ;
     qtasks_ =  qtasks ;
 	}
+	
+	/**
+	 * For run in Standalone container
+	 * 
+	 * @param quartzSchduler
+	 * @param qtasks
+	 */
+	public JobSchedulerServiceImpl(QuartzSheduler quartzSchduler, QueueTasks qtasks) {
+    scheduler_ = quartzSchduler.getQuartzSheduler();
+    containerName_ = "Standalone";
+    qtasks_ = qtasks;
+  }
 	
 	public void queueTask(Task task) {
 	  qtasks_.add(task) ;

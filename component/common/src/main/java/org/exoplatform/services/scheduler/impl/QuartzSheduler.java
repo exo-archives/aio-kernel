@@ -14,6 +14,8 @@ import org.quartz.impl.StdSchedulerFactory;
  * Author : Tuan Nguyen
  *          tuan08@users.sourceforge.net
  * Dec 13, 2005
+ * 
+ * @version $Id$
  */
 public class QuartzSheduler implements Startable {
   private Scheduler scheduler_ ;
