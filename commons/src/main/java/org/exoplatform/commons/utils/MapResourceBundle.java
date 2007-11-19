@@ -41,14 +41,13 @@ public class MapResourceBundle extends ResourceBundle implements Serializable {
     Enumeration e = rB.getKeys();
     while (e.hasMoreElements()) {
       String s = (String) e.nextElement();
-      Object value = rB.getObject(s);      
       try {        
-        String[] newArray = rB.getStringArray(s);        
         if (props.get(s) == null) {
+          String[] newArray = rB.getStringArray(s);        
           props.put(s, newArray);
         }
       } catch (ClassCastException ex) {
-        props.put(s, value);
+        props.put(s, rB.getObject(s));
       }
     }
   }
