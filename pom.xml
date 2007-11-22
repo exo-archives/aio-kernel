@@ -50,7 +50,7 @@
           <skip>${test.skip}</skip>
           <useFile>false</useFile>
           <forkMode>pertest</forkMode><!--once , pertest -->
-          <testFailureIgnore>false</testFailureIgnore>
+          <testFailureIgnore>${exo.test.failure.ignore}</testFailureIgnore>
           <includes>
             <include implementation="java.lang.String">**/${test.classes}*.java</include>
           </includes>
@@ -61,7 +61,7 @@
 
   <profiles>
     <profile>
-      <id>default</id>  
+      <id>default</id>
       <activation>
         <property><name>default</name></property>
         <activeByDefault>true</activeByDefault>
