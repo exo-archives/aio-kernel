@@ -17,7 +17,7 @@ import org.picocontainer.PicoContainer;
 import org.picocontainer.PicoException;
 import org.picocontainer.defaults.DuplicateComponentKeyRegistrationException;
 /**
- * Created by The eXo Platform SARL
+ * Created by The eXo Platform SAS
  * Author : Mestrallet Benjamin
  *          benjmestrallet@users.sourceforge.net
  * Date: Jul 31, 2003

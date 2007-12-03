@@ -9,7 +9,7 @@ import org.exoplatform.services.log.impl.ExoLog;
 
 
 /**
- * Created by The eXo Platform SARL .
+ * Created by The eXo Platform SAS .
  * 
  * @author <a href="mailto:geaz@users.sourceforge.net">Gennady Azarenkov </a>
  * @version $Id: LogTest.java 5332 2006-04-29 18:32:44Z geaz $

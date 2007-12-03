@@ -4,7 +4,7 @@
  **/
 
 /**
- * Created by The eXo Platform SARL
+ * Created by The eXo Platform SAS
  * Author : Mestrallet Benjamin
  *          benjmestrallet@users.sourceforge.net
  * Date: Aug 7, 2003

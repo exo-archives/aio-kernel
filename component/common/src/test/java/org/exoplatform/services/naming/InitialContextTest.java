@@ -14,7 +14,7 @@ import junit.framework.TestCase;
 import org.exoplatform.container.StandaloneContainer;
 
 /**
- * Created by The eXo Platform SARL .<br/>
+ * Created by The eXo Platform SAS .<br/>
  * 
  * Prerequisites: default-context-factory = org.exoplatform.services.naming.impl.SimpleContextFactory
  * 

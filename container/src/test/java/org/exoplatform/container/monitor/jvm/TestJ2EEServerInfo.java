@@ -14,7 +14,7 @@ import junit.framework.TestCase;
 import org.exoplatform.container.configuration.ConfigurationException;
 
 /**
- * Created by The eXo Platform SARL Author : Alex Reshetnyak
+ * Created by The eXo Platform SAS Author : Alex Reshetnyak
  * alex.reshetnyak@exoplatform.com.ua reshetnyak.alex@exoplatform.com.ua Nov 7,
  * 2007
  */

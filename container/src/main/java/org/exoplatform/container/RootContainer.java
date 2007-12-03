@@ -20,7 +20,7 @@ import org.exoplatform.container.util.ContainerUtil;
 import org.exoplatform.test.mocks.servlet.MockServletContext;
 
 /**
- * Created by The eXo Platform SARL
+ * Created by The eXo Platform SAS
  * Author : Tuan Nguyen
  *          tuan08@users.sourceforge.net
  * Date: Jul 21, 2004

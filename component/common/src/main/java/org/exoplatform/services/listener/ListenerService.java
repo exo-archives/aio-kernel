@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by The eXo Platform SARL
+ * Created by The eXo Platform SAS
  * Author : Nhu Dinh Thuan
  *          nhudinhthuan@exoplatform.com
  * Apr 6, 2007  

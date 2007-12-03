@@ -15,7 +15,7 @@ import org.objectweb.jotm.Current;
 
 
 /**
- * Created by The eXo Platform SARL .<br/>
+ * Created by The eXo Platform SAS .<br/>
  * 
  * Prerequisites: default-context-factory = org.exoplatform.services.naming.impl.SimpleContextFactory
  * 

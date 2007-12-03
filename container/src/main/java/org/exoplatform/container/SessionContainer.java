@@ -8,7 +8,7 @@ import java.util.HashMap;
 
 import org.exoplatform.container.client.ClientInfo;
 /**
- * Created by The eXo Platform SARL
+ * Created by The eXo Platform SAS
  * Author : Tuan Nguyen
  *          tuan08@users.sourceforge.net
  * Date: Jul 18, 2004
