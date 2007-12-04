@@ -34,7 +34,7 @@ public class QName {
   
   protected final String stringName;
   
-  protected int hashCode;
+  protected final int hashCode;
 
   // [PN] 05.02.07 use of canonical representation for the string values
   // see: http://java.sun.com/j2se/1.5.0/docs/api/java/lang/String.html#intern()  
@@ -42,8 +42,12 @@ public class QName {
     this.namespace = (namespace != null ? namespace : "").intern();
     this.name = (name != null ? name : "").intern();
     
-    this.stringName = ("[" + this.namespace + "]" + this.name); // .intern()
-    this.hashCode = 31 * stringName.hashCode();
+    this.stringName = ("[" + this.namespace + "]" + this.name);
+    
+    //this.hashCode = 31 * stringName.hashCode();
+    
+    int hk = 31 + this.namespace.hashCode();
+    this.hashCode = hk * 31 + this.name.hashCode();
   }
 
   public String getNamespace() {
