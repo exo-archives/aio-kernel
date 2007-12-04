@@ -46,6 +46,6 @@ public class MimeTypeResolver {
 	    if (value.equals(mimeType)&&ext.equals("")) ext = new String(key);
 	    else if (value.equals(mimeType)&&(!ext.equals(""))) return ext;
 	  }
-	  return "";
+	  return ext;
   }
 }
