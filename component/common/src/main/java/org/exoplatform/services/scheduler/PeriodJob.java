@@ -22,6 +22,7 @@ import java.util.Date;
 import org.exoplatform.commons.utils.ExoProperties;
 import org.exoplatform.container.component.BaseComponentPlugin;
 import org.exoplatform.container.xml.InitParams;
+import org.quartz.JobDataMap;
 
 /**
  * Created by The eXo Platform SAS
@@ -34,6 +35,7 @@ public class PeriodJob extends  BaseComponentPlugin {
   
   private PeriodInfo pjinfo_ ;
   private JobInfo jinfo_ ;
+  private JobDataMap jdatamap_ ;
   
   public PeriodJob(InitParams params) throws Exception {
     ExoProperties props =  params.getPropertiesParam("job.info").getProperties() ;
@@ -67,4 +69,6 @@ public class PeriodJob extends  BaseComponentPlugin {
   public JobInfo  getJobInfo() {  return jinfo_ ;  }
   
   public PeriodInfo  getPeriodInfo() { return pjinfo_ ;}
+  
+  public JobDataMap  getJobDataMap() {  return jdatamap_ ;  }
 }

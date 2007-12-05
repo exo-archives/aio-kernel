@@ -129,7 +129,7 @@ public class JobSchedulerServiceImpl implements JobSchedulerService, Startable {
 	
 	public void addPeriodJob(ComponentPlugin plugin)   throws Exception {
 		PeriodJob pjob = (PeriodJob) plugin ;    
-		addPeriodJob(pjob.getJobInfo(), pjob.getPeriodInfo()) ;
+		addPeriodJob(pjob.getJobInfo(), pjob.getPeriodInfo(), pjob.getJobDataMap()) ;
 	}
 	
 	public void addCronJob(JobInfo jinfo, String exp) throws Exception {
