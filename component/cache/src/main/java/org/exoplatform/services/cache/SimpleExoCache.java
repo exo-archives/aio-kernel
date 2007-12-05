@@ -30,11 +30,9 @@ public class SimpleExoCache  extends BaseExoCache {
   public SimpleExoCache() {   
   }
   
-  
   public SimpleExoCache(String name, int maxSize) {  
     super(name, maxSize) ; 
   }
-  
   
   protected ObjectCacheInfo createObjectCacheInfo(long expTime, Object objToCache) {
     return new CacheSoftReference(expTime, objToCache) ;

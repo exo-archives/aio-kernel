@@ -18,6 +18,7 @@ package org.exoplatform.services.cache;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 /**
  * Created by The eXo Platform SAS.
  * Author : Tuan Nguyen
@@ -36,6 +37,7 @@ public interface ExoCache  {
   public Object get(Serializable name) throws Exception ;
   public Object remove(Serializable name) throws Exception ;
   public void   put(Serializable name, Object obj) throws Exception ;
+  public void   putMap(Map<Serializable, Object> objs) throws Exception ;
   public void   clearCache() throws Exception ;
   public void   select(CachedObjectSelector selector) throws Exception ;
   public int  getCacheSize() ;

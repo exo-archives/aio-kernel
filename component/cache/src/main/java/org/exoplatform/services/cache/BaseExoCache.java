@@ -22,6 +22,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 /**
  * Created by The eXo Platform SAS
  * Author : Tuan Nguyen
@@ -44,7 +45,7 @@ abstract public class BaseExoCache  extends LinkedHashMap implements ExoCache {
   
   private ArrayList<CacheListener> listeners_ ;
   
-  public BaseExoCache() {  maxSize_  = DEFAULT_MAX_SIZE ; }
+  public BaseExoCache() {  maxSize_  = DEFAULT_MAX_SIZE ;}
   
   public BaseExoCache(int maxSize) {   maxSize_  = maxSize ; }
   
@@ -72,7 +73,7 @@ abstract public class BaseExoCache  extends LinkedHashMap implements ExoCache {
   
   public int  getCacheSize()  { return size() ; }
   
-  public int  getMaxSize() { return maxSize_ ; }
+  public int  getMaxSize() { return maxSize_ ;}
   public void setMaxSize(int max) { maxSize_ = max ; }
   
   public long  getLiveTime() { return liveTime_ ; }
@@ -129,6 +130,23 @@ abstract public class BaseExoCache  extends LinkedHashMap implements ExoCache {
     ObjectCacheInfo ref = createObjectCacheInfo(expireTime, obj) ;
     onPut(name,obj) ;
     super.put(name, ref) ;
+  }
+  
+  /**
+   * For whole put of items set
+   */
+  synchronized public void putMap(Map<Serializable, Object> objs) throws Exception {
+    if(liveTime_ == 0) return ;
+    long expireTime = -1 ;
+    if(liveTime_ > 0) expireTime = System.currentTimeMillis() + liveTime_ ;
+    
+    for (Map.Entry<Serializable, Object> obje: objs.entrySet()) {
+      Object obj = obje.getValue();
+      Serializable name = (Serializable) obje.getKey(); 
+      ObjectCacheInfo ref = createObjectCacheInfo(expireTime, obj) ;
+      onPut(name, obj);
+      super.put(name, ref);
+    }
   }
   
   synchronized public void clearCache() throws Exception {
