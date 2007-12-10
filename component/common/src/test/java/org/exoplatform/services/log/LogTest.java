@@ -20,7 +20,7 @@ public class LogTest extends TestCase {
   
   public void setUp() throws Exception {
     
-    StandaloneContainer.setConfigurationPath("src/test/java/conf/standalone/test-configuration.xml");
+    StandaloneContainer.setConfigurationURL(getClass().getResource("/conf/standalone/test-configuration.xml").toString());
   	
     container = StandaloneContainer.getInstance();
   }
