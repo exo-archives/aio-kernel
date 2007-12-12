@@ -69,10 +69,10 @@ public class ContainerUtil {
     }
     
     i = map.values().iterator();
-    while(i.hasNext()) {
-      URL url = (URL) i.next() ;
-      System.out.println("==> Add " + url);
-    }
+//    while(i.hasNext()) {
+//      URL url = (URL) i.next() ;
+//      System.out.println("==> Add " + url);
+//    }
     return map.values() ;
   }
   
