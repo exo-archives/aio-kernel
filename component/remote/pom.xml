@@ -22,14 +22,16 @@
     <dependency>
       <groupId>javagroups</groupId>
       <artifactId>jgroups-all</artifactId>
-      <version>2.4</version>
+      <version>2.5.0</version>
+      <scope>compile</scope>
     </dependency>
 
     <dependency>
-	      <groupId>javagroups</groupId>
-	      <artifactId>concurrent</artifactId>
-	      <version>2.4</version>
-	      <scope>test</scope>
+      <groupId>javagroups</groupId>
+      <artifactId>concurrent</artifactId>
+      <version>2.4.1</version>
+      <scope>compile</scope>
     </dependency>
+
   </dependencies>
 </project>

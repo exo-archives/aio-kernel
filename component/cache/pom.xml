@@ -27,10 +27,18 @@
     </dependency>
 
     <dependency>
-		      <groupId>javagroups</groupId>
-		      <artifactId>concurrent</artifactId>
-		      <version>2.4</version>
-		      <scope>test</scope>
+      <groupId>javagroups</groupId>
+      <artifactId>jgroups-all</artifactId>
+      <version>2.5.0</version>
+      <scope>test</scope>
     </dependency>
+
+    <dependency>
+      <groupId>javagroups</groupId>
+      <artifactId>concurrent</artifactId>
+      <version>2.4.1</version>
+      <scope>test</scope>
+    </dependency>
+
   </dependencies>
 </project>

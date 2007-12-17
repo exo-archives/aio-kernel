@@ -82,10 +82,16 @@ public class RootContainer extends ExoContainer {
       PortalContainer.setInstance(pcontainer) ;
       ExoContainerContext.setCurrentContainer(pcontainer);
       ConfigurationManagerImpl cService = new ConfigurationManagerImpl(context) ;
-      cService.addConfiguration(ContainerUtil.getConfigurationURL("conf/portal/configuration.xml")) ;
+      try {
+        cService.addConfiguration(ContainerUtil.getConfigurationURL("conf/portal/configuration.xml")) ;
+      } catch(Exception ex){
+        System .err.println("ERROR: cannot add configuration conf/portal/configuration.xml. ServletContext: " + context);
+        ex.printStackTrace() ;
+      }
       try {
         cService.addConfiguration("war:/conf/configuration.xml") ;
       } catch(Exception ex){
+        System .err.println("ERROR: cannot add configuration war:/conf/configuration.xml. ServletContext: " + context);
         ex.printStackTrace() ;
       }
       cService.processRemoveConfiguration() ;
@@ -97,6 +103,7 @@ public class RootContainer extends ExoContainer {
       pcontainer.start() ;
       return pcontainer ;
     } catch (Exception ex) {
+      System .err.println("ERROR: cannot create portal container. ServletContext: " + context);
       ex.printStackTrace() ;
     }
     return null ;
@@ -128,7 +135,7 @@ public class RootContainer extends ExoContainer {
             String overrideConf = confDir + "/configuration.xml";
             File file = new File(overrideConf) ;
             if(file.exists()) {
-              service.addConfiguration("file:" + overrideConf) ;
+              service.addConfiguration("file:" + overrideConf) ;  
             }
             service.processRemoveConfiguration() ;
             singleton_.registerComponentInstance(ConfigurationManager.class, service) ;

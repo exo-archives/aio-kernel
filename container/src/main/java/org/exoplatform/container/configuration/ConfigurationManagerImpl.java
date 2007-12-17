@@ -42,23 +42,28 @@ import org.jibx.runtime.IUnmarshallingContext;
  */
 public class ConfigurationManagerImpl implements ConfigurationManager {
   final static public String WAR_CONF_LOCATION = "/WEB-INF";
+  
+  final static public String LOG_DEBUG_PROPERTY = "org.exoplatform.container.configuration.debug";
+  
+  final static public boolean LOG_DEBUG = System.getProperty(LOG_DEBUG_PROPERTY) != null;
 
-  protected Configuration configurations_;
+  protected Configuration    configurations_;
 
-  private ServletContext scontext_;
+  private ServletContext     scontext_;
 
-  private String contextPath = null;
+  private String             contextPath       = null;
 
   public ConfigurationManagerImpl(ServletContext context) {
     scontext_ = context;
   }
 
-  public Configuration getConfiguration() { return configurations_ ; }
-  
+  public Configuration getConfiguration() {
+    return configurations_;
+  }
+
   public void addConfiguration(String url) throws Exception {
     if (url == null)
       return;
-//    System. err.println(">>>>>>>>>>>>>>>>>>> add configuration file: " + url) ;
     addConfiguration(getURL(url));
   }
 
@@ -71,44 +76,52 @@ public class ConfigurationManagerImpl implements ConfigurationManager {
   }
 
   public void addConfiguration(URL url) throws Exception {
-//    System.out.println("parse configuration: " + url) ;
+    if (LOG_DEBUG)
+      System.out.println("Add configuration " + url);
     if (url == null)
       return;
     try {
       contextPath = (new File(url.toString())).getParent() + "/";
-      contextPath = contextPath.replaceAll("\\\\","/");
-    } catch(Exception e) { contextPath = null; }
+      contextPath = contextPath.replaceAll("\\\\", "/");
+    } catch (Exception e) {
+      contextPath = null;
+    }
     try {
       IBindingFactory bfact = BindingDirectory.getFactory(Configuration.class);
       IUnmarshallingContext uctx = bfact.createUnmarshallingContext();
-      Configuration conf = (Configuration)uctx.unmarshalDocument(url.openStream(), null);
-      if (configurations_ == null) configurations_ = conf;
-      else configurations_.mergeConfiguration(conf);
+      Configuration conf = (Configuration) uctx.unmarshalDocument(url.openStream(), null);
+      if (configurations_ == null)
+        configurations_ = conf;
+      else
+        configurations_.mergeConfiguration(conf);
       List urls = conf.getImports();
-      if(urls != null) {
+      if (urls != null) {
         for (int i = 0; i < urls.size(); i++) {
           String uri = (String) urls.get(i);
           URL urlObject = getURL(uri);
-          if(urlObject!=null){	  
-        	  InputStream is = urlObject.openStream();
-        	  conf = (Configuration)uctx.unmarshalDocument(is, null);
-        	  configurations_.mergeConfiguration(conf);   
-          }else{
-        	  System.err.println("WARNING: Couldn't process the URL for "+uri+" configuration file ignored ");
+          if (urlObject != null) {
+            InputStream is = urlObject.openStream();
+            conf = (Configuration) uctx.unmarshalDocument(is, null);
+            configurations_.mergeConfiguration(conf);
+            if (LOG_DEBUG)
+              System.out.println("\timport " + urlObject);
+          } else {
+            System.err.println("WARNING: Couldn't process the URL for " + uri + " configuration file ignored ");
           }
-        } 
+        }
       }
     } catch (Exception ex) {
-//      System .err.println("Error: " + ex.getMessage());
-//      System .err.println("Error: cannot process the configuration" + url);
-      ex.printStackTrace() ;
+      // System .err.println("Error: " + ex.getMessage());
+      System .err.println("ERROR: cannot process the configuration " + url);
+      ex.printStackTrace();
     }
   }
 
   public void processRemoveConfiguration() {
-    if(configurations_ == null) return;
+    if (configurations_ == null)
+      return;
     List list = configurations_.getRemoveConfiguration();
-    if(list != null) {
+    if (list != null) {
       for (int i = 0; i < list.size(); i++) {
         String type = (String) list.get(i);
         configurations_.removeConfiguration(type);
@@ -117,19 +130,19 @@ public class ConfigurationManagerImpl implements ConfigurationManager {
   }
 
   public Component getComponent(String service) throws Exception {
-    return configurations_.getComponent(service) ;
+    return configurations_.getComponent(service);
   }
-  
-  public Component getComponent(Class clazz) throws Exception  {
-    return configurations_.getComponent(clazz.getName()) ;
+
+  public Component getComponent(Class clazz) throws Exception {
+    return configurations_.getComponent(clazz.getName());
   }
-  
+
   public Collection getComponents() {
-    if(configurations_ == null) return null;
-    return configurations_.getComponents() ; 
+    if (configurations_ == null)
+      return null;
+    return configurations_.getComponents();
   }
-  
-  
+
   public URL getResource(String url, String defaultURL) throws Exception {
     return null;
   }
@@ -138,17 +151,17 @@ public class ConfigurationManagerImpl implements ConfigurationManager {
     return getURL(uri);
   }
 
-  public InputStream getInputStream(String url, String defaultURL)
-      throws Exception {
-    if (url == null) url = defaultURL;
+  public InputStream getInputStream(String url, String defaultURL) throws Exception {
+    if (url == null)
+      url = defaultURL;
     return getInputStream(url);
   }
 
   public InputStream getInputStream(String uri) throws Exception {
     URL url = getURL(uri);
     if (url == null) {
-      throw new IOException("Resource (" +
-          uri + ") could not be found or the invoker doesn't have adequate privileges to get the resource"); 
+      throw new IOException("Resource (" + uri
+          + ") could not be found or the invoker doesn't have adequate privileges to get the resource");
     }
     return url.openStream();
   }
@@ -180,7 +193,7 @@ public class ConfigurationManagerImpl implements ConfigurationManager {
   private String resolveSystemProperties(String input) {
     final int NORMAL = 0;
     final int SEEN_DOLLAR = 1;
-    final int IN_BRACKET = 2;    
+    final int IN_BRACKET = 2;
     if (input == null)
       return input;
     char[] chars = input.toCharArray();
@@ -196,14 +209,12 @@ public class ConfigurationManagerImpl implements ConfigurationManager {
         buffer.append(input.substring(start, i - 1));
         state = IN_BRACKET;
         start = i - 1;
-      }
-      else if (state == SEEN_DOLLAR)
+      } else if (state == SEEN_DOLLAR)
         state = NORMAL;
-      else if (c == '}' && state == IN_BRACKET) {        
+      else if (c == '}' && state == IN_BRACKET) {
         if (start + 2 == i) {
           buffer.append("${}");
-        }       
-        else {
+        } else {
           String value = null;
           String key = input.substring(start + 2, i);
           value = System.getProperty(key);
@@ -224,10 +235,10 @@ public class ConfigurationManagerImpl implements ConfigurationManager {
 
   }
 
-  public boolean isDefault(String value)  {
-     return value == null || value.length() == 0 || "default".equals(value) ;
+  public boolean isDefault(String value) {
+    return value == null || value.length() == 0 || "default".equals(value);
   }
-  
+
   protected String removePrefix(String prefix, String url) {
     return url.substring(prefix.length(), url.length());
   }
