@@ -9,7 +9,6 @@
   <modules>
     <module>container</module>
     <module>commons</module>
-
     <module>component/common</module>
     <module>component/remote</module>
     <module>component/cache</module>
@@ -48,20 +47,20 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
           <skip>${exo.test.skip}</skip>
-		  <useFile>${exo.test.use.file}</useFile>
-		  <forkMode>always</forkMode>
+          <useFile>${exo.test.use.file}</useFile>
+          <forkMode>always</forkMode>
           <testFailureIgnore>${exo.test.failure.ignore}</testFailureIgnore>
           <includes>
             <include implementation="java.lang.String">**/${test.classes}*.java</include>
           </includes>
           <excludes>
-		            <exclude>**/*$*</exclude>
-		            <exclude>**/SchedulerServiceTestBase.java</exclude>
-		            <exclude>**/TestCompressData.java</exclude><!-- need to add test resources -->
-		            <exclude>**/LogTest.java</exclude><!-- need to review test logic -->
-		  			<exclude>**/TestSimpleThreadPoolService.java</exclude><!-- no such service in *config*.xml -->
-		  			<exclude>**/TestCommunicationService.java</exclude><!--need to tune firewall-->
-		  			<exclude>**/TestNetService.java</exclude><!--need to tune firewall-->
+            <exclude>**/*$*</exclude>
+            <exclude>**/SchedulerServiceTestBase.java</exclude>
+            <exclude>**/TestCompressData.java</exclude><!-- need to add test resources -->
+            <exclude>**/LogTest.java</exclude><!-- need to review test logic -->
+            <exclude>**/TestSimpleThreadPoolService.java</exclude><!-- no such service in *config*.xml -->
+            <exclude>**/TestCommunicationService.java</exclude><!--need to tune firewall-->
+            <exclude>**/TestNetService.java</exclude><!--need to tune firewall-->
           </excludes>
         </configuration>
       </plugin>
