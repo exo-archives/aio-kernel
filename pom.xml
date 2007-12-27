@@ -198,8 +198,6 @@
         <exo.platform.version>trunk</exo.platform.version>
         <org.exoplatform.tool.version>trunk</org.exoplatform.tool.version>
         <org.exoplatform.kernel.version>trunk</org.exoplatform.kernel.version>
-        <test.classes>Test</test.classes>
-        <test.skip>true</test.skip>
       </properties>
     </profile>
   </profiles>
