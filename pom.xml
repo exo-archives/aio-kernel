@@ -65,7 +65,7 @@
           <testFailureIgnore>${exo.test.failure.ignore}</testFailureIgnore>
           <classesDirectory>${exo.test.classesdirectory}</classesDirectory>
           <includes>
-            <include implementation="java.lang.String">**/${test.classes}*.java</include>
+            <include>**/${exo.test.includes}.java</include>
           </includes>
           <excludes>
             <exclude>**/*$*</exclude>
