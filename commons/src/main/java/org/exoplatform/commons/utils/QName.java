@@ -40,11 +40,9 @@ public class QName {
   // see: http://java.sun.com/j2se/1.5.0/docs/api/java/lang/String.html#intern()  
   public QName(String namespace, String name) {
     this.namespace = (namespace != null ? namespace : "").intern();
-    this.name = (name != null ? name : "").intern();
+    this.name = (name != null ? name : ""); // [PN] 28.01.08 .intern()
     
     this.stringName = ("[" + this.namespace + "]" + this.name);
-    
-    //this.hashCode = 31 * stringName.hashCode();
     
     int hk = 31 + this.namespace.hashCode();
     this.hashCode = hk * 31 + this.name.hashCode();
