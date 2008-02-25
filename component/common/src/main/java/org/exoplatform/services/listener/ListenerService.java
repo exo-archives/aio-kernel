@@ -9,6 +9,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.exoplatform.services.log.ExoLogger;
+
 /**
  * Created by The eXo Platform SAS
  * Author : Nhu Dinh Thuan
@@ -18,6 +21,8 @@ import java.util.Map;
 public class ListenerService {
   
   private Map<String, List<Listener>> listeners_;
+  
+  private static Log log = ExoLogger.getLogger("kernel.ListenerService");
   
   /**
    * Construct a listener service.
@@ -75,6 +80,9 @@ public class ListenerService {
     List<Listener> list = listeners_.get(name);
     if(list == null)  return;
     for(Listener<S,D> listener : list) {
+      if (log.isDebugEnabled()) {
+        log.debug("broadcasting event " + name + " on " + listener.getName());
+      }
       listener.onEvent(new Event<S, D>(name, source, data)); 
     }
   }
