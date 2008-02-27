@@ -3,7 +3,7 @@
     <groupId>org.exoplatform.kernel</groupId>
     <artifactId>config</artifactId>
     <version>trunk</version>
-  </parent> 
+  </parent>
 
   <modelVersion>4.0.0</modelVersion>
   <artifactId>exo.kernel.component.command</artifactId>
@@ -13,7 +13,7 @@
   <description>exoplatform command services implementation</description>
 
   <dependencies>
-    
+
     <dependency>
       <groupId>org.exoplatform.kernel</groupId>
       <artifactId>exo.kernel.component.common</artifactId>
@@ -26,6 +26,12 @@
       <artifactId>commons-chain</artifactId>
       <version>1.0</version>
       <scope>compile</scope>
+      <exclusions>
+	          <exclusion>
+	            <groupId>xml-apis</groupId>
+	            <artifactId>xml-apis</artifactId>
+	          </exclusion>
+      </exclusions>
     </dependency>
-  </dependencies>   
+  </dependencies>
 </project>
