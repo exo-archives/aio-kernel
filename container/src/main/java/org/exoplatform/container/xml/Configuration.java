@@ -94,8 +94,24 @@ public class Configuration {
   }
   
   public void addExternalComponentPlugins(Object o) {
-    ExternalComponentPlugins eps = (ExternalComponentPlugins) o ;
-    externalComponentPlugins_.put(eps.getTargetComponent(), eps) ;
+    
+    if(o != null) {
+      ExternalComponentPlugins eps = (ExternalComponentPlugins) o ;
+      
+      // Retrieve potential existing external component
+      // plugins with same target component.
+      String targetComponent = eps.getTargetComponent();
+      ExternalComponentPlugins foundExternalComponentPlugins =
+        (ExternalComponentPlugins) externalComponentPlugins_.get(targetComponent) ;
+  
+      if(foundExternalComponentPlugins == null) {
+        // No external component plugins found. Create a new entry.
+        externalComponentPlugins_.put(targetComponent, eps) ;
+      } else {
+        // Found external component plugins. Add the specified one.
+        foundExternalComponentPlugins.merge(eps) ;
+      }
+    }
   }
   
   public Iterator getExternalComponentPluginsIterator() { 
