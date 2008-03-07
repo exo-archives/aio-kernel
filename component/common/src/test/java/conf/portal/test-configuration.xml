@@ -27,7 +27,9 @@
 	  	<description>set value listener</description>
 		</component-plugin>
   </external-component-plugins>
-       
+
+<!-- Disabled this as only one job is expected to be defined in the tests 
+
   <external-component-plugins>
     <target-component>org.exoplatform.services.scheduler.JobSchedulerService</target-component>
     <component-plugin>
@@ -71,7 +73,7 @@
       </init-params>          
     </component-plugin>    
   </external-component-plugins>
-  
+-->  
   <external-component-plugins>
     <target-component>org.exoplatform.services.scheduler.JobSchedulerService</target-component>
     <component-plugin>
@@ -94,5 +96,5 @@
         </properties-param>
       </init-params>    
     </component-plugin>
-  </external-component-plugins>      
+  </external-component-plugins>
 </configuration>
