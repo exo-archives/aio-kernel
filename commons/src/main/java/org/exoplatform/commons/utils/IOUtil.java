@@ -52,10 +52,9 @@ public class IOUtil {
 	}
 	
 	static public String getStreamContentAsString(InputStream is) throws Exception {
-    char buf[] = new char[is.available()];
-    BufferedReader in = new BufferedReader(new InputStreamReader(is, "UTF-8"));    
-    in.read(buf);   	
-	  return new String(buf) ;
+   	 byte buf[] = new byte[is.available()];
+        is.read(buf);
+        return new String (buf, "UTF-8");
 	}
 	
 	static public byte[] getStreamContentAsBytes(InputStream is) throws Exception {
