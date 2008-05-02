@@ -51,12 +51,12 @@ public class ListenerService {
   }
   
   /**
-   * TODO:  This method should be removed
-   * @param name
+   * @deprecated use the Listener name as the event name 
+   * @param eventName
    * @param listener
    */
-  public void addListener(String name, Listener listener) {
-    listener.setName(name);
+  public void addListener(String eventName, Listener listener) {
+    listener.setName(eventName);
     addListener(listener);
   }
   
