@@ -27,4 +27,8 @@ public class ValueParam extends Parameter {
   
   public String getValue() { return value ; }
   public void   setValue(String s) { value = s ; }
+  
+  public String toString() {
+    return value;
+  }
 }

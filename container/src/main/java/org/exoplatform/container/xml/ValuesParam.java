@@ -17,6 +17,7 @@
 package org.exoplatform.container.xml;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * Jul 19, 2004 
@@ -34,5 +35,18 @@ public class ValuesParam extends  Parameter {
   public String getValue() {
    if(values.size() == 0) return null ;
    return (String) values.get(0) ;
+  }
+  
+  public String toString() {
+    Iterator it = values.iterator();
+    StringBuilder builder = new StringBuilder();
+    while (it.hasNext()) {
+      Object object = (Object) it.next();
+      builder.append(object);
+      if (it.hasNext()) {
+        builder.append(",");
+      }
+    }
+    return builder.toString();
   }
 }

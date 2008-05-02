@@ -43,4 +43,8 @@ public class ObjectParameter extends Parameter {
       throw t ;
     }
   }
+  
+  public String toString() {
+    return object.toString();
+  }
 }

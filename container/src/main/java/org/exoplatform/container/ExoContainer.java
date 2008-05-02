@@ -21,6 +21,8 @@ import javax.management.MBeanServer;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.exoplatform.container.component.ComponentLifecyclePlugin;
 import org.exoplatform.container.configuration.ConfigurationManager;
 import org.exoplatform.container.jmx.ExoContainerMBean;
@@ -40,6 +42,8 @@ import org.picocontainer.defaults.DefaultPicoContainer;
  * Time: 12:15:28 AM
  */
 public class ExoContainer extends DefaultPicoContainer {
+  
+  Log log = LogFactory.getLog(ExoContainer.class);
   
   private Map<String, ComponentLifecyclePlugin> componentLifecylePlugin_ = new HashMap<String, ComponentLifecyclePlugin>();
   private List<ContainerLifecyclePlugin> containerLifecyclePlugin_ = new ArrayList<ContainerLifecyclePlugin>();
@@ -109,6 +113,7 @@ public class ExoContainer extends DefaultPicoContainer {
   }
   
   public <T> T createComponent(Class<T> clazz, InitParams params) throws Exception {
+    log.info(clazz.getName() + " " + ((params!=null)?params:"") + " added to " + getContext().getName());    
     Constructor<?>[] constructors = ContainerUtil.getSortedConstructors(clazz) ;
     Class<?> unknownParameter = null;
     for(int k = 0; k < constructors.length; k++) {

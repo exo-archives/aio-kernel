@@ -50,4 +50,8 @@ public class PropertiesParam extends Parameter {
     }
     return list.iterator() ;
   }
+  
+  public String toString() {
+    return properties.toString();
+  }
 }
