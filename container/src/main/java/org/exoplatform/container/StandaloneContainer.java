@@ -61,10 +61,13 @@ public class StandaloneContainer extends ExoContainer implements SessionManagerC
   private SessionManager smanager_;
 
   private ConfigurationManagerImpl configurationManager;
+  
+  private MBeanServer mbeanServer ;
 
   private StandaloneContainer() {
     super(new MX4JComponentAdapterFactory(), null);
     configurationManager = new ConfigurationManagerImpl(null);
+    this.mbeanServer = MBeanServerFactory.createMBeanServer("exomx");
     this.registerComponentInstance(ConfigurationManager.class,
         configurationManager);
     registerComponentImplementation(SessionManagerImpl.class);
@@ -190,7 +193,7 @@ public class StandaloneContainer extends ExoContainer implements SessionManagerC
   }
 
   public MBeanServer getMBeanServer() {
-    return MBeanServerFactory.createMBeanServer("exomx");
+    return mbeanServer;
   }
 
   /**

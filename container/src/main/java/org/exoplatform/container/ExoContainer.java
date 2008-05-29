@@ -139,29 +139,38 @@ public class ExoContainer extends DefaultPicoContainer {
                         + " with parameter "+unknownParameter) ;
   }
   
-  public void manageMBean(Component component, String componentKey,  Object bean)  {
+  public void manageMBean(Component component, String componentKey, Object bean) {
     ObjectName name = null;
-    MBeanServer mbeanServer = getMBeanServer() ;
-    Object mbean = null;
-    try {      
-      name = asObjectName(component, componentKey);
-      mbean = new ExoContainerMBean(bean);
-      mbeanServer.registerMBean(mbean, name);
-    } catch (InstanceAlreadyExistsException e) {
-      try {               
-        mbeanServer.unregisterMBean(name);
-        mbeanServer.registerMBean(mbean, name);        
-      } catch (Exception e1) {
-        throw new RuntimeException("Failed to register MBean '" + name + " due to " + e.getMessage(), e);
-      }             
-    } catch (Exception  e) {
-      throw new RuntimeException("Failed to register MBean '" + name + " due to " + e.getMessage(), e);
+    MBeanServer mbeanServer = getMBeanServer();
+
+   Object mbean = null;
+
+    synchronized (mbeanServer) {
+      try {
+        name = asObjectName(component, componentKey);
+        mbean = new ExoContainerMBean(bean);
+        mbeanServer.registerMBean(mbean, name);
+      } catch (InstanceAlreadyExistsException e) {
+        try {
+
+          mbeanServer.unregisterMBean(name);
+          mbeanServer.registerMBean(mbean, name);
+
+        } catch (Exception e1) {
+          throw new RuntimeException("Failed to register MBean '" + name + " due to "
+              + e.getMessage(), e);
+        }
+      } catch (Exception e) {
+        throw new RuntimeException("Failed to register MBean '" + name + " due to "
+            + e.getMessage(), e);
+      }
+
     }
-    
   }
   
   /**
    * Ensures that the given componentKey is converted to a JMX ObjectName
+   * 
    * @param componentKey
    * @return an ObjectName based on the given componentKey
    */
