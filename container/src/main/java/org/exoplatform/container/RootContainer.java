@@ -82,18 +82,34 @@ public class RootContainer extends ExoContainer {
       PortalContainer.setInstance(pcontainer) ;
       ExoContainerContext.setCurrentContainer(pcontainer);
       ConfigurationManagerImpl cService = new ConfigurationManagerImpl(context) ;
+      
+      // add configs from services
       try {
         cService.addConfiguration(ContainerUtil.getConfigurationURL("conf/portal/configuration.xml")) ;
       } catch(Exception ex){
         System .err.println("ERROR: cannot add configuration conf/portal/configuration.xml. ServletContext: " + context);
         ex.printStackTrace() ;
       }
+      
+      // add configs from web apps
       try {
         cService.addConfiguration("war:/conf/configuration.xml") ;
       } catch(Exception ex){
         System .err.println("ERROR: cannot add configuration war:/conf/configuration.xml. ServletContext: " + context);
         ex.printStackTrace() ;
       }
+      
+      // add config from application server, $AH_HOME/exo-conf/portal/configuration.xml
+      String overrideConfig = singleton_.getServerEnvironment().getExoConfigurationDirectory() + "/portal/configuration.xml";
+      try {
+        File file = new File(overrideConfig) ;
+        if (file.exists())
+          cService.addConfiguration(file.toURI().toURL()) ;  
+      } catch(Exception ex){
+        System .err.println("ERROR: cannot add configuration " + overrideConfig + ". ServletContext: " + context);
+        ex.printStackTrace() ;
+      }
+      
       cService.processRemoveConfiguration() ;
       pcontainer.registerComponentInstance(ConfigurationManager.class, cService) ;
       pcontainer.initContainer() ;
