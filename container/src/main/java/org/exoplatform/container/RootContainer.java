@@ -100,7 +100,8 @@ public class RootContainer extends ExoContainer {
       }
       
       // add config from application server, $AH_HOME/exo-conf/portal/configuration.xml
-      String overrideConfig = singleton_.getServerEnvironment().getExoConfigurationDirectory() + "/portal/configuration.xml";
+      String overrideConfig = singleton_.getServerEnvironment().getExoConfigurationDirectory() 
+          + "/portal/" + pcontainer.getPortalContainerInfo().getContainerName() + "/configuration.xml";
       try {
         File file = new File(overrideConfig) ;
         if (file.exists())
