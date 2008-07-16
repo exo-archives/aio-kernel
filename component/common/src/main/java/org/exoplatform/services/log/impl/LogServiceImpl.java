@@ -30,6 +30,7 @@ import org.exoplatform.services.log.LogService;
 /**
  * Created by the Exo Development team. Author : Mestrallet Benjamin
  * benjmestrallet@users.sourceforge.net Date: 14 nov. 2003 Time: 20:40:57
+ * @deprecated to instanciate a logger use ExoLogger.getLogger()
  */
 public class LogServiceImpl implements LogService {
 

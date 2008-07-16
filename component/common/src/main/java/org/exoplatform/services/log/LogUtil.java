@@ -25,10 +25,15 @@ import org.exoplatform.container.ExoContainerContext;
  * @author: Tuan Nguyen
  * @email:   tuan08@users.sourceforge.net
  * @version: $Id: LogUtil.java 5332 2006-04-29 18:32:44Z geaz $
+ * @deprecated use ExoLogger instead
  */
 public class LogUtil {
 	static private Log defaultInstance_ = null ;
-	
+
+  /**
+   * @deprecated use ExoLogger
+   * @see ExoLogger#getLogger(String)
+   */
 	public static Log getLog(String category) {
 		ExoContainer manager  = ExoContainerContext.getTopContainer();
 		LogService service = (LogService) manager.getComponentInstanceOfType(LogService.class) ;
@@ -36,6 +41,10 @@ public class LogUtil {
 		return log ;
 	}
 	
+  /**
+   * @deprecated use ExoLogger
+   * @see ExoLogger#getLogger(Class)
+   */	
   public static Log getLog(Class clazz) {
     ExoContainer manager  = ExoContainerContext.getTopContainer();
     LogService service = (LogService) manager.getComponentInstanceOfType(LogService.class) ;   

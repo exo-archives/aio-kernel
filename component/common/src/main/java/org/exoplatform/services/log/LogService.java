@@ -26,6 +26,7 @@ import org.apache.commons.logging.Log;
  *          benjmestrallet@users.sourceforge.net
  * Date: 14 nov. 2003
  * Time: 20:19:45
+ * @deprecated use commons-logging through ExoLogger instead of LogService
  */
 public interface LogService {
 	final static public int FATAL = 0 ;
@@ -35,8 +36,19 @@ public interface LogService {
   final static public int DEBUG = 4 ;
   final static public int TRACE = 5 ;
 
+  
+  /**
+   * @deprecated use ExoLogger
+   * @see ExoLogger#getLogger(Class)
+   */
   public Log getLog(Class clazz);
+  
+  /**
+   * @deprecated use ExoLogger
+   * @see ExoLogger#getLogger(String)
+   */
   public Log getLog(String name);
+  
   public Collection getLogs() ;
     
   public int  getLogLevel(String name) throws Exception ;
