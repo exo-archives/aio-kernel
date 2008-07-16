@@ -22,6 +22,7 @@ import java.util.List;
  * @author Tuan Nguyen (tuan08@users.sourceforge.net)
  * @since Feb 21, 2005
  * @version $Id: CommunicationService.java 5799 2006-05-28 17:55:42Z geaz $
+ * @deprecated unused
  */
 public interface CommunicationService {
   
