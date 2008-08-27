@@ -64,9 +64,9 @@ public class StandaloneContainer extends ExoContainer implements SessionManagerC
   
   private MBeanServer mbeanServer ;
 
-  private StandaloneContainer() {
+  private StandaloneContainer(ClassLoader configClassLoader) {
     super(new MX4JComponentAdapterFactory(), null);
-    configurationManager = new ConfigurationManagerImpl(null);
+    configurationManager = new ConfigurationManagerImpl(configClassLoader);
     this.mbeanServer = MBeanServerFactory.createMBeanServer("exomx");
     this.registerComponentInstance(ConfigurationManager.class,
         configurationManager);
@@ -113,7 +113,7 @@ public class StandaloneContainer extends ExoContainer implements SessionManagerC
    */
   public static StandaloneContainer getInstance(ClassLoader configClassLoader, Object[][] components) throws Exception {
     if (container == null) {
-      container = new StandaloneContainer();
+      container = new StandaloneContainer(configClassLoader);
       if (useDefault)
         container.initDefaultConf();
       // initialize configurationURL

@@ -143,7 +143,7 @@ public class RootContainer extends ExoContainer {
         if(singleton_ == null) {
           try {
             singleton_ = new RootContainer() ;
-            ConfigurationManagerImpl service = new ConfigurationManagerImpl(null) ;
+            ConfigurationManagerImpl service = new ConfigurationManagerImpl() ;
             service.addConfiguration(ContainerUtil.getConfigurationURL("conf/configuration.xml")) ;
             if(System.getProperty("maven.exoplatform.dir") != null) {
               service.addConfiguration(ContainerUtil.getConfigurationURL("conf/test-configuration.xml")) ;

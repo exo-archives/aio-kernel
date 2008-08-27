@@ -51,10 +51,18 @@ public class ConfigurationManagerImpl implements ConfigurationManager {
 
   private ServletContext     scontext_;
 
+  private ClassLoader scontextClassLoader_;
+
   private String             contextPath       = null;
+
+  public ConfigurationManagerImpl() { }
 
   public ConfigurationManagerImpl(ServletContext context) {
     scontext_ = context;
+  }
+
+  public ConfigurationManagerImpl(ClassLoader loader) {
+    scontextClassLoader_ = loader;
   }
 
   public Configuration getConfiguration() {
@@ -176,11 +184,14 @@ public class ConfigurationManagerImpl implements ConfigurationManager {
       ClassLoader cl = Thread.currentThread().getContextClassLoader();
       return cl.getResource(path);
     } else if (url.startsWith("war:")) {
-      if (scontext_ == null) {
-        throw new Exception("unsupport war uri in this configuration service");
-      }
       String path = removePrefix("war:", url);
-      return scontext_.getResource(WAR_CONF_LOCATION + path);
+      if (scontext_ != null) {
+        return scontext_.getResource(WAR_CONF_LOCATION + path);
+      }
+      if (scontextClassLoader_ != null) {
+        return scontextClassLoader_.getResource(path);
+      }
+      throw new Exception("unsupport war uri in this configuration service");
     } else if (url.startsWith("file:")) {
       url = resolveSystemProperties(url);
       return new URL(url);
