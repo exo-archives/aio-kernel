@@ -16,60 +16,71 @@
  */
 package org.exoplatform.commons.utils;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 /**
- * Jul 20, 2004 
+ * Jul 20, 2004
+ * 
  * @author: Tuan Nguyen
- * @email:   tuan08@users.sourceforge.net
+ * @email: tuan08@users.sourceforge.net
  * @version: $Id: ExoProperties.java,v 1.1 2004/09/11 14:08:53 tuan08 Exp $
  */
-public class ExoProperties extends HashMap {
-	public ExoProperties() {  }
-  
-  public ExoProperties(int size) {  
-    super(size) ;
+public class ExoProperties extends HashMap<String, String> {
+  public ExoProperties() {
   }
-  
-  public String getProperty(String key) {	return (String) get(key) ; }
-  
-  public void setProperty(String key, String value) { put(key, value) ; }
-  
+
+  public ExoProperties(int size) {
+    super(size);
+  }
+
+  public String getProperty(String key) {
+    return (String) get(key);
+  }
+
+  public void setProperty(String key, String value) {
+    put(key, value);
+  }
+
   public void addPropertiesFromText(String text) {
-    String[] temp = text.split("\n") ;
-    for(int i = 0; i < temp.length; i++ ) {
-      temp[i] = temp[i].trim() ;
-      if(temp[i].length() > 0) {
-      	String[] value = temp[i].split("=") ;
-        if(value.length == 2)  	put(value[0].trim(), value[1].trim()) ;
+    String[] temp = text.split("\n");
+    for (int i = 0; i < temp.length; i++) {
+      temp[i] = temp[i].trim();
+      if (temp[i].length() > 0) {
+        String[] value = temp[i].split("=");
+        if (value.length == 2)
+          put(value[0].trim(), value[1].trim());
       }
     }
   }
-  
-  public String toText() {
-    StringBuffer b = new StringBuffer() ;
-    Set set = entrySet() ;
-    Iterator i = set.iterator() ;
-    while(i.hasNext()) {
-      Map.Entry entry = (Map.Entry) i.next() ;
-      b.append(entry.getKey()).append("=").append(entry.getValue()).append("\n") ;
-    }
-    return b.toString() ;
-  }
-  
 
-  
-  public String toXml() {
-    StringBuffer b = new StringBuffer() ;
-    b.append("<properties>") ;
-    Set set = entrySet() ;
-    Iterator i = set.iterator() ;
-    while(i.hasNext()) {
-      Map.Entry entry = (Map.Entry) i.next() ;
-      b.append("<property key=\"").append(entry.getKey()).append("\" value=\"").
-        append(entry.getValue()).append("\"/>");
+  public String toText() {
+    StringBuffer b = new StringBuffer();
+    Set<Map.Entry<String, String>> set = entrySet();
+    Iterator<Map.Entry<String, String>> i = set.iterator();
+    while (i.hasNext()) {
+      Map.Entry<String, String> entry = (Map.Entry<String, String>) i.next();
+      b.append(entry.getKey()).append("=").append(entry.getValue()).append("\n");
     }
-    b.append("</properties>") ;
-    return b.toString() ;
+    return b.toString();
+  }
+
+  public String toXml() {
+    StringBuffer b = new StringBuffer();
+    b.append("<properties>");
+    Set<Map.Entry<String, String>> set = entrySet();
+    Iterator<Map.Entry<String, String>> i = set.iterator();
+    while (i.hasNext()) {
+      Map.Entry<String, String> entry = (Map.Entry<String, String>) i.next();
+      b.append("<property key=\"")
+       .append(entry.getKey())
+       .append("\" value=\"")
+       .append(entry.getValue())
+       .append("\"/>");
+    }
+    b.append("</properties>");
+    return b.toString();
   }
 }

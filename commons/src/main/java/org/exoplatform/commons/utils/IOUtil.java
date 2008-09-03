@@ -16,7 +16,14 @@
  */
 package org.exoplatform.commons.utils;
 
-import java.io.* ;
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.URL;
 
 /**
@@ -27,79 +34,82 @@ import java.net.URL;
  */
 public class IOUtil {
   static public String getFileContenntAsString(File file, String encoding) throws Exception {
-    FileInputStream is = new FileInputStream(file) ;
-    return new String(getStreamContentAsBytes(is), encoding) ;
+    FileInputStream is = new FileInputStream(file);
+    return new String(getStreamContentAsBytes(is), encoding);
   }
-  
+
   static public String getFileContenntAsString(File file) throws Exception {
-    FileInputStream is = new FileInputStream(file) ;
-    return new String(getStreamContentAsBytes(is)) ;
+    FileInputStream is = new FileInputStream(file);
+    return new String(getStreamContentAsBytes(is));
   }
-  
+
   static public String getFileContenntAsString(String fileName, String encoding) throws Exception {
-    FileInputStream is = new FileInputStream(fileName) ;
-    return new String(getStreamContentAsBytes(is), encoding) ;
+    FileInputStream is = new FileInputStream(fileName);
+    return new String(getStreamContentAsBytes(is), encoding);
   }
-  
-	static public String getFileContenntAsString(String fileName) throws Exception {
-		FileInputStream is = new FileInputStream(fileName) ;
-		return new String(getStreamContentAsBytes(is)) ;
-	}
-	
-	static public byte[] getFileContentAsBytes(String fileName) throws Exception {
-		FileInputStream is = new FileInputStream(fileName) ;
-		return getStreamContentAsBytes(is) ;
-	}
-	
-	static public String getStreamContentAsString(InputStream is) throws Exception {
-   	 byte buf[] = new byte[is.available()];
-        is.read(buf);
-        return new String (buf, "UTF-8");
-	}
-	
-	static public byte[] getStreamContentAsBytes(InputStream is) throws Exception {
-    BufferedInputStream buffer = new BufferedInputStream(is);    
+
+  static public String getFileContenntAsString(String fileName) throws Exception {
+    FileInputStream is = new FileInputStream(fileName);
+    return new String(getStreamContentAsBytes(is));
+  }
+
+  static public byte[] getFileContentAsBytes(String fileName) throws Exception {
+    FileInputStream is = new FileInputStream(fileName);
+    return getStreamContentAsBytes(is);
+  }
+
+  static public String getStreamContentAsString(InputStream is) throws Exception {
+    byte buf[] = new byte[is.available()];
+    is.read(buf);
+    return new String(buf, "UTF-8");
+  }
+
+  static public byte[] getStreamContentAsBytes(InputStream is) throws Exception {
+    BufferedInputStream buffer = new BufferedInputStream(is);
     ByteArrayOutputStream output = new ByteArrayOutputStream();
-    byte[] data  = new byte[buffer.available()];      
+    byte[] data = new byte[buffer.available()];
     int available = -1;
-    while( (available = buffer.read(data)) > -1){
+    while ((available = buffer.read(data)) > -1) {
       output.write(data, 0, available);
-    }   
+    }
     return output.toByteArray();
-	}
-  
+  }
+
   static public String getResourceAsString(String resource) throws Exception {
     ClassLoader cl = Thread.currentThread().getContextClassLoader();
     URL url = cl.getResource(resource);
     InputStream is = url.openStream();
-    return getStreamContentAsString(is) ;
+    return getStreamContentAsString(is);
   }
-  
+
   static public byte[] getResourceAsBytes(String resource) throws Exception {
     ClassLoader cl = Thread.currentThread().getContextClassLoader();
     URL url = cl.getResource(resource);
     InputStream is = url.openStream();
-    return getStreamContentAsBytes(is) ;
+    return getStreamContentAsBytes(is);
   }
 
-	static public byte[] serialize(Object obj) throws Exception {
-	  //long start = System.currentTimeMillis() ;
-	  ByteArrayOutputStream bytes = new  ByteArrayOutputStream() ;
-	  ObjectOutputStream out = new ObjectOutputStream(bytes);
-	  out.writeObject(obj);
-	  out.close();
-	  byte[] ret = bytes.toByteArray() ;
-	  //long end = System.currentTimeMillis() ;
-	  return ret ;
-	}
+  @Deprecated
+  static public byte[] serialize(Object obj) throws Exception {
+    //long start = System.currentTimeMillis() ;
+    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+    ObjectOutputStream out = new ObjectOutputStream(bytes);
+    out.writeObject(obj);
+    out.close();
+    byte[] ret = bytes.toByteArray();
+    //long end = System.currentTimeMillis() ;
+    return ret;
+  }
 
-	static public Object deserialize(byte[] bytes) throws Exception {
-	  if (bytes == null) return null ;
-	  //long start = System.currentTimeMillis() ;
-	  ByteArrayInputStream is = new  ByteArrayInputStream(bytes) ;
-	  ObjectInputStream in = new ObjectInputStream(is);
-	  Object obj =  in.readObject() ;
-	  in.close();
-	  return obj ;
-	}
+  @Deprecated
+  static public Object deserialize(byte[] bytes) throws Exception {
+    if (bytes == null)
+      return null;
+    //long start = System.currentTimeMillis() ;
+    ByteArrayInputStream is = new ByteArrayInputStream(bytes);
+    ObjectInputStream in = new ObjectInputStream(is);
+    Object obj = in.readObject();
+    in.close();
+    return obj;
+  }
 }
