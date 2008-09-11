@@ -13,6 +13,8 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.component.ComponentLifecycle;
 import org.exoplatform.container.component.ComponentPlugin;
@@ -31,7 +33,7 @@ import org.picocontainer.defaults.AbstractComponentAdapter;
  */
 public class MX4JComponentAdapter extends AbstractComponentAdapter {
   private Object instance_ ;
-
+  private Log log = LogFactory.getLog(MX4JComponentAdapter.class);
   public MX4JComponentAdapter(Object key, Class implementation) {
     super(key, implementation) ;
   }
@@ -56,7 +58,7 @@ public class MX4JComponentAdapter extends AbstractComponentAdapter {
       
       instance_ = exocontainer.createComponent(getComponentImplementation(), params) ;
       
-      if(debug) print("==> create  component : " + instance_) ;
+      if(debug) log.debug("==> create  component : " + instance_) ;
       if(component != null && component.getComponentPlugins() != null) {
         addComponentPlugin(debug,instance_, component.getComponentPlugins(),exocontainer);
       }
@@ -67,7 +69,7 @@ public class MX4JComponentAdapter extends AbstractComponentAdapter {
       }
       //check  if component implement  the ComponentLifecycle 
       exocontainer.manageMBean(component,componentKey, instance_) ;
-      if(debug) print("==> add " + component + " to a mbean server") ;
+      if(debug) log.debug("==> add " + component + " to a mbean server") ;
       if(instance_ instanceof ComponentLifecycle) {
         ComponentLifecycle lc  = (ComponentLifecycle) instance_ ;
         lc.initComponent(exocontainer) ;
@@ -83,25 +85,28 @@ public class MX4JComponentAdapter extends AbstractComponentAdapter {
       ExoContainer container) throws Exception {
     if(plugins == null) return ;
     for(org.exoplatform.container.xml.ComponentPlugin plugin : plugins) {
+      
+      
+      try {
       Class clazz = Class.forName(plugin.getType()) ;
       ComponentPlugin cplugin = 
         (ComponentPlugin)container.createComponent(clazz, plugin.getInitParams()) ;
       cplugin.setName(plugin.getName()) ;
       cplugin.setDescription(plugin.getDescription()) ;
       clazz =  component.getClass() ;
-      try {
+
+
         Method m =  getSetMethod(clazz, plugin.getSetMethod()) ;
         Object[]  params = {cplugin} ;
         m.invoke(component,params) ;
-        if(debug) print("==> add component plugin: " + cplugin) ;
-      } catch (Exception ex) {
-//      System. err.println("Error while invoking set method : " + plugin.getSetMethod()+ 
-//      " of component : " + component.getClass().getName());
-        throw ex ;
-      }
+        if(debug) log.debug("==> add component plugin: " + cplugin) ;
+
 
       cplugin.setName(plugin.getName()) ;
       cplugin.setDescription(plugin.getDescription()) ;
+      } catch (Exception ex) {
+        log.error("Failed to instanciate plugin " + plugin.getName() + "for component " + component +  ": " + ex.getMessage());
+      }
     }
   }
 
@@ -122,7 +127,4 @@ public class MX4JComponentAdapter extends AbstractComponentAdapter {
 
   public void verify(PicoContainer container)  {  }
 
-  private void print(String message) {
-//  System .out.println(message) ;
-  }
 }
