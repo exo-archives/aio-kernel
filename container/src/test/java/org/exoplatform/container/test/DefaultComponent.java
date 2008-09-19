@@ -23,13 +23,13 @@ import org.exoplatform.mocks.MockService;
  * @version $Id: $
  */
 public class DefaultComponent {
-    
-    public DefaultComponent(MockService ms) {
-      System.out.println("(Constructor) MoskService in DefaultComponent: " + ms);
-    }
-    
-    public int hash() {
-      return this.hashCode();
-    }
+
+  public DefaultComponent(MockService ms) {
+    System.out.println("(Constructor) MoskService in DefaultComponent: " + ms);
+  }
+
+  public int hash() {
+    return this.hashCode();
+  }
 
 }

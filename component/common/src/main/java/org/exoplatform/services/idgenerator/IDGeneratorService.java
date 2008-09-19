@@ -25,9 +25,12 @@ import java.io.Serializable;
  */
 public interface IDGeneratorService {
   public static final int ID_LENGTH = 32;
-  
-  public Serializable generateID(Object o) ;
-  public String generateStringID(Object o)  ; 
-  public int   generatIntegerID(Object o)  ; 
-  public long   generateLongID(Object o)  ; 
+
+  public Serializable generateID(Object o);
+
+  public String generateStringID(Object o);
+
+  public int generatIntegerID(Object o);
+
+  public long generateLongID(Object o);
 }

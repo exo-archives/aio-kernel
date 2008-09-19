@@ -22,18 +22,18 @@ package org.exoplatform.commons.utils;
  * @version: $Id: ExoEnumeration.java,v 1.3 2004/07/13 02:46:19 tuan08 Exp $
  */
 
-import java.util.Iterator;
 import java.util.Enumeration;
+import java.util.Iterator;
 
 /**
  * @author Ove Ranheim (oranheim@users.sourceforge.net)
  * @since Nov 9, 2003 4:01:29 PM
  */
 public class ExoEnumeration implements Enumeration {
-  private Iterator iterator_ ;
+  private Iterator iterator_;
 
   public ExoEnumeration(Iterator i) {
-    iterator_ = i ;
+    iterator_ = i;
   }
 
   public boolean hasMoreElements() {

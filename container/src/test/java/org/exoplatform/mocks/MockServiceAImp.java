@@ -21,7 +21,7 @@ public class MockServiceAImp implements MockServiceA {
     this.service = service;
   }
 
-  public void methodServiceA(){
+  public void methodServiceA() {
     System.out.println("Method service A");
     service.methodServiceB();
   }

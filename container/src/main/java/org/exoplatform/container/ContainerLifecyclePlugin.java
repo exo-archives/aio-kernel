@@ -24,18 +24,24 @@ import org.exoplatform.container.xml.InitParams;
  * @version $Id: ContainerLifecyclePlugin.java 5799 2006-05-28 17:55:42Z geaz $
  */
 public interface ContainerLifecyclePlugin {
-  
-  public String getName() ;
-  public void   setName(String s) ;
-  
-  public String getDescription() ;
-  public void   setDescription(String s) ;
-  
-  public InitParams getInitParams() ;
-  public void  setInitParams(InitParams params) ; 
-  
-  public void  initContainer(ExoContainer container) throws Exception ;
-  public void  startContainer(ExoContainer container) throws Exception ;
-  public void  stopContainer(ExoContainer container) throws Exception ;
-  public void  destroyContainer(ExoContainer container) throws Exception ;
+
+  public String getName();
+
+  public void setName(String s);
+
+  public String getDescription();
+
+  public void setDescription(String s);
+
+  public InitParams getInitParams();
+
+  public void setInitParams(InitParams params);
+
+  public void initContainer(ExoContainer container) throws Exception;
+
+  public void startContainer(ExoContainer container) throws Exception;
+
+  public void stopContainer(ExoContainer container) throws Exception;
+
+  public void destroyContainer(ExoContainer container) throws Exception;
 }

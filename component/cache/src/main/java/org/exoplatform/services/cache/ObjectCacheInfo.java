@@ -17,12 +17,11 @@
 package org.exoplatform.services.cache;
 
 /**
- * Created by The eXo Platform SAS
- * Author : Tuan Nguyen
- *          tuan08@users.sourceforge.net
- * Sep 19, 2005
+ * Created by The eXo Platform SAS Author : Tuan Nguyen
+ * tuan08@users.sourceforge.net Sep 19, 2005
  */
 public interface ObjectCacheInfo {
-  public long getExpireTime() ;
-  public Object get() ;
+  public long getExpireTime();
+
+  public Object get();
 }

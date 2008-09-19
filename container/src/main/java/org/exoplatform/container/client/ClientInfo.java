@@ -22,13 +22,13 @@ package org.exoplatform.container.client;
  * @version $Id: ClientInfo.java 5799 2006-05-28 17:55:42Z geaz $
  */
 public interface ClientInfo {
-  public static ClientInfo DEFAULT = new MockClientInfo() ;
-  
-  public String getClientType()  ;
-  
-  public String getRemoteUser()  ;
-  
-  public String getIpAddress()  ;
+  public static ClientInfo DEFAULT = new MockClientInfo();
 
-  public String getClientName() ;
+  public String getClientType();
+
+  public String getRemoteUser();
+
+  public String getIpAddress();
+
+  public String getClientName();
 }

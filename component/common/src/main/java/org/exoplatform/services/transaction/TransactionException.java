@@ -18,7 +18,9 @@ package org.exoplatform.services.transaction;
 
 /**
  * Created by The eXo Platform SAS.
- * @author <a href="mailto:gennady.azarenkov@exoplatform.com">Gennady Azarenkov</a>
+ * 
+ * @author <a href="mailto:gennady.azarenkov@exoplatform.com">Gennady
+ *         Azarenkov</a>
  * @version $Id: TransactionException.java 5987 2006-06-05 10:14:23Z geaz $
  */
 

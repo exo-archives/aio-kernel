@@ -24,8 +24,6 @@ import junit.framework.TestCase;
 import org.exoplatform.container.StandaloneContainer;
 import org.exoplatform.services.command.impl.CommandService;
 
-
-
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -35,92 +33,89 @@ import org.exoplatform.services.command.impl.CommandService;
 public class MultiConfigServiceTest extends TestCase {
 
   private StandaloneContainer container;
-  
-  private static final String IS = "<catalog name='fromput'>"+
-  "<command name='put'"+
-  " className='org.exoplatform.services.command.TestCommand1'/>"+
-  "</catalog>";
 
-  
+  private static final String IS                             = "<catalog name='fromput'>"
+                                                                 + "<command name='put'"
+                                                                 + " className='org.exoplatform.services.command.TestCommand1'/>"
+                                                                 + "</catalog>";
+
   // amount of commands configured in multiple plugins
   // CHECK it if change test-multi-configuration.xml !!!
-  private final int NUMBER_OF_COMMANDS_IN_DEF = 4;
-  
-  private final int NUMBER_OF_COMMANDS_IN_CATALOG1 = 2; 
+  private final int           NUMBER_OF_COMMANDS_IN_DEF      = 4;
 
-  
+  private final int           NUMBER_OF_COMMANDS_IN_CATALOG1 = 2;
+
   public void setUp() throws Exception {
-    
+
     StandaloneContainer.setConfigurationPath("src/java/conf/standalone/test-multi-configuration.xml");
-  	
+
     container = StandaloneContainer.getInstance();
   }
-  
+
   /**
-   * Tests if multiple configuration is allowed 
+   * Tests if multiple configuration is allowed
+   * 
    * @throws Exception
    */
   public void testMultiConfig() throws Exception {
-    
-    CommandService cservice = (CommandService)container.getComponentInstanceOfType(CommandService.class);
+
+    CommandService cservice = (CommandService) container.getComponentInstanceOfType(CommandService.class);
     assertNotNull(cservice);
 
     assertTrue(cservice.getCatalogNames().hasNext());
-    
+
     Iterator commands = cservice.getCatalog().getNames();
-    int cnt=0;
-    while(commands.hasNext()) {
-      System.out.println(" command >>> "+commands.next());
+    int cnt = 0;
+    while (commands.hasNext()) {
+      System.out.println(" command >>> " + commands.next());
       cnt++;
     }
-    
+
     assertEquals(NUMBER_OF_COMMANDS_IN_DEF, cnt);
 
-    
     commands = cservice.getCatalog("catalog1").getNames();
-    cnt=0;
-    while(commands.hasNext()) {
-      System.out.println(" command(1) >>> "+commands.next());
+    cnt = 0;
+    while (commands.hasNext()) {
+      System.out.println(" command(1) >>> " + commands.next());
       cnt++;
     }
-    
+
     assertEquals(NUMBER_OF_COMMANDS_IN_CATALOG1, cnt);
 
   }
 
   public void testIfPutCatalogDoesNotRemoveCommands() throws Exception {
-    
-    CommandService cservice = (CommandService)container.getComponentInstanceOfType(CommandService.class);
+
+    CommandService cservice = (CommandService) container.getComponentInstanceOfType(CommandService.class);
     assertNotNull(cservice);
 
     assertTrue(cservice.getCatalogNames().hasNext());
     Iterator commands = cservice.getCatalog().getNames();
-    int cnt=0;
-    while(commands.hasNext()) {
-      System.out.println(" command before >>> "+commands.next());
+    int cnt = 0;
+    while (commands.hasNext()) {
+      System.out.println(" command before >>> " + commands.next());
       cnt++;
     }
-  
+
     ByteArrayInputStream is = new ByteArrayInputStream(IS.getBytes());
-    
+
     cservice.putCatalog(is);
 
     assertTrue(cservice.getCatalogNames().hasNext());
     commands = cservice.getCatalog().getNames();
-    cnt=0;
-    while(commands.hasNext()) {
-      System.out.println(" command after >>> "+commands.next());
+    cnt = 0;
+    while (commands.hasNext()) {
+      System.out.println(" command after >>> " + commands.next());
       cnt++;
     }
 
     commands = cservice.getCatalog("fromput").getNames();
-    cnt=0;
-    while(commands.hasNext()) {
-      System.out.println(" command fromput >>> "+commands.next());
+    cnt = 0;
+    while (commands.hasNext()) {
+      System.out.println(" command fromput >>> " + commands.next());
       cnt++;
     }
 
   }
-
 
 }

@@ -33,48 +33,49 @@ import org.exoplatform.container.util.ContainerUtil;
 
 /**
  * Created by The eXo Platform SAS .
- *
+ * 
  * @author <a href="mailto:gennady.azarenkov@exoplatform.com">Gennady Azarenkov
  *         </a>
  * @version $Id: StandaloneContainer.java 7168 2006-07-19 07:36:23Z peterit $
- *
- * Singletone, context independent Exo Container with one configuration entry point.
- * The configuration is set as follows:
- * - client calls setConfigurationURL() or setConfigurationPath method BEFORE getInstance()
- * - otherwise container in instantiation time looks for configuration.xml file in the "home" directory.
- *   the home directory it is AS server home in a case of AS env or just current directory (from where JVM is started) for standalone.
- *   See
+ *          Singletone, context independent Exo Container with one configuration
+ *          entry point. The configuration is set as follows: - client calls
+ *          setConfigurationURL() or setConfigurationPath method BEFORE
+ *          getInstance() - otherwise container in instantiation time looks for
+ *          configuration.xml file in the "home" directory. the home directory
+ *          it is AS server home in a case of AS env or just current directory
+ *          (from where JVM is started) for standalone. See
  */
 
 public class StandaloneContainer extends ExoContainer implements SessionManagerContainer {
 
-  private static final long serialVersionUID = 12L;
+  private static final long          serialVersionUID       = 12L;
 
-  private static final String CONFIGURATION_URL_ATTR = "configurationURL";
+  private static final String        CONFIGURATION_URL_ATTR = "configurationURL";
 
   private static StandaloneContainer container;
 
   // TODO use ONLY attribute from context instead
-  private static URL configurationURL = null;
-  private static boolean useDefault = true;
+  private static URL                 configurationURL       = null;
 
-  private SessionManager smanager_;
+  private static boolean             useDefault             = true;
 
-  private ConfigurationManagerImpl configurationManager;
-  
-  private MBeanServer mbeanServer ;
+  private SessionManager             smanager_;
+
+  private ConfigurationManagerImpl   configurationManager;
+
+  private MBeanServer                mbeanServer;
 
   private StandaloneContainer(ClassLoader configClassLoader) {
     super(new MX4JComponentAdapterFactory(), null);
     configurationManager = new ConfigurationManagerImpl(configClassLoader);
     this.mbeanServer = MBeanServerFactory.createMBeanServer("exomx");
-    this.registerComponentInstance(ConfigurationManager.class,
-        configurationManager);
+    this.registerComponentInstance(ConfigurationManager.class, configurationManager);
     registerComponentImplementation(SessionManagerImpl.class);
   }
 
   /**
    * Shortcut for getInstance(null, null)
+   * 
    * @return the StandaloneContainer instance
    * @throws Exception
    */
@@ -84,6 +85,7 @@ public class StandaloneContainer extends ExoContainer implements SessionManagerC
 
   /**
    * Shortcut for getInstance(configClassLoader, null)
+   * 
    * @return the StandaloneContainer instance
    * @throws Exception
    */
@@ -93,6 +95,7 @@ public class StandaloneContainer extends ExoContainer implements SessionManagerC
 
   /**
    * Shortcut for getInstance(null, components)
+   * 
    * @return the StandaloneContainer instance
    * @throws Exception
    */
@@ -101,11 +104,10 @@ public class StandaloneContainer extends ExoContainer implements SessionManagerC
   }
 
   /**
-   * A way to inject externally instantiated objects to container before it starts
-   *
-   * Object[][] components - an array of components in form:
-   * {{"name1", component1}, {"name2", component2}, ...}
-   *
+   * A way to inject externally instantiated objects to container before it
+   * starts Object[][] components - an array of components in form: {{"name1",
+   * component1}, {"name2", component2}, ...}
+   * 
    * @param configClassLoader
    * @param components
    * @return the StandaloneContainer instance
@@ -123,8 +125,7 @@ public class StandaloneContainer extends ExoContainer implements SessionManagerC
         container.registerArray(components);
       container.start();
       ExoContainerContext.setTopContainer(container);
-      System.setProperty("exo.standalone-container", StandaloneContainer.class
-          .getName());
+      System.setProperty("exo.standalone-container", StandaloneContainer.class.getName());
       System.out.println("StandaloneContainer initialized using:  " + configurationURL);
     }
     return container;
@@ -146,11 +147,12 @@ public class StandaloneContainer extends ExoContainer implements SessionManagerC
   }
 
   public static void addConfigurationURL(String url) throws MalformedURLException {
-    if((url == null) || (url.length() == 0))
+    if ((url == null) || (url.length() == 0))
       return;
     URL confURL = new URL(url);
-    configurationURL = fileExists(confURL)?confURL:null;
-//    container.getContext().setAttribute(CONFIGURATION_URL_ATTR, configurationURL);
+    configurationURL = fileExists(confURL) ? confURL : null;
+    // container.getContext().setAttribute(CONFIGURATION_URL_ATTR,
+    // configurationURL);
   }
 
   public static void setConfigurationURL(String url) throws MalformedURLException {
@@ -159,11 +161,12 @@ public class StandaloneContainer extends ExoContainer implements SessionManagerC
   }
 
   public static void addConfigurationPath(String path) throws MalformedURLException {
-    if((path == null) || (path.length() == 0))
+    if ((path == null) || (path.length() == 0))
       return;
     URL confURL = new File(path).getAbsoluteFile().toURL();
-    configurationURL = fileExists(confURL)?confURL:null;
-//    container.getContext().setAttribute(CONFIGURATION_URL_ATTR, configurationURL);
+    configurationURL = fileExists(confURL) ? confURL : null;
+    // container.getContext().setAttribute(CONFIGURATION_URL_ATTR,
+    // configurationURL);
   }
 
   public static void setConfigurationPath(String path) throws MalformedURLException {
@@ -173,7 +176,8 @@ public class StandaloneContainer extends ExoContainer implements SessionManagerC
 
   public SessionContainer createSessionContainer(String id) {
     SessionContainer scontainer = getSessionManager().getSessionContainer(id);
-    if(scontainer != null)   getSessionManager().removeSessionContainer(id);
+    if (scontainer != null)
+      getSessionManager().removeSessionContainer(id);
     scontainer = new SessionContainer(id, null);
     getSessionManager().addSessionContainer(scontainer);
     SessionContainer.setInstance(scontainer);
@@ -185,7 +189,7 @@ public class StandaloneContainer extends ExoContainer implements SessionManagerC
   }
 
   public List<SessionContainer> getLiveSessions() {
-  	return getSessionManager().getLiveSessions();
+    return getSessionManager().getLiveSessions();
   }
 
   public void removeSessionContainer(String sessionID) {
@@ -203,7 +207,8 @@ public class StandaloneContainer extends ExoContainer implements SessionManagerC
     return configurationURL;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
    * @see org.picocontainer.defaults.DefaultPicoContainer#stop()
    */
   public void stop() {
@@ -211,11 +216,10 @@ public class StandaloneContainer extends ExoContainer implements SessionManagerC
     ExoContainerContext.setTopContainer(null);
   }
 
-
   // -------------- Helpers ----------
 
-  public SessionManager  getSessionManager()  {
-    if(smanager_ == null)
+  public SessionManager getSessionManager() {
+    if (smanager_ == null)
       smanager_ = (SessionManager) this.getComponentInstanceOfType(SessionManager.class);
     return smanager_;
   }
@@ -231,50 +235,54 @@ public class StandaloneContainer extends ExoContainer implements SessionManagerC
 
   /**
    * implements strategy of choosing configuration for this container
+   * 
    * @throws MalformedURLException
    * @throws ConfigurationException
    */
-  private static void initConfigurationURL(ClassLoader configClassLoader) throws MalformedURLException, ConfigurationException {
+  private static void initConfigurationURL(ClassLoader configClassLoader) throws MalformedURLException,
+                                                                         ConfigurationException {
     // (1) set by setConfigurationURL or setConfigurationPath
     // or
     if (configurationURL == null) {
 
       // (2) exo-configuration.xml in AS (standalone) home directory
-      configurationURL = new URL("file:"
-            + (new J2EEServerInfo()).getServerHome() + "/exo-configuration.xml");
-      
+      configurationURL = new URL("file:" + (new J2EEServerInfo()).getServerHome()
+          + "/exo-configuration.xml");
+
       // (3) conf/exo-configuration.xml in war/ear(?)
-      if(!fileExists(configurationURL) && configClassLoader != null) {
+      if (!fileExists(configurationURL) && configClassLoader != null) {
         configurationURL = configClassLoader.getResource("conf/exo-configuration.xml");
       }
 
       // (4) conf/standalone/configuration.xml in jar
-      // Note: this option may be suitable for test only as there can be more than
+      // Note: this option may be suitable for test only as there can be more
+      // than
       // one jars with conf/standalone/configuration.xml file
-/*
-      if(!fileExists(configurationURL)) {
-        configurationURL = Thread.currentThread().getContextClassLoader().getResource("conf/standalone/configuration.xml");
-
-        if (configurationURL == null)
-          throw new ConfigurationException(
-            "No StandaloneContainer config found. Check if conf/standalone/configuration.xml exists !");
-      }
-*/
-//      container.getContext().setAttribute(CONFIGURATION_URL_ATTR, configurationURL);
+      /*
+       * if(!fileExists(configurationURL)) { configurationURL =
+       * Thread.currentThread
+       * ().getContextClassLoader().getResource("conf/standalone/configuration.xml"
+       * ); if (configurationURL == null) throw new ConfigurationException(
+       * "No StandaloneContainer config found. Check if conf/standalone/configuration.xml exists !"
+       * ); }
+       */
+      // container.getContext().setAttribute(CONFIGURATION_URL_ATTR,
+      // configurationURL);
     }
 
   }
 
   private void initDefaultConf() throws Exception {
-    configurationManager.addConfiguration(ContainerUtil.getConfigurationURL("conf/configuration.xml")) ;
-    configurationManager.addConfiguration(ContainerUtil.getConfigurationURL("conf/portal/configuration.xml")) ;
+    configurationManager.addConfiguration(ContainerUtil.getConfigurationURL("conf/configuration.xml"));
+    configurationManager.addConfiguration(ContainerUtil.getConfigurationURL("conf/portal/configuration.xml"));
     try {
-      configurationManager.addConfiguration("war:/conf/configuration.xml") ;
-    } catch(Exception ex){}
+      configurationManager.addConfiguration("war:/conf/configuration.xml");
+    } catch (Exception ex) {
+    }
   }
 
   private static URL configurationURL() {
-    return (URL)container.getContext().getAttribute(CONFIGURATION_URL_ATTR);
+    return (URL) container.getContext().getAttribute(CONFIGURATION_URL_ATTR);
   }
 
   private void populate(URL conf) throws Exception {

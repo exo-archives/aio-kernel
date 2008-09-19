@@ -22,10 +22,11 @@ package org.exoplatform.xml.object;
  * @version $Id: XMLKey.java 5799 2006-05-28 17:55:42Z geaz $
  */
 public class XMLKey extends XMLBaseObject {
-  
-  public XMLKey() {  }
-  
-  public XMLKey(Class objecttype , Object val) throws Exception {
-    super(objecttype , val) ;
+
+  public XMLKey() {
+  }
+
+  public XMLKey(Class objecttype, Object val) throws Exception {
+    super(objecttype, val);
   }
 }

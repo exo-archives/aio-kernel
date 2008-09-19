@@ -1,4 +1,4 @@
- /*
+/*
  * Copyright (C) 2003-2007 eXo Platform SAS.
  *
  * This program is free software; you can redistribute it and/or
@@ -29,21 +29,21 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * @author Benjamin Mestrallet
- * benjamin.mestrallet@exoplatform.com
+ * @author Benjamin Mestrallet benjamin.mestrallet@exoplatform.com
  */
 public class MapResourceBundle extends ResourceBundle implements Serializable {
-  
-  private final static String REGEXP = "#\\{.*\\}";
-  
-  private Map props = new HashMap();
-  private Locale locale;
-  
-  public MapResourceBundle(Locale l) {    
-    this.locale = l;
-  }  
 
-  public MapResourceBundle(ResourceBundle rB,  Locale l) {
+  private final static String REGEXP = "#\\{.*\\}";
+
+  private Map                 props  = new HashMap();
+
+  private Locale              locale;
+
+  public MapResourceBundle(Locale l) {
+    this.locale = l;
+  }
+
+  public MapResourceBundle(ResourceBundle rB, Locale l) {
     this.locale = l;
     initMap(rB);
   }
@@ -52,9 +52,9 @@ public class MapResourceBundle extends ResourceBundle implements Serializable {
     Enumeration e = rB.getKeys();
     while (e.hasMoreElements()) {
       String s = (String) e.nextElement();
-      try {        
+      try {
         if (props.get(s) == null) {
-          String[] newArray = rB.getStringArray(s);        
+          String[] newArray = rB.getStringArray(s);
           props.put(s, newArray);
         }
       } catch (ClassCastException ex) {
@@ -74,66 +74,67 @@ public class MapResourceBundle extends ResourceBundle implements Serializable {
   public Locale getLocale() {
     return this.locale;
   }
-  
-  public void add(String key, Object value){
+
+  public void add(String key, Object value) {
     props.put(key, value);
   }
-  
-  public void remove(String key){
+
+  public void remove(String key) {
     props.remove(key);
   }
-    
-  public void merge(ResourceBundle bundle){
+
+  public void merge(ResourceBundle bundle) {
     Enumeration e = bundle.getKeys();
     while (e.hasMoreElements()) {
       String s = (String) e.nextElement();
-      Object value = bundle.getObject(s);      
-      try {        
-        String[] newArray = bundle.getStringArray(s);        
+      Object value = bundle.getObject(s);
+      try {
+        String[] newArray = bundle.getStringArray(s);
         if (props.get(s) == null) {
           props.put(s, newArray);
         }
       } catch (ClassCastException ex) {
         props.put(s, value);
       }
-    }    
-  }   
-  
-  public void resolveDependencies(){
+    }
+  }
+
+  public void resolveDependencies() {
     Map tempMap = new HashMap();
     Set keys = props.keySet();
     Pattern pattern = Pattern.compile(REGEXP);
     for (Iterator iter = keys.iterator(); iter.hasNext();) {
       String element = (String) iter.next();
-      String value = lookupKey(element, pattern);        
+      String value = lookupKey(element, pattern);
       tempMap.put(element, value);
     }
     props = tempMap;
   }
-  
-  private String lookupKey(String key, Pattern pattern){
-    String s = (String) props.get(key);     
-    if(s == null) return key;
-    Matcher matcher = pattern.matcher(s);         
-    if(matcher.find()){      
-      return recursivedResolving(s, pattern);        
-    }  
-    return s;                   
-  }  
-  
-  private String recursivedResolving(String key, Pattern pattern){                  
+
+  private String lookupKey(String key, Pattern pattern) {
+    String s = (String) props.get(key);
+    if (s == null)
+      return key;
+    Matcher matcher = pattern.matcher(s);
+    if (matcher.find()) {
+      return recursivedResolving(s, pattern);
+    }
+    return s;
+  }
+
+  private String recursivedResolving(String key, Pattern pattern) {
     String resolved = key;
     StringBuffer sB = new StringBuffer();
-    while(resolved.indexOf("#{") != -1){  
-      sB.setLength(0) ;
-      int firstIndex = resolved.indexOf('#');      
+    while (resolved.indexOf("#{") != -1) {
+      sB.setLength(0);
+      int firstIndex = resolved.indexOf('#');
       int lastIndex = resolved.indexOf('}', firstIndex);
-      String realKey = resolved.substring(firstIndex + 2, lastIndex);      
+      String realKey = resolved.substring(firstIndex + 2, lastIndex);
       sB.append(resolved.substring(0, firstIndex));
       sB.append(lookupKey(realKey, pattern));
       sB.append(resolved.substring(lastIndex + 1));
-      resolved = sB.toString();         
-    }    
-    return resolved;        
-  }  
+      resolved = sB.toString();
+    }
+    return resolved;
+  }
 }

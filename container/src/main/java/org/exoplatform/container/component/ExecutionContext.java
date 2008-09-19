@@ -15,27 +15,28 @@
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
 package org.exoplatform.container.component;
+
 /**
- * Created by The eXo Platform SAS
- * Author : Tuan Nguyen
- *          tuan08@users.sourceforge.net
- * Sep 17, 2005
+ * Created by The eXo Platform SAS Author : Tuan Nguyen
+ * tuan08@users.sourceforge.net Sep 17, 2005
  */
 public class ExecutionContext {
-  private ExecutionUnit currentUnit_ ;
-  
+  private ExecutionUnit currentUnit_;
+
   public void setCurrentExecutionUnit(ExecutionUnit unit) {
-    currentUnit_ = unit ;
+    currentUnit_ = unit;
   }
-  
+
   public Object execute() throws Throwable {
-    if(currentUnit_ != null)  return currentUnit_.execute(this) ;
-    return null ;
-  } 
-  
+    if (currentUnit_ != null)
+      return currentUnit_.execute(this);
+    return null;
+  }
+
   public Object executeNextUnit() throws Throwable {
-    currentUnit_ =  currentUnit_.getNextUnit() ;
-    if(currentUnit_ != null)  return currentUnit_.execute(this) ;
-    return null ;
-  } 
+    currentUnit_ = currentUnit_.getNextUnit();
+    if (currentUnit_ != null)
+      return currentUnit_.execute(this);
+    return null;
+  }
 }

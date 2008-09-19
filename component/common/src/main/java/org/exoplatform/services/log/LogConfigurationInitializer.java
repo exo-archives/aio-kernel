@@ -19,67 +19,76 @@ package org.exoplatform.services.log;
 import java.util.Map;
 import java.util.Properties;
 
+import org.picocontainer.Startable;
+
 import org.apache.commons.logging.LogFactory;
+
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.PropertiesParam;
 import org.exoplatform.container.xml.ValueParam;
-import org.picocontainer.Startable;
+
 /**
- * Created by The eXo Platform SAS.
- * <br/> The component for commons based logging configuration initialization.
- * There are 3 optional initialization parameters:
- * logger - a logger class implemented org.apache.commons.logging.Log
- * configurator - a log system configurator implementation of LogConfigurator
- * parameters - list of parameters for the configurator 
- * @author <a href="mailto:gennady.azarenkov@exoplatform.com">Gennady Azarenkov</a>
- * @version $Id: LogConfigurationInitializer.java 5332 2006-04-29 18:32:44Z geaz $
+ * Created by The eXo Platform SAS. <br/> The component for commons based
+ * logging configuration initialization. There are 3 optional initialization
+ * parameters: logger - a logger class implemented
+ * org.apache.commons.logging.Log configurator - a log system configurator
+ * implementation of LogConfigurator parameters - list of parameters for the
+ * configurator
+ * 
+ * @author <a href="mailto:gennady.azarenkov@exoplatform.com">Gennady
+ *         Azarenkov</a>
+ * @version $Id: LogConfigurationInitializer.java 5332 2006-04-29 18:32:44Z geaz
+ *          $
  */
 
 public class LogConfigurationInitializer implements Startable {
-  
-  private Map properties = null;
-  
-  private String logger = null;
-  
+
+  private Map    properties = null;
+
+  private String logger     = null;
+
   private String configurer = null;
-  
+
   /**
    * Constructor for in-container using
-   * @param params - initialization parameters, optionally included logger, configurator and properties
+   * 
+   * @param params - initialization parameters, optionally included logger,
+   *          configurator and properties
    * @throws Exception
    */
   public LogConfigurationInitializer(InitParams params) throws Exception {
 
     ValueParam loggerValue = params.getValueParam("logger");
-    if(loggerValue != null)
+    if (loggerValue != null)
       logger = loggerValue.getValue();
-    
+
     ValueParam confValue = params.getValueParam("configurator");
-    if(confValue != null)
+    if (confValue != null)
       configurer = confValue.getValue();
-    
+
     PropertiesParam p = params.getPropertiesParam("properties");
-    if(p != null)
-     properties = p.getProperties();  
-    
+    if (p != null)
+      properties = p.getProperties();
+
     initLogger();
   }
-  
+
   /**
-   * Simple constructor, not for use in container 
+   * Simple constructor, not for use in container
+   * 
    * @param logger
    * @param configurator
    * @param properties
    */
   public LogConfigurationInitializer(String logger, String configurator, Properties properties) throws Exception {
-    
+
     this.logger = logger;
     this.configurer = configurator;
-    this.properties = properties; 
+    this.properties = properties;
     initLogger();
-    
+
   }
-  
+
   /**
    * @return logger class name
    */
@@ -98,11 +107,12 @@ public class LogConfigurationInitializer implements Startable {
    * @return current Log properties (name-value pairs)
    */
   public Map getProperties() {
-    return properties; 
+    return properties;
   }
-  
+
   /**
    * Updates or adds property
+   * 
    * @param name
    * @param value
    * @throws Exception
@@ -111,9 +121,10 @@ public class LogConfigurationInitializer implements Startable {
     properties.put(name, value);
     initLogger();
   }
-  
+
   /**
    * Removes property
+   * 
    * @param name
    * @throws Exception
    */
@@ -121,34 +132,37 @@ public class LogConfigurationInitializer implements Startable {
     properties.remove(name);
     initLogger();
   }
-  
-  /* (non-Javadoc)
+
+  /*
+   * (non-Javadoc)
    * @see org.picocontainer.Startable#start()
    */
   public void start() {
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
    * @see org.picocontainer.Startable#stop()
    */
   public void stop() {
   }
-  
+
   /**
    * initializes log configuration
+   * 
    * @throws Exception
    */
-  private void initLogger() throws Exception{
-    
+  private void initLogger() throws Exception {
+
     Properties props;
-    if(configurer != null && properties != null) {
-      LogConfigurator conf = (LogConfigurator)Class.forName(configurer).newInstance();
+    if (configurer != null && properties != null) {
+      LogConfigurator conf = (LogConfigurator) Class.forName(configurer).newInstance();
       props = new Properties();
       props.putAll(properties);
       conf.configure(props);
     }
-    if(logger != null)
+    if (logger != null)
       LogFactory.getFactory().setAttribute("org.apache.commons.logging.Log", logger);
   }
-  
+
 }

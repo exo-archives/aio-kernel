@@ -16,6 +16,7 @@ import java.util.Collection;
 
 import javax.management.MBeanAttributeInfo;
 import javax.management.MBeanOperationInfo;
+
 /**
  * @author James Strachan
  * @version $Revision: 1.7 $
@@ -40,9 +41,9 @@ public class ExoContainerMBean extends AbstractDynamicMBean {
     Collection<MBeanOperationInfo> cToReturn = new ArrayList<MBeanOperationInfo>();
     for (int i = 0; i < methodArray.length; i++) {
       Method method = methodArray[i];
-      if(Modifier.isPublic(method.getModifiers())) {
-        MBeanOperationInfo operationInfo = new MBeanOperationInfo(method.getName(), method) ;
-      	cToReturn.add(operationInfo );
+      if (Modifier.isPublic(method.getModifiers())) {
+        MBeanOperationInfo operationInfo = new MBeanOperationInfo(method.getName(), method);
+        cToReturn.add(operationInfo);
       }
     }
     return cToReturn.toArray(new MBeanOperationInfo[cToReturn.size()]);

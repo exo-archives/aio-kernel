@@ -21,8 +21,10 @@ import org.exoplatform.container.RootContainer;
 import org.exoplatform.container.SessionContainer;
 import org.exoplatform.container.monitor.jvm.JVMRuntimeInfo;
 import org.exoplatform.test.BasicTestCase;
+
 /**
- * Thu, May 15, 2003 @   
+ * Thu, May 15, 2003 @
+ * 
  * @author: Tuan Nguyen
  * @version: $Id: TestPortalMonitorService.java 5799 2006-05-28 17:55:42Z geaz $
  * @since: 0.0
@@ -30,34 +32,34 @@ import org.exoplatform.test.BasicTestCase;
  */
 public class TestPortalMonitorService extends BasicTestCase {
 
-  PortalContainer pcontainer_  ;
-  SessionContainer scontainer_ ;
+  PortalContainer  pcontainer_;
+
+  SessionContainer scontainer_;
 
   public TestPortalMonitorService(String name) {
     super(name);
   }
 
   public void setUp() throws Exception {
-    setTestNumber(1) ;
+    setTestNumber(1);
     pcontainer_ = PortalContainer.getInstance();
-    scontainer_ = pcontainer_.createSessionContainer("session.container", "anon") ;
+    scontainer_ = pcontainer_.createSessionContainer("session.container", "anon");
   }
 
   public void tearDown() throws Exception {
   }
-  
+
   public void testOSEnvironment() {
-    System.out.println(RootContainer.getInstance().getOSEnvironment()) ;
+    System.out.println(RootContainer.getInstance().getOSEnvironment());
   }
 
   public void testRuntimInfo() {
-    JVMRuntimeInfo info = 
-      (JVMRuntimeInfo)RootContainer.getInstance().getComponentInstanceOfType(JVMRuntimeInfo.class) ;
-    System.out.println(info) ;
+    JVMRuntimeInfo info = (JVMRuntimeInfo) RootContainer.getInstance()
+                                                        .getComponentInstanceOfType(JVMRuntimeInfo.class);
+    System.out.println(info);
   }
-  
-  
+
   protected String getDescription() {
-    return "Test portal monitor service " ;
+    return "Test portal monitor service ";
   }
 }

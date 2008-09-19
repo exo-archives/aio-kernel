@@ -22,24 +22,53 @@ package org.exoplatform.container.xml;
  * @version $Id: ComponentPlugin.java 5799 2006-05-28 17:55:42Z geaz $
  */
 public class ComponentPlugin {
-  String name ;
-  String type ;
-  String setMethod ;
-  String description ;
-  InitParams initParams ;
-  
-  public String getName() {   return name; }
-  public void setName(String s) {   this.name = s; }
-  
-  public String getType() {   return type; }
-  public void setType(String s) {   this.type = s; }
-  
-  public String getSetMethod() {   return setMethod ; }
-  public void   setSetMethod(String s) {   setMethod = s; }
-  
-  public String getDescription() {    return description;  }
-  public void setDescription(String desc) {   this.description = desc;  }
-  
-  public InitParams getInitParams() {  return initParams; }
-  public void setInitParams(InitParams ips) {  this.initParams = ips; }
+  String     name;
+
+  String     type;
+
+  String     setMethod;
+
+  String     description;
+
+  InitParams initParams;
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String s) {
+    this.name = s;
+  }
+
+  public String getType() {
+    return type;
+  }
+
+  public void setType(String s) {
+    this.type = s;
+  }
+
+  public String getSetMethod() {
+    return setMethod;
+  }
+
+  public void setSetMethod(String s) {
+    setMethod = s;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String desc) {
+    this.description = desc;
+  }
+
+  public InitParams getInitParams() {
+    return initParams;
+  }
+
+  public void setInitParams(InitParams ips) {
+    this.initParams = ips;
+  }
 }

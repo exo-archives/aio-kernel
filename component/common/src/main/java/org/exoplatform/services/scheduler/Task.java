@@ -17,11 +17,9 @@
 package org.exoplatform.services.scheduler;
 
 /**
- * Created by The eXo Platform SAS
- * Author : Tuan Nguyen
- *          tuan08@users.sourceforge.net
- * Dec 29, 2005
+ * Created by The eXo Platform SAS Author : Tuan Nguyen
+ * tuan08@users.sourceforge.net Dec 29, 2005
  */
 abstract public class Task {
-  abstract public  void execute() throws Exception ;
+  abstract public void execute() throws Exception;
 }

@@ -16,28 +16,26 @@
  */
 package org.exoplatform.services.scheduler;
 
-import org.quartz.Job ;
+import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 /**
- * Created by The eXo Platform SAS
- * Author : Hoa  Pham
- *          hoapham@exoplatform.com
- * Oct 5, 2005
+ * Created by The eXo Platform SAS Author : Hoa Pham hoapham@exoplatform.com Oct
+ * 5, 2005
  */
-abstract public class BaseJob implements  Job {
+abstract public class BaseJob implements Job {
 
   public void execute(JobExecutionContext context) throws JobExecutionException {
-     JobContext tcontext  = new JobContext(context) ;
-     try {
-       execute(tcontext) ;
-     } catch (Exception ex) {
-       throw new JobExecutionException(ex) ;
-     }
+    JobContext tcontext = new JobContext(context);
+    try {
+      execute(tcontext);
+    } catch (Exception ex) {
+      throw new JobExecutionException(ex);
+    }
   }
 
-  public void  execute(JobContext  context) throws Exception {
-    throw new Exception("You  should overide this method") ;
+  public void execute(JobContext context) throws Exception {
+    throw new Exception("You  should overide this method");
   }
 }

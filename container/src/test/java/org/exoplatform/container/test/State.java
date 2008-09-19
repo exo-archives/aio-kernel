@@ -44,48 +44,44 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
 public class State {
-  private String name = null;  
-  private String state = null;
-  
-  private PropertyChangeSupport changes = new PropertyChangeSupport( this );
-  
-  public State( String name ) {
+  private String                name    = null;
+
+  private String                state   = null;
+
+  private PropertyChangeSupport changes = new PropertyChangeSupport(this);
+
+  public State(String name) {
     this.name = name;
     state = "NOTRUN";
   }
-  
-  public String getName( )
-  {
+
+  public String getName() {
     return name;
   }
-  
-  public String getState( )
-  {
+
+  public String getState() {
     return state;
   }
-  
-  public void setState( String newState )
-  {
+
+  public void setState(String newState) {
     String oldState = state;
     state = newState;
     changes.firePropertyChange("state", oldState, newState);
   }
-  
-  public boolean inState(String aName, String aState)
-  {
-    return name.equals( aName ) && state.equals( aState );
+
+  public boolean inState(String aName, String aState) {
+    return name.equals(aName) && state.equals(aState);
   }
-  
-  public String toString( )
-  {
+
+  public String toString() {
     return name + "[" + state + "]";
   }
-  
-  public void addPropertyChangeListener( PropertyChangeListener l ) {
-    changes.addPropertyChangeListener( l );
+
+  public void addPropertyChangeListener(PropertyChangeListener l) {
+    changes.addPropertyChangeListener(l);
   }
-  
-  public void removePropertyChangeListener( PropertyChangeListener l ) {
-    changes.removePropertyChangeListener( l ); 
+
+  public void removePropertyChangeListener(PropertyChangeListener l) {
+    changes.removePropertyChangeListener(l);
   }
 }

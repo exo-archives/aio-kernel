@@ -26,7 +26,6 @@
 
 package org.exoplatform.services.threadpool.impl;
 
-
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -34,63 +33,69 @@ import java.util.Map;
 import java.util.Vector;
 
 import org.apache.commons.logging.Log;
+
 import org.exoplatform.services.log.LogService;
 import org.exoplatform.services.threadpool.ThreadPoolService;
 
 public class ThreadPoolServiceImpl implements ThreadPoolService {
 
   /**
-   * The maximum pool size; used if not otherwise specified.
-   * Default value is 500
+   * The maximum pool size; used if not otherwise specified. Default value is
+   * 500
    */
-  public static final int DEFAULT_MAXIMUMPOOLSIZE = 500;
+  public static final int  DEFAULT_MAXIMUMPOOLSIZE = 500;
+
   /**
-   * The normal pool size; used if not otherwise specified.
-   * Default value is 1.
+   * The normal pool size; used if not otherwise specified. Default value is 1.
    */
-  public static final int DEFAULT_NORMALPOOLSIZE = 1;
+  public static final int  DEFAULT_NORMALPOOLSIZE  = 1;
+
   /**
-   * The maximum time to keep worker threads alive waiting for
-   * new tasks; used if not otherwise specified. Default
-   * value is one minute (60000 milliseconds).
+   * The maximum time to keep worker threads alive waiting for new tasks; used
+   * if not otherwise specified. Default value is one minute (60000
+   * milliseconds).
    */
-  public static final long DEFAULT_MAXIDLETIME = 60 * 1000;
+  public static final long DEFAULT_MAXIDLETIME     = 60 * 1000;
+
   // Bounds declared as volatile to avoid having to carefully
   // synchronize responses to changes in value.
-  protected volatile int maximumPoolSize = DEFAULT_MAXIMUMPOOLSIZE;
-  protected volatile int normalPoolSize = DEFAULT_NORMALPOOLSIZE;
-  protected long maxIdleTime = DEFAULT_MAXIDLETIME;
+  protected volatile int   maximumPoolSize         = DEFAULT_MAXIMUMPOOLSIZE;
+
+  protected volatile int   normalPoolSize          = DEFAULT_NORMALPOOLSIZE;
+
+  protected long           maxIdleTime             = DEFAULT_MAXIDLETIME;
+
   /*
-   * The queue is used to hand off the task
-   * to a thread in the pool
+   * The queue is used to hand off the task to a thread in the pool
    */
-  protected Queue handOff;
+  protected Queue          handOff;
+
   /**
    * Lock used for protecting poolSize and threads map *
    */
-  protected Object poolLock = new Object();
-  /**
-   * Current pool size. Relies on poolLock for all locking.
-   * But is also volatile to allow simpler checking inside
-   * worker thread runloop.
-   */
-  protected volatile int poolSize = 0;
-  /**
-   * An object to map active worker objects to their active
-   * thread.  This is used by the interruptAll method.
-   * It may also be useful in subclasses that need to perform
-   * other thread management chores.
-   * All operations on the Map should be done holding
-   * a synchronization lock on poolLock.
-   */
-  protected Map threads;
-  /**
-   * This object delegates the creation of threads to the
-   * factory object referenced by this variable.
-   */
-  private ThreadFactoryIF threadFactory = new DefaultThreadFactory();
+  protected Object         poolLock                = new Object();
 
-  private Log log;
+  /**
+   * Current pool size. Relies on poolLock for all locking. But is also volatile
+   * to allow simpler checking inside worker thread runloop.
+   */
+  protected volatile int   poolSize                = 0;
+
+  /**
+   * An object to map active worker objects to their active thread. This is used
+   * by the interruptAll method. It may also be useful in subclasses that need
+   * to perform other thread management chores. All operations on the Map should
+   * be done holding a synchronization lock on poolLock.
+   */
+  protected Map            threads;
+
+  /**
+   * This object delegates the creation of threads to the factory object
+   * referenced by this variable.
+   */
+  private ThreadFactoryIF  threadFactory           = new DefaultThreadFactory();
+
+  private Log              log;
 
   /**
    * Construct a new pool with all default settings
@@ -104,34 +109,33 @@ public class ThreadPoolServiceImpl implements ThreadPoolService {
   } // constructor()
 
   /**
-   * Return the maximum number of threads to simultaneously
-   * execute New requests are handled according to the
-   * current blocking policy once this limit is exceeded.
+   * Return the maximum number of threads to simultaneously execute New requests
+   * are handled according to the current blocking policy once this limit is
+   * exceeded.
    */
   public int getMaximumPoolSize() {
     return maximumPoolSize;
   } // getMaximumPoolSize
 
   /**
-   * Set the maximum number of threads to use. Decreasing
-   * the pool size will not immediately  kill existing threads,
-   * but they may later die when idle.
-   *
-   * @throws IllegalArgumentException if less or equal to zero.  (It is not
-   *                                  considered an error to set the maximum to be
-   *                                  less than than the normal. However, in this
-   *                                  case there are no guarantees about behavior.)
+   * Set the maximum number of threads to use. Decreasing the pool size will not
+   * immediately kill existing threads, but they may later die when idle.
+   * 
+   * @throws IllegalArgumentException if less or equal to zero. (It is not
+   *           considered an error to set the maximum to be less than than the
+   *           normal. However, in this case there are no guarantees about
+   *           behavior.)
    */
   public void setMaximumPoolSize(int newMaximum) {
-    if (newMaximum <= 0) throw new IllegalArgumentException();
+    if (newMaximum <= 0)
+      throw new IllegalArgumentException();
     maximumPoolSize = newMaximum;
   } // setMaximumPoolSize(int)
 
   /**
-   * Return the normal number of threads to simultaneously
-   * execute.  (Default value is 1).  If fewer than the mininum
-   * number are running upon reception of a new request, a new
-   * thread is started to handle this request.
+   * Return the normal number of threads to simultaneously execute. (Default
+   * value is 1). If fewer than the mininum number are running upon reception of
+   * a new request, a new thread is started to handle this request.
    */
   public int getNormalPoolSize() {
     return normalPoolSize;
@@ -139,12 +143,10 @@ public class ThreadPoolServiceImpl implements ThreadPoolService {
 
   /**
    * Set the normal number of threads to use.
-   *
-   * @throws IllegalArgumentException if less than zero.
-   *                                  (It is not considered an error to set the
-   *                                  normal to be greater than the maximum. However,
-   *                                  in this case there are no guarantees about
-   *                                  behavior.)
+   * 
+   * @throws IllegalArgumentException if less than zero. (It is not considered
+   *           an error to set the normal to be greater than the maximum.
+   *           However, in this case there are no guarantees about behavior.)
    */
   public void setNormalPoolSize(int newNormal) {
     if (newNormal < 0) {
@@ -154,8 +156,8 @@ public class ThreadPoolServiceImpl implements ThreadPoolService {
   } // setNormalPoolSize(int)
 
   /**
-   * Return the current number of active threads in the pool.
-   * This number is just a snaphot, and may change immediately.
+   * Return the current number of active threads in the pool. This number is
+   * just a snaphot, and may change immediately.
    */
   public int getPoolSize() {
     return poolSize;
@@ -176,8 +178,8 @@ public class ThreadPoolServiceImpl implements ThreadPoolService {
   } // getThreadFactory()
 
   /**
-   * Create and start a thread to handle a new task.
-   * Call only when holding poolLock.
+   * Create and start a thread to handle a new task. Call only when holding
+   * poolLock.
    */
   protected void addThread(Runnable task) {
     ++poolSize;
@@ -188,12 +190,11 @@ public class ThreadPoolServiceImpl implements ThreadPoolService {
   } // addThread(Runnable)
 
   /**
-   * Create and start up to numberOfThreads threads in the
-   * pool.
-   *
-   * @return The actual number of threads created. This may be
-   *         less than the number of threads requested if
-   *         creating more would exceed maximum pool size.
+   * Create and start up to numberOfThreads threads in the pool.
+   * 
+   * @return The actual number of threads created. This may be less than the
+   *         number of threads requested if creating more would exceed maximum
+   *         pool size.
    */
   public int createThreads(int numberOfThreads) {
     int ncreated = 0;
@@ -211,15 +212,14 @@ public class ThreadPoolServiceImpl implements ThreadPoolService {
   } // createThreads
 
   /**
-   * Interrupt all threads in the pool, causing them all
-   * to terminate. Threads will terminate sooner if the
-   * executed tasks themselves respond to interrupts.
+   * Interrupt all threads in the pool, causing them all to terminate. Threads
+   * will terminate sooner if the executed tasks themselves respond to
+   * interrupts.
    */
   public void interruptAll() {
     // Synchronized to avoid concurrentModification exceptions
     synchronized (poolLock) {
-      for (Iterator it = threads.values().iterator();
-           it.hasNext();) {
+      for (Iterator it = threads.values().iterator(); it.hasNext();) {
         Thread t = (Thread) (it.next());
         t.interrupt();
       } // for
@@ -227,26 +227,25 @@ public class ThreadPoolServiceImpl implements ThreadPoolService {
   } // interruptAll()
 
   /**
-   * Remove all unprocessed tasks from pool queue, and
-   * return them in a java.util.List. It should normally be
-   * used only when there are not any active clients of the
-   * pool (otherwise you face the possibility that the method
-   * will loop pulling out tasks as clients are putting them
-   * in.)  This method can be useful after shutting down a pool
-   * (via interruptAll) to determine whether there are any
-   * pending tasks that were not processed.  You can then, for
-   * example execute all unprocessed tasks via code along the
+   * Remove all unprocessed tasks from pool queue, and return them in a
+   * java.util.List. It should normally be used only when there are not any
+   * active clients of the pool (otherwise you face the possibility that the
+   * method will loop pulling out tasks as clients are putting them in.) This
+   * method can be useful after shutting down a pool (via interruptAll) to
+   * determine whether there are any pending tasks that were not processed. You
+   * can then, for example execute all unprocessed tasks via code along the
    * lines of:
+   * 
    * <pre>
-   *   List tasks = pool.drain();
-   *   for (Iterator it = tasks.iterator(); it.hasNext();)
-   *     ( (Runnable)(it.next()) ).run();
+   * List tasks = pool.drain();
+   * for (Iterator it = tasks.iterator(); it.hasNext();)
+   *   ((Runnable) (it.next())).run();
    * </pre>
    */
   public List drain() {
     boolean wasInterrupted = false;
     Vector tasks = new Vector();
-    for (; ;) {
+    for (;;) {
       try {
         Object x = handOff.get(0);
         if (x == null)
@@ -257,26 +256,24 @@ public class ThreadPoolServiceImpl implements ThreadPoolService {
         wasInterrupted = true; // postpone re-interrupt until drained
       } // try
     } // for
-    if (wasInterrupted) Thread.currentThread().interrupt();
+    if (wasInterrupted)
+      Thread.currentThread().interrupt();
     return tasks;
   } // drain()
 
-
   /**
-   * Return the number of milliseconds to keep threads
-   * alive waiting for new tasks. A negative value
-   * means to wait forever. A zero value means not to wait
-   * at all.
+   * Return the number of milliseconds to keep threads alive waiting for new
+   * tasks. A negative value means to wait forever. A zero value means not to
+   * wait at all.
    */
   public synchronized long getMaxIdleTime() {
     return maxIdleTime;
   } // getMaxIdleTime()
 
   /**
-   * Set the number of milliseconds to keep threads
-   * alive waiting for new tasks. A negative value
-   * means to wait forever. A zero value means not to wait
-   * at all.
+   * Set the number of milliseconds to keep threads alive waiting for new tasks.
+   * A negative value means to wait forever. A zero value means not to wait at
+   * all.
    */
   public synchronized void setMaxIdleTime(long msecs) {
     maxIdleTime = msecs;
@@ -339,20 +336,16 @@ public class ThreadPoolServiceImpl implements ThreadPoolService {
     } // run()
   } // class Worker
 
-
   /**
-   * Class for actions to take when execute() blocks. Uses
-   * Strategy pattern to represent different actions. You can
-   * add more in subclasses, and/or create subclasses of
-   * these. If so, you will also want to add or modify the
-   * corresponding methods that set the current
-   * blockedExectionStrategy.
+   * Class for actions to take when execute() blocks. Uses Strategy pattern to
+   * represent different actions. You can add more in subclasses, and/or create
+   * subclasses of these. If so, you will also want to add or modify the
+   * corresponding methods that set the current blockedExectionStrategy.
    */
   protected interface BlockedExecutionStrategy {
     /**
-     * Return true if successfully handled so, execute
-     * should terminate; else return false if execute loop
-     * should be retried.
+     * Return true if successfully handled so, execute should terminate; else
+     * return false if execute loop should be retried.
      */
     public boolean blockedAction(Runnable task);
   } // interface BlockedExecutionStrategy
@@ -403,34 +396,33 @@ public class ThreadPoolServiceImpl implements ThreadPoolService {
   } // getBlockedExecutionStrategy()
 
   /**
-   * Set the policy for blocked execution to be that
-   * the current thread executes the task if
-   * there are no available threads in the pool.
+   * Set the policy for blocked execution to be that the current thread executes
+   * the task if there are no available threads in the pool.
    */
   public synchronized void runWhenBlocked() {
     blockedExecutionStrategy = new RunWhenBlocked();
   } // runWhenBlocked()
 
   /**
-   * Set the policy for blocked execution to be to
-   * wait until a thread is available.
+   * Set the policy for blocked execution to be to wait until a thread is
+   * available.
    */
   public synchronized void WhenBlocked() {
     blockedExecutionStrategy = new WaitWhenBlocked();
   } // WaitWhenBlocked()
 
   /**
-   * Set the policy for blocked execution to be to
-   * return without executing the request
+   * Set the policy for blocked execution to be to return without executing the
+   * request
    */
   public synchronized void discardWhenBlocked() {
     blockedExecutionStrategy = new DiscardWhenBlocked();
   } // discardWhenBlocked()
 
   /**
-   * Arrange for the given task to be executed by a thread in
-   * this pool.  The method normally returns when the task
-   * has been handed off for (possibly later) execution.
+   * Arrange for the given task to be executed by a thread in this pool. The
+   * method normally returns when the task has been handed off for (possibly
+   * later) execution.
    */
   public void execute(Runnable task) throws InterruptedException {
     log.debug("execute method called");

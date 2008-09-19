@@ -20,10 +20,11 @@ import java.util.HashMap;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author Gennady Azarenkov
  * @version $Id: $
  */
 
-public class Condition extends HashMap <String, Object> {
+public class Condition extends HashMap<String, Object> {
 
 }

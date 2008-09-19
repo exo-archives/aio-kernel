@@ -15,6 +15,7 @@
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
 package org.exoplatform.commons.exception;
+
 /*
  * @author: Tuan Nguyen
  * @version: $Id: UniqueObjectException.java,v 1.1 2004/10/21 15:23:40 tuan08 Exp $
@@ -22,19 +23,21 @@ package org.exoplatform.commons.exception;
  * @email: tuan08@yahoo.com
  */
 public class UniqueObjectException extends ExoMessageException {
-  
+
   public UniqueObjectException(String messageKey) {
-    super(messageKey) ;
+    super(messageKey);
   }
-  
+
   public UniqueObjectException(String messageKey, Object[] args) {
-    super(messageKey, args) ; 
+    super(messageKey, args);
   }
-  
+
   public String getExceptionDescription() {
-    return "Usually, this exception is raised when the system detect 2 or more " +
-           "objects with the same id the database or a tree of components";
+    return "Usually, this exception is raised when the system detect 2 or more "
+        + "objects with the same id the database or a tree of components";
   }
-  
-  public String getErrorCode() {  return "UNIQUE_CONSTRAINT: " ; }
+
+  public String getErrorCode() {
+    return "UNIQUE_CONSTRAINT: ";
+  }
 }

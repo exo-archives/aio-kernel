@@ -6,8 +6,6 @@
  * */
 package org.exoplatform.container.client.http;
 
-import com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl;
-import javax.xml.parsers.DocumentBuilderFactory ;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
@@ -25,94 +23,101 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public class ClientTypeMap {
-  final static public String XHTML_MIME_TYPE = "text/xhtml" ;
-  final static public String XHTMLMP_MIME_TYPE = "application/vnd.wap.xhtml+xml" ;
+  final static public String        XHTML_MIME_TYPE   = "text/xhtml";
+
+  final static public String        XHTMLMP_MIME_TYPE = "application/vnd.wap.xhtml+xml";
 
   private ArrayList<HttpClientType> clientList_;
-  private static ClientTypeMap singleton_;
-  
+
+  private static ClientTypeMap      singleton_;
+
   private void loadClientsInfos() {
     try {
-      //System.setProperty("javax.xml.xpath.XPathFactory","com.sun.org.apache.xpath.internal.jaxp.XPathFactoryImpl") ;
-      //XPathFactory xpfactory = XPathFactory.newInstance() ;
+      // System.setProperty("javax.xml.xpath.XPathFactory",
+      // "com.sun.org.apache.xpath.internal.jaxp.XPathFactoryImpl") ;
+      // XPathFactory xpfactory = XPathFactory.newInstance() ;
       XPath xpath = XPathFactory.newInstance().newXPath();
-      XPathExpression clientTypeExp = xpath.compile("/clients-type/client-type") ;
-      XPathExpression nameExp = xpath.compile("name/text()") ;
-      XPathExpression userAgentPatternExp = xpath.compile("userAgentPattern/text()") ;
-      XPathExpression preferredMimeTypeExp = xpath.compile("preferredMimeType/text()") ;
-      XPathExpression rendererExp = xpath.compile("renderer/text()") ;
-      ClassLoader cl = Thread.currentThread().getContextClassLoader() ;
-      java.net.URL url = cl.getResource("conf/portal/clients-type.xml") ;
-      //S ystem.setProperty("javax.xml.parsers.DocumentBuilderFactory","com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl") ;
-      //S ystem.out.println("==================> " + System.getProperty("javax.xml.parsers.DocumentBuilderFactory")) ;
-      //S ystem.out.println("==================>" + DocumentBuilderFactory.newInstance());
-      Iterator itr = System.getProperties().entrySet().iterator() ;
-      while(itr.hasNext()) {
-        Map.Entry entry = (Map.Entry)itr.next() ;
-        String key = (String)  entry.getKey() ;
-        if(key.startsWith("javax")) {
-//          System .out.println(key + " = " + entry.getValue());
+      XPathExpression clientTypeExp = xpath.compile("/clients-type/client-type");
+      XPathExpression nameExp = xpath.compile("name/text()");
+      XPathExpression userAgentPatternExp = xpath.compile("userAgentPattern/text()");
+      XPathExpression preferredMimeTypeExp = xpath.compile("preferredMimeType/text()");
+      XPathExpression rendererExp = xpath.compile("renderer/text()");
+      ClassLoader cl = Thread.currentThread().getContextClassLoader();
+      java.net.URL url = cl.getResource("conf/portal/clients-type.xml");
+      // S ystem.setProperty("javax.xml.parsers.DocumentBuilderFactory",
+      // "com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl") ;
+      // S ystem.out.println("==================> " +
+      // System.getProperty("javax.xml.parsers.DocumentBuilderFactory")) ;
+      // S ystem.out.println("==================>" +
+      // DocumentBuilderFactory.newInstance());
+      Iterator itr = System.getProperties().entrySet().iterator();
+      while (itr.hasNext()) {
+        Map.Entry entry = (Map.Entry) itr.next();
+        String key = (String) entry.getKey();
+        if (key.startsWith("javax")) {
+          // System .out.println(key + " = " + entry.getValue());
         }
       }
-      
-        
-      DocumentBuilderFactory finstance = DocumentBuilderFactory.newInstance() ;
-      DocumentBuilder builder =  finstance.newDocumentBuilder();
+
+      DocumentBuilderFactory finstance = DocumentBuilderFactory.newInstance();
+      DocumentBuilder builder = finstance.newDocumentBuilder();
       Document document = builder.parse(url.openStream());
-      NodeList nodes = 
-        (NodeList) clientTypeExp.evaluate(document , XPathConstants.NODESET);
-      for(int i = 0 ; i < nodes.getLength(); i++) {
-        Node node = nodes.item(i) ;
-        String name = (String)nameExp.evaluate(node, XPathConstants.STRING) ;
-        String userAgentPattern =(String)userAgentPatternExp.evaluate(node, XPathConstants.STRING) ;
-        String preferredMimeType = (String)preferredMimeTypeExp.evaluate(node, XPathConstants.STRING) ;
-        String renderer = (String)rendererExp.evaluate(node, XPathConstants.STRING) ;
+      NodeList nodes = (NodeList) clientTypeExp.evaluate(document, XPathConstants.NODESET);
+      for (int i = 0; i < nodes.getLength(); i++) {
+        Node node = nodes.item(i);
+        String name = (String) nameExp.evaluate(node, XPathConstants.STRING);
+        String userAgentPattern = (String) userAgentPatternExp.evaluate(node, XPathConstants.STRING);
+        String preferredMimeType = (String) preferredMimeTypeExp.evaluate(node,
+                                                                          XPathConstants.STRING);
+        String renderer = (String) rendererExp.evaluate(node, XPathConstants.STRING);
         HttpClientType clientInfo;
-        if (renderer != null || renderer.length() > 0) { 
+        if (renderer != null || renderer.length() > 0) {
           clientInfo = new HttpClientType(name, userAgentPattern, preferredMimeType, renderer);
-        }  else {
+        } else {
           clientInfo = new HttpClientType(name, userAgentPattern, preferredMimeType);
         }
         addClientInfo(clientInfo);
       }
     } catch (Exception ex) {
-      ex.printStackTrace() ;
-    } 
+      ex.printStackTrace();
+    }
   }
-  
+
   public ClientTypeMap() {
-    clientList_ = new ArrayList<HttpClientType>() ;
+    clientList_ = new ArrayList<HttpClientType>();
     loadClientsInfos();
   }
-  
+
   protected void addClientInfo(HttpClientType clientInfo) {
     clientList_.add(clientInfo);
   }
-  
+
   /*
-   * @return ClientInfo according to userAgent parameter and first
-   * ClientInfo (ie5) if not found or if userAgent is null 
-   * 
+   * @return ClientInfo according to userAgent parameter and first ClientInfo
+   * (ie5) if not found or if userAgent is null
    */
   public HttpClientType findClient(String userAgent) {
-    if (userAgent == null) return clientList_.get(0);
-    if (userAgent.equals("")) return clientList_.get(0);
+    if (userAgent == null)
+      return clientList_.get(0);
+    if (userAgent.equals(""))
+      return clientList_.get(0);
     HttpClientType client;
     for (int i = 0; i < clientList_.size(); i++) {
       client = clientList_.get(i);
-      String userAgentPattern = client.getUserAgentPattern(); 
+      String userAgentPattern = client.getUserAgentPattern();
       if (userAgentPattern != null) {
         try {
-          if (userAgent.matches(userAgentPattern)) return client;
+          if (userAgent.matches(userAgentPattern))
+            return client;
         } catch (PatternSyntaxException e) {
-          e.printStackTrace() ;
+          e.printStackTrace();
           return clientList_.get(0);
         }
       }
     }
     return clientList_.get(0);
   }
-  
+
   public static ClientTypeMap getInstance() {
     if (singleton_ == null) {
       synchronized (ClientTypeMap.class) {

@@ -22,5 +22,5 @@ package org.exoplatform.services.remote.group;
  * @version $Id: ResultHandler.java 5799 2006-05-28 17:55:42Z geaz $
  */
 public interface ResultHandler {
-  public void handleResponse(Response response) ;
+  public void handleResponse(Response response);
 }

@@ -36,11 +36,13 @@ import org.exoplatform.test.BasicTestCase;
  * Dec 23, 2005
  */
 public class TestMailService extends BasicTestCase {
-  static private String  EMAIL = "<exo@PC01>";
-  static private int     MAIL_PORT = 25 ;
+  static private String EMAIL     = "<exo@PC01>";
 
-  private MailService service_;
-  private NetService nservice_ ;  
+  static private int    MAIL_PORT = 25;
+
+  private MailService   service_;
+
+  private NetService    nservice_;
 
   public TestMailService(String name) {
     super(name);
@@ -50,12 +52,13 @@ public class TestMailService extends BasicTestCase {
     if (service_ == null) {
       PortalContainer pcontainer = PortalContainer.getInstance();
       service_ = (MailService) pcontainer.getComponentInstanceOfType(MailService.class);
-      nservice_ = (NetService) pcontainer.getComponentInstanceOfType(NetService.class) ;      
+      nservice_ = (NetService) pcontainer.getComponentInstanceOfType(NetService.class);
     }
   }
 
   public void testSendMineMessage() throws Exception {
-    if(!pingMailServer()) return ;
+    if (!pingMailServer())
+      return;
     Properties props = new Properties(System.getProperties());
     Session session = Session.getDefaultInstance(props, null);
     session.setDebug(true);
@@ -67,49 +70,52 @@ public class TestMailService extends BasicTestCase {
     Flags flags = new Flags();
     flags.add(Flags.Flag.RECENT);
     message.setFlags(flags, true);
-    service_.sendMessage(message);       
+    service_.sendMessage(message);
   }
 
   public void testSendMessage() throws Exception {
-    if(!pingMailServer()) return ;
-    ByteArrayInputStream is = new ByteArrayInputStream("===> Attachement text".getBytes()) ;
-    String TO = "<exo@PC01>" ;
-    String FROM = TO ;
-    String CC = "<exo@PC01>, <exo@PC01>" ;
-    String BCC = "<exo@PC01>, <exo@PC01>" ;
-    String subject = "Subject test" ;
-    String contents =  "This is test sendMessage method !" ;
-    String mimeType = "text/html" ;
+    if (!pingMailServer())
+      return;
+    ByteArrayInputStream is = new ByteArrayInputStream("===> Attachement text".getBytes());
+    String TO = "<exo@PC01>";
+    String FROM = TO;
+    String CC = "<exo@PC01>, <exo@PC01>";
+    String BCC = "<exo@PC01>, <exo@PC01>";
+    String subject = "Subject test";
+    String contents = "This is test sendMessage method !";
+    String mimeType = "text/html";
     Message message = new Message();
-    message.setFrom(FROM) ;
-    message.setTo(TO) ;
-    message.setCC(CC) ;
-    message.setBCC(BCC) ;
+    message.setFrom(FROM);
+    message.setTo(TO);
+    message.setCC(CC);
+    message.setBCC(BCC);
     message.setSubject(subject);
     message.setBody(contents);
     message.setMimeType(mimeType);
     Attachment attachment = new Attachment();
-    attachment.setInputStream(is) ;
+    attachment.setInputStream(is);
     attachment.setMimeType("text/plain");
-    message.addAttachment(attachment) ;
+    message.addAttachment(attachment);
     service_.sendMessage(message);
   }
-  
+
   public void testSendMessageWithInfo() throws Exception {
-    if(!pingMailServer()) return ;
-    String TO = "<exo@PC01>" ;
-    String FROM = TO ;
-    String subject = "Subject test" ;
-    String contents =  "This is test sendMessage method with 4 parameter !" ;
-    service_.sendMessage(FROM, TO, subject, contents) ;
+    if (!pingMailServer())
+      return;
+    String TO = "<exo@PC01>";
+    String FROM = TO;
+    String subject = "Subject test";
+    String contents = "This is test sendMessage method with 4 parameter !";
+    service_.sendMessage(FROM, TO, subject, contents);
   }
-  
+
   private boolean pingMailServer() throws Exception {
-    String mailServer = service_.getOutgoingMailServer() ;
-    if(nservice_.ping(mailServer,MAIL_PORT)<0) {
-      System.out.println("======>MailServer:"+mailServer+ " and on port:"+MAIL_PORT+ " is not connected") ;
-      return false ;
+    String mailServer = service_.getOutgoingMailServer();
+    if (nservice_.ping(mailServer, MAIL_PORT) < 0) {
+      System.out.println("======>MailServer:" + mailServer + " and on port:" + MAIL_PORT
+          + " is not connected");
+      return false;
     }
-    return true ;
+    return true;
   }
 }

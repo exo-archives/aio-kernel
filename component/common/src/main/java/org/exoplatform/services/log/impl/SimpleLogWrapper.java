@@ -20,19 +20,18 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.impl.SimpleLog;
 
 /**
- * Created by The eXo Platform SAS.
+ * Created by The eXo Platform SAS. <br/> A dummy wrapper for the SimpleLog
+ * logger as SimpleLog has final methods
  * 
- * <br/> A dummy wrapper for the SimpleLog logger as SimpleLog has final methods
- * 
- * @author <a href="mailto:gennady.azarenkov@exoplatform.com">Gennady Azarenkov</a>
+ * @author <a href="mailto:gennady.azarenkov@exoplatform.com">Gennady
+ *         Azarenkov</a>
  * @version $Id: SimpleLogWrapper.java 5332 2006-04-29 18:32:44Z geaz $
- * 
  */
 
 public abstract class SimpleLogWrapper implements Log {
-  
+
   protected SimpleLog log;
-  
+
   public SimpleLogWrapper(String name) {
     log = new SimpleLog(name);
   }

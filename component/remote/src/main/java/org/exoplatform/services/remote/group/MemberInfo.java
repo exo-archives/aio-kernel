@@ -24,18 +24,37 @@ import java.io.Serializable;
  * @version $Id: MemberInfo.java 5799 2006-05-28 17:55:42Z geaz $
  */
 public class MemberInfo implements Serializable {
-  private String hostName_ ;
-  private String ipAddress_ ;
-  private int    port_ ;
-  
-  public String getHostName() { return hostName_ ; }
-  public void   setHostName(String s) { hostName_ = s ; }
-  
-  public String getIpAddress() { return ipAddress_ ; }
-  public void   setIpAddress(String s) { ipAddress_ = s ; }
-  
-  public int getPort() { return port_ ; } 
-  public void setPort(int port) { port_ = port ; }
-  
-  public String toString() { return hostName_ + ":" + port_ ; }
+  private String hostName_;
+
+  private String ipAddress_;
+
+  private int    port_;
+
+  public String getHostName() {
+    return hostName_;
+  }
+
+  public void setHostName(String s) {
+    hostName_ = s;
+  }
+
+  public String getIpAddress() {
+    return ipAddress_;
+  }
+
+  public void setIpAddress(String s) {
+    ipAddress_ = s;
+  }
+
+  public int getPort() {
+    return port_;
+  }
+
+  public void setPort(int port) {
+    port_ = port;
+  }
+
+  public String toString() {
+    return hostName_ + ":" + port_;
+  }
 }

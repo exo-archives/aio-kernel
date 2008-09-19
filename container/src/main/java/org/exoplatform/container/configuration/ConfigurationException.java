@@ -18,26 +18,28 @@ package org.exoplatform.container.configuration;
 
 /**
  * Created by The eXo Platform SAS.
- * @author <a href="mailto:gennady.azarenkov@exoplatform.com">Gennady Azarenkov</a>
+ * 
+ * @author <a href="mailto:gennady.azarenkov@exoplatform.com">Gennady
+ *         Azarenkov</a>
  * @version $Id: ConfigurationException.java 5799 2006-05-28 17:55:42Z geaz $
  */
 
 public class ConfigurationException extends Exception {
 
-	public ConfigurationException() {
-		super();
-	}
+  public ConfigurationException() {
+    super();
+  }
 
-	public ConfigurationException(String arg0) {
-		super(arg0);
-	}
+  public ConfigurationException(String arg0) {
+    super(arg0);
+  }
 
-	public ConfigurationException(String arg0, Throwable arg1) {
-		super(arg0, arg1);
-	}
+  public ConfigurationException(String arg0, Throwable arg1) {
+    super(arg0, arg1);
+  }
 
-	public ConfigurationException(Throwable arg0) {
-		super(arg0);
-	}
+  public ConfigurationException(Throwable arg0) {
+    super(arg0);
+  }
 
 }

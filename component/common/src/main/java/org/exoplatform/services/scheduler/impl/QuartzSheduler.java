@@ -22,31 +22,32 @@ import org.quartz.SchedulerFactory;
 import org.quartz.impl.StdSchedulerFactory;
 
 /**
- * Created by The eXo Platform SAS
- * Author : Tuan Nguyen
- *          tuan08@users.sourceforge.net
- * Dec 13, 2005
+ * Created by The eXo Platform SAS Author : Tuan Nguyen
+ * tuan08@users.sourceforge.net Dec 13, 2005
  * 
  * @version $Id$
  */
 public class QuartzSheduler implements Startable {
-  private Scheduler scheduler_ ;
-  
+  private Scheduler scheduler_;
+
   public QuartzSheduler() throws Exception {
     SchedulerFactory sf = new StdSchedulerFactory();
     scheduler_ = sf.getScheduler();
     scheduler_.start();
   }
-  
-  public Scheduler getQuartzSheduler () {  return scheduler_ ; }
 
-  public void start() {  }
+  public Scheduler getQuartzSheduler() {
+    return scheduler_;
+  }
+
+  public void start() {
+  }
 
   public void stop() {
     try {
       scheduler_.shutdown();
     } catch (Exception ex) {
-      ex.printStackTrace() ;
+      ex.printStackTrace();
     }
   }
 }

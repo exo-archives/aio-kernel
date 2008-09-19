@@ -28,10 +28,10 @@ public interface MailService {
   public Session getMailSession();
 
   public String getOutgoingMailServer();
-  
-  public void sendMessage(String from, String to, String subject, String body)throws Exception;
-  
-  public void sendMessage(Message message) throws Exception ;
-  
+
+  public void sendMessage(String from, String to, String subject, String body) throws Exception;
+
+  public void sendMessage(Message message) throws Exception;
+
   public void sendMessage(MimeMessage message) throws Exception;
 }

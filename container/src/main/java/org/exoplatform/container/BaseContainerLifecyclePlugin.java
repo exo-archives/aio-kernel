@@ -2,38 +2,51 @@ package org.exoplatform.container;
 
 import org.exoplatform.container.xml.InitParams;
 
-
 abstract public class BaseContainerLifecyclePlugin implements ContainerLifecyclePlugin {
 
-  private String name ;
-  private String description ;
-  private InitParams params ;
+  private String     name;
 
-  public String getName() {  return name ; }
+  private String     description;
 
-  public void setName(String s) {  name = s ;}
+  private InitParams params;
 
-  public String getDescription() {   return description ; }
+  public String getName() {
+    return name;
+  }
 
-  public void setDescription(String s) { description = s ; }
+  public void setName(String s) {
+    name = s;
+  }
 
-  public InitParams getInitParams()  { return params ; }
+  public String getDescription() {
+    return description;
+  }
 
-  public void  setInitParams(InitParams params) { this.params = params ; }
+  public void setDescription(String s) {
+    description = s;
+  }
 
-  public void  initContainer(ExoContainer container) throws Exception {
+  public InitParams getInitParams() {
+    return params;
+  }
+
+  public void setInitParams(InitParams params) {
+    this.params = params;
+  }
+
+  public void initContainer(ExoContainer container) throws Exception {
 
   }
 
-  public void  startContainer(ExoContainer container) throws Exception {
+  public void startContainer(ExoContainer container) throws Exception {
 
   }
 
-  public void  stopContainer(ExoContainer container) throws Exception {
+  public void stopContainer(ExoContainer container) throws Exception {
 
   }
 
-  public void  destroyContainer(ExoContainer container) throws Exception {
+  public void destroyContainer(ExoContainer container) throws Exception {
 
   }
 }

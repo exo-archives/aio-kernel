@@ -25,27 +25,28 @@ import javax.management.ObjectName;
 import javax.management.QueryExp;
 
 /**
- * Jul 30, 2004 
+ * Jul 30, 2004
+ * 
  * @author: Tuan Nguyen
- * @email:   tuan08@users.sourceforge.net
+ * @email: tuan08@users.sourceforge.net
  * @version: $Id: ExoQueryExp.java 5799 2006-05-28 17:55:42Z geaz $
  */
 public class ExoQueryExp implements QueryExp {
-	
-  private String domain_ ;
-  
+
+  private String domain_;
+
   public ExoQueryExp(String domain) {
-    domain_ = domain ;
+    domain_ = domain;
   }
-  
+
   public void setMBeanServer(MBeanServer s) {
-    
+
   }
-  
+
   public boolean apply(ObjectName name) throws BadStringOperationException,
-																				BadBinaryOpValueExpException,
-																				BadAttributeValueExpException,
-																				InvalidApplicationException {
-		return domain_.equals(name.getDomain());
-	}
+                                       BadBinaryOpValueExpException,
+                                       BadAttributeValueExpException,
+                                       InvalidApplicationException {
+    return domain_.equals(name.getDomain());
+  }
 }

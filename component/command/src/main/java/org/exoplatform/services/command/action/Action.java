@@ -20,6 +20,7 @@ import org.apache.commons.chain.Command;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author Gennady Azarenkov
  * @version $Id: $
  */

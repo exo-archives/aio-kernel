@@ -19,19 +19,17 @@ package org.exoplatform.services.scheduler;
 import org.quartz.JobExecutionContext;
 
 /**
- * Created by The eXo Platform SAS
- * Author : Hoa  Pham
- *          hoapham@exoplatform.com
- * Oct 5, 2005
+ * Created by The eXo Platform SAS Author : Hoa Pham hoapham@exoplatform.com Oct
+ * 5, 2005
  */
 public class JobContext {
-  private JobExecutionContext jobContext_ ;
-  
+  private JobExecutionContext jobContext_;
+
   public JobContext(JobExecutionContext context) {
-    jobContext_ =  context ;
+    jobContext_ = context;
   }
-  
-  public  void put(Object key, Object value) {
-    jobContext_.put(key, value) ;
+
+  public void put(Object key, Object value) {
+    jobContext_.put(key, value);
   }
 }

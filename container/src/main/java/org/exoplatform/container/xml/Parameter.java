@@ -22,12 +22,23 @@ package org.exoplatform.container.xml;
  * @version $Id: Parameter.java 5799 2006-05-28 17:55:42Z geaz $
  */
 abstract public class Parameter {
-  private String  name;
-  private String  description;
+  private String name;
 
-  public String getDescription() { return description; }
-  public void setDescription(String description) { this.description = description; }
+  private String description;
 
-  public String getName() { return name; }
-  public void setName(String name) { this.name = name; }
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
 }

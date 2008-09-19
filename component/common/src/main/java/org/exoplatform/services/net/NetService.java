@@ -17,11 +17,9 @@
 package org.exoplatform.services.net;
 
 /**
- * Created by The eXo Platform SAS
- * Author : HoaPham
- *          phamvuxuanhoa@yahoo.com
- * Jan 10, 2006
+ * Created by The eXo Platform SAS Author : HoaPham phamvuxuanhoa@yahoo.com Jan
+ * 10, 2006
  */
 public interface NetService {
-  public long ping(String host,int port) throws Exception ;  
+  public long ping(String host, int port) throws Exception;
 }

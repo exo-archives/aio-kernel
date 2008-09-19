@@ -1,4 +1,4 @@
- /*
+/*
  * Copyright (C) 2003-2007 eXo Platform SAS.
  *
  * This program is free software; you can redistribute it and/or
@@ -19,21 +19,25 @@ package org.exoplatform.container.xml;
 import javax.servlet.ServletContext;
 
 /**
- * @author Benjamin Mestrallet
- * benjamin.mestrallet@exoplatform.com
+ * @author Benjamin Mestrallet benjamin.mestrallet@exoplatform.com
  */
 
 public class PortalContainerInfo {
-  
+
   private String containerName;
-  
-  public PortalContainerInfo() { 
+
+  public PortalContainerInfo() {
   }
-  
-  public PortalContainerInfo(ServletContext context) {  
-    containerName = context.getServletContextName(); 
+
+  public PortalContainerInfo(ServletContext context) {
+    containerName = context.getServletContextName();
   }
-  
-  public String getContainerName() {  return containerName; }
-  public void setContainerName(String name) { containerName = name; }
+
+  public String getContainerName() {
+    return containerName;
+  }
+
+  public void setContainerName(String name) {
+    containerName = name;
+  }
 }

@@ -21,10 +21,11 @@ package org.exoplatform.xml.object;
  * @since Apr 11, 2005
  * @version $Id: XMLValue.java 5799 2006-05-28 17:55:42Z geaz $
  */
-public class XMLValue extends XMLBaseObject{
-  public XMLValue() {  }
-  
-  public XMLValue(Class objecttype , Object val) throws Exception {
-    super(objecttype , val) ;
+public class XMLValue extends XMLBaseObject {
+  public XMLValue() {
+  }
+
+  public XMLValue(Class objecttype, Object val) throws Exception {
+    super(objecttype, val);
   }
 }

@@ -25,16 +25,17 @@ import javax.naming.spi.InitialContextFactory;
 /**
  * Created by The eXo Platform SAS .
  * 
- * @author <a href="mailto:gennady.azarenkov@exoplatform.com">Gennady Azarenkov</a>
+ * @author <a href="mailto:gennady.azarenkov@exoplatform.com">Gennady
+ *         Azarenkov</a>
  * @version $Id: SimpleContextFactory.java 5340 2006-04-30 12:51:48Z geaz $
  */
 
 public class SimpleContextFactory implements InitialContextFactory {
 
   private Context context;
-  
+
   public SimpleContextFactory() {
-    context = new SimpleContext(); 
+    context = new SimpleContext();
   }
 
   public Context getInitialContext(Hashtable<?, ?> env) throws NamingException {

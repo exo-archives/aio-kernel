@@ -1,12 +1,9 @@
-
 package org.exoplatform.services.log;
 
 import junit.framework.TestCase;
 
 import org.exoplatform.container.StandaloneContainer;
 import org.exoplatform.services.log.impl.ExoLog;
-
-
 
 /**
  * Created by The eXo Platform SAS .
@@ -17,20 +14,21 @@ import org.exoplatform.services.log.impl.ExoLog;
 public class LogTest extends TestCase {
 
   private StandaloneContainer container;
-  
+
   public void setUp() throws Exception {
-    
-    StandaloneContainer.setConfigurationURL(getClass().getResource("/conf/standalone/test-configuration.xml").toString());
-  	
+
+    StandaloneContainer.setConfigurationURL(getClass().getResource("/conf/standalone/test-configuration.xml")
+                                                      .toString());
+
     container = StandaloneContainer.getInstance();
   }
-  
+
   public void testLog() throws Exception {
 
     ExoLogger.getLogger(this.getClass()).debug("debug message");
 
     ExoLogger.getLogger(this.getClass().getName()).warn("warn message");
-    
+
     ExoLogger.getLogger(this.getClass()).error("error message");
 
     ExoLogger.getLogger(this.getClass()).fatal("fatal message");
@@ -39,12 +37,10 @@ public class LogTest extends TestCase {
 
     assertEquals(2, ExoLog.getErrorBuffer().size());
 
-    LogMessage m = ((LogMessage)ExoLog.getLogBuffer().get(2));
-    
+    LogMessage m = ((LogMessage) ExoLog.getLogBuffer().get(2));
+
     assertEquals("error message", m.getMessage());
-    
+
   }
-
-
 
 }

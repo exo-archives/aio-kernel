@@ -23,25 +23,27 @@ package org.exoplatform.services.exception;
  * @email: tuan08@yahoo.com
  */
 public class ExoServiceException extends Exception {
-  protected Object[] params_ ; 
-  protected String key_ = "SystemException" ;
-  protected String keyDesc_ = "SystemExceptionDesc" ;
+  protected Object[] params_;
+
+  protected String   key_     = "SystemException";
+
+  protected String   keyDesc_ = "SystemExceptionDesc";
 
   public ExoServiceException() {
   }
 
   public ExoServiceException(Throwable ex) {
-    super(ex.getMessage()) ;
-    ex.printStackTrace() ;
+    super(ex.getMessage());
+    ex.printStackTrace();
   }
 
   public ExoServiceException(String s) {
-    super(s) ;
+    super(s);
   }
 
   public ExoServiceException(String key, Object[] params) {
-    key_ = key ;
+    key_ = key;
     keyDesc_ = key + "Desc";
-    params_ = params ;
+    params_ = params;
   }
 }

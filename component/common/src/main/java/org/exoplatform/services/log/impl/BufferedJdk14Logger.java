@@ -22,18 +22,18 @@ import java.util.logging.Logger;
 import org.apache.commons.logging.impl.Jdk14Logger;
 
 /**
- * Created by The eXo Platform SAS.
+ * Created by The eXo Platform SAS. <br/> Buffered
+ * org.apache.commons.logging.impl.Jdk14Logger.
  * 
- * <br/> Buffered org.apache.commons.logging.impl.Jdk14Logger.
- * 
- * @author <a href="mailto:gennady.azarenkov@exoplatform.com">Gennady Azarenkov</a>
+ * @author <a href="mailto:gennady.azarenkov@exoplatform.com">Gennady
+ *         Azarenkov</a>
  * @version $Id: BufferedJdk14Logger.java 5332 2006-04-29 18:32:44Z geaz $
  */
 
 public class BufferedJdk14Logger extends Jdk14Logger {
 
   private BufferedLog bufLogger;
-  
+
   public BufferedJdk14Logger(String name) {
     super(name);
     this.bufLogger = new BufferedLog(this, name);
@@ -88,31 +88,31 @@ public class BufferedJdk14Logger extends Jdk14Logger {
     log(Level.SEVERE, String.valueOf(message), t);
     bufLogger.fatal(message, t);
   }
-  
+
   // borrowed from superclass
   // why would not do it protected?
-  private void log( Level level, String msg, Throwable ex ) {
+  private void log(Level level, String msg, Throwable ex) {
 
     Logger logger = getLogger();
     if (logger.isLoggable(level)) {
-        // Hack (?) to get the stack trace.
-        Throwable dummyException=new Throwable();
-        StackTraceElement locations[]=dummyException.getStackTrace();
-        // Caller will be the third element
-        String cname="unknown";
-        String method="unknown";
-        if( locations!=null && locations.length >2 ) {
-            StackTraceElement caller=locations[2];
-            cname=caller.getClassName();
-            method=caller.getMethodName();
-        }
-        if( ex==null ) {
-            logger.logp( level, cname, method, msg );
-        } else {
-            logger.logp( level, cname, method, msg, ex );
-        }
+      // Hack (?) to get the stack trace.
+      Throwable dummyException = new Throwable();
+      StackTraceElement locations[] = dummyException.getStackTrace();
+      // Caller will be the third element
+      String cname = "unknown";
+      String method = "unknown";
+      if (locations != null && locations.length > 2) {
+        StackTraceElement caller = locations[2];
+        cname = caller.getClassName();
+        method = caller.getMethodName();
+      }
+      if (ex == null) {
+        logger.logp(level, cname, method, msg);
+      } else {
+        logger.logp(level, cname, method, msg, ex);
+      }
     }
 
-}
+  }
 
 }

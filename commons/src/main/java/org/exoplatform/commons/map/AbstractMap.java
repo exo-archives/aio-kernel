@@ -16,25 +16,26 @@
  */
 package org.exoplatform.commons.map;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Ove Ranheim (oranheim@users.sourceforge.net)
  * @since Nov 6, 2003 5:58:08 PM
- *
  */
-public abstract class AbstractMap implements Map
-{
+public abstract class AbstractMap implements Map {
   // Generic Attributes
 
-  protected abstract Object getAttribute( String name );
+  protected abstract Object getAttribute(String name);
 
-  protected abstract void setAttribute( String name, Object value );
+  protected abstract void setAttribute(String name, Object value);
 
-  protected abstract void removeAttribute( String name );
+  protected abstract void removeAttribute(String name);
 
   protected abstract Enumeration getAttributeNames();
-
 
   // Bridge methods
 
@@ -52,17 +53,17 @@ public abstract class AbstractMap implements Map
     return !getAttributeNames().hasMoreElements();
   }
 
-  public boolean containsKey( Object key ) {
-    return (getAttribute( (String) key ) != null);
+  public boolean containsKey(Object key) {
+    return (getAttribute((String) key) != null);
   }
 
-  public boolean containsValue( Object value ) {
+  public boolean containsValue(Object value) {
     boolean match = false;
     Enumeration keys = getAttributeNames();
     while (keys.hasMoreElements()) {
       String key = (String) keys.nextElement();
-      Object val = getAttribute( key );
-      if (value.equals( val )) {
+      Object val = getAttribute(key);
+      if (value.equals(val)) {
         match = true;
         break;
       }
@@ -70,28 +71,29 @@ public abstract class AbstractMap implements Map
     return match;
   }
 
-  public Object get( Object key ) {
-    return getAttribute( (String) key );
+  public Object get(Object key) {
+    return getAttribute((String) key);
   }
 
-  public Object put( Object key, Object value ) {
+  public Object put(Object key, Object value) {
     Object result = null;
-    if (containsKey( key )) result = getAttribute( (String) key );
-    setAttribute( (String) key, value );
+    if (containsKey(key))
+      result = getAttribute((String) key);
+    setAttribute((String) key, value);
     return result;
   }
 
-  public Object remove( Object key ) {
-    Object result = getAttribute( (String) key );
-    removeAttribute( (String) key );
+  public Object remove(Object key) {
+    Object result = getAttribute((String) key);
+    removeAttribute((String) key);
     return result;
   }
 
-  public void putAll( Map t ) {
+  public void putAll(Map t) {
     for (Iterator i = t.keySet().iterator(); i.hasNext();) {
       String key = (String) i.next();
-      Object value = t.get( key );
-      put( key, value );
+      Object value = t.get(key);
+      put(key, value);
     }
   }
 
@@ -112,12 +114,12 @@ public abstract class AbstractMap implements Map
   }
 
   public String toString() {
-    StringBuffer b = new StringBuffer() ;
+    StringBuffer b = new StringBuffer();
     Enumeration keys = getAttributeNames();
     while (keys.hasMoreElements()) {
       String key = (String) keys.nextElement();
-      b.append(key).append("\n") ;
+      b.append(key).append("\n");
     }
-    return b.toString() ;
+    return b.toString();
   }
 }

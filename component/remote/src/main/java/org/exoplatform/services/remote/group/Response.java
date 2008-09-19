@@ -24,12 +24,14 @@ import org.jgroups.util.Rsp;
  * @version $Id: Response.java 5799 2006-05-28 17:55:42Z geaz $
  */
 public class Response {
-  private Rsp rsp_ ;
-  
+  private Rsp rsp_;
+
   public void populate(Rsp rsp) {
-    rsp_ = rsp ;
+    rsp_ = rsp;
   }
-  
-  public Object getReturnValue() { return rsp_.getValue(); }
-  
+
+  public Object getReturnValue() {
+    return rsp_.getValue();
+  }
+
 }

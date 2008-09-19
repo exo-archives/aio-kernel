@@ -24,29 +24,46 @@ import java.io.Serializable;
  * @version $Id: MessageHandlerMonitor.java 5799 2006-05-28 17:55:42Z geaz $
  */
 public class MessageHandlerMonitor implements Serializable {
-  private String handlerId_ ;
-  int counter_ = 0 ;
-  int errorCounter_ = 0 ;
-  private Throwable lastError_ ;
-  
+  private String    handlerId_;
+
+  int               counter_      = 0;
+
+  int               errorCounter_ = 0;
+
+  private Throwable lastError_;
+
   public MessageHandlerMonitor(String handlerId) {
-    handlerId_ = handlerId ;
+    handlerId_ = handlerId;
   }
-  
-  public String getMessageHandlerId() { return handlerId_ ; }
-  
-  public void addMessageCounter(int i) { counter_ += i ; }
-  public int getReceiceMessageCounter() { return counter_ ; }
-  
+
+  public String getMessageHandlerId() {
+    return handlerId_;
+  }
+
+  public void addMessageCounter(int i) {
+    counter_ += i;
+  }
+
+  public int getReceiceMessageCounter() {
+    return counter_;
+  }
+
   public String getLastErrorMessage() {
-    if(lastError_ == null) return "" ;
-    return lastError_.getMessage() ; 
+    if (lastError_ == null)
+      return "";
+    return lastError_.getMessage();
   }
-  public Throwable getLastError() { return lastError_ ; }
+
+  public Throwable getLastError() {
+    return lastError_;
+  }
+
   public void setLastError(Throwable t) {
-    errorCounter_++ ;
-    lastError_ = t ;
+    errorCounter_++;
+    lastError_ = t;
   }
-  
-  public int getHandleErrorCounter() { return errorCounter_ ; }
+
+  public int getHandleErrorCounter() {
+    return errorCounter_;
+  }
 }

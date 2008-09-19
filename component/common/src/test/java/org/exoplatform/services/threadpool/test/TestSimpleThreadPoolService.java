@@ -5,14 +5,13 @@ import org.exoplatform.services.threadpool.impl.ThreadPoolServiceImpl;
 import org.exoplatform.test.BasicTestCase;
 
 /**
- * Created by the Exo Development team.
- * Author : Mestrallet Benjamin
+ * Created by the Exo Development team. Author : Mestrallet Benjamin
  * benjamin.mestrallet@exoplatform.com
  */
-public class TestSimpleThreadPoolService extends BasicTestCase{
+public class TestSimpleThreadPoolService extends BasicTestCase {
   private ThreadPoolServiceImpl service_;
 
-  private static int counter = 0;
+  private static int            counter = 0;
 
   public TestSimpleThreadPoolService(String name) {
     super(name);
@@ -22,15 +21,14 @@ public class TestSimpleThreadPoolService extends BasicTestCase{
     return "Test the Thread pool service";
   }
 
-	public void setUp() throws Exception {
-	  PortalContainer manager  = PortalContainer.getInstance();
-		service_ = 
-			(ThreadPoolServiceImpl) manager.getComponentInstanceOfType(ThreadPoolServiceImpl.class) ;
-	}
+  public void setUp() throws Exception {
+    PortalContainer manager = PortalContainer.getInstance();
+    service_ = (ThreadPoolServiceImpl) manager.getComponentInstanceOfType(ThreadPoolServiceImpl.class);
+  }
 
   public void testSimpleThreadPoolService() throws InterruptedException {
     service_.setMaximumPoolSize(10);
-    for(int i= 0; i < 20; i++){
+    for (int i = 0; i < 20; i++) {
       Runnable r = new SimpleRunnable();
       service_.execute(r);
     }

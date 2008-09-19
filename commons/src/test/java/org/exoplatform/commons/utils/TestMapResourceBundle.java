@@ -1,4 +1,4 @@
- /*
+/*
  * Copyright (C) 2003-2007 eXo Platform SAS.
  *
  * This program is free software; you can redistribute it and/or
@@ -16,23 +16,22 @@
  */
 package org.exoplatform.commons.utils;
 
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 import junit.framework.TestCase;
-import java.util.*;
 
 /**
- * @author Benjamin Mestrallet
- * benjamin.mestrallet@exoplatform.com
+ * @author Benjamin Mestrallet benjamin.mestrallet@exoplatform.com
  */
 public class TestMapResourceBundle extends TestCase {
   public void testResolveDependencies() {
     ResourceBundle rB = ResourceBundle.getBundle("org.exoplatform.commons.utils.resources");
     MapResourceBundle mapRB = new MapResourceBundle(rB, new Locale("en"));
     mapRB.resolveDependencies();
-    //System.out.println("KEYYYYYYYYY2 "+mapRB.getString("key1"));
-    System.out.println("KEYYYYYYYYY2 "+mapRB.getString("key2"));
-    //System.out.println("KEYYYYYYYYY2 "+mapRB.getString("key3"));
+    // System.out.println("KEYYYYYYYYY2 "+mapRB.getString("key1"));
+    System.out.println("KEYYYYYYYYY2 " + mapRB.getString("key2"));
+    // System.out.println("KEYYYYYYYYY2 "+mapRB.getString("key3"));
   }
-  
+
 }

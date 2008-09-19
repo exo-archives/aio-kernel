@@ -20,110 +20,128 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+
 /**
- * Jul 19, 2004 
+ * Jul 19, 2004
+ * 
  * @author: Tuan Nguyen
- * @email:   tuan08@users.sourceforge.net
+ * @email: tuan08@users.sourceforge.net
  * @version: $Id: ServiceConfiguration.java 5799 2006-05-28 17:55:42Z geaz $
  */
 public class ServiceConfiguration extends HashMap {
-  private String key ;
-  private String type ;
-  
+  private String key;
+
+  private String type;
+
   public ServiceConfiguration() {
   }
-  
-  public String getServiceKey() { return key ; }
-  public void   setServiceKey(String s) { key = s  ;  }
-  
-  public String getServiceType() { return type ; }
-  public void   setServiceType(String s) { type = s  ;  }
-  
-  public ValuesParam  getValuesParam(String name) {
-  	return (ValuesParam) get(name) ;
+
+  public String getServiceKey() {
+    return key;
   }
-  
-  public ValueParam  getValueParam(String name) {
-    return (ValueParam) get(name) ;
+
+  public void setServiceKey(String s) {
+    key = s;
   }
-  
-  public PropertiesParam  getPropertiesParam(String name) {
-    return (PropertiesParam) get(name) ;
+
+  public String getServiceType() {
+    return type;
   }
-  
-  public ObjectParam  getObjectParam(String name) {
-    return (ObjectParam) get(name) ;
+
+  public void setServiceType(String s) {
+    type = s;
   }
-  
-  public List  getObjectParamValues(Class type) {
-    List list = new ArrayList() ;
-    Iterator i = values().iterator() ;
-    while(i.hasNext()) {
-      Object o = i.next() ;
-      if(o instanceof ObjectParam) {
-        ObjectParam param = (ObjectParam) o ;
-        Object paramValue = param.getObject() ;
-        if(type.isInstance(paramValue)) list.add(paramValue) ;
+
+  public ValuesParam getValuesParam(String name) {
+    return (ValuesParam) get(name);
+  }
+
+  public ValueParam getValueParam(String name) {
+    return (ValueParam) get(name);
+  }
+
+  public PropertiesParam getPropertiesParam(String name) {
+    return (PropertiesParam) get(name);
+  }
+
+  public ObjectParam getObjectParam(String name) {
+    return (ObjectParam) get(name);
+  }
+
+  public List getObjectParamValues(Class type) {
+    List list = new ArrayList();
+    Iterator i = values().iterator();
+    while (i.hasNext()) {
+      Object o = i.next();
+      if (o instanceof ObjectParam) {
+        ObjectParam param = (ObjectParam) o;
+        Object paramValue = param.getObject();
+        if (type.isInstance(paramValue))
+          list.add(paramValue);
       }
     }
-    return list ;
+    return list;
   }
-  
+
   public Parameter getParameter(String name) {
-    return (Parameter) get(name) ;
+    return (Parameter) get(name);
   }
-  
+
   public void addParameter(Parameter param) {
-    put(param.getName(), param) ;
+    put(param.getName(), param);
   }
-  
-  public Parameter  removeParameter(String name) {
-    return (Parameter) remove(name) ;
+
+  public Parameter removeParameter(String name) {
+    return (Parameter) remove(name);
   }
-  
-  //--------------xml binding---------------------------------
+
+  // --------------xml binding---------------------------------
   public void addParam(Object o) {
-    Parameter param = (Parameter) o ;
-    put(param.getName(), param) ;
+    Parameter param = (Parameter) o;
+    put(param.getName(), param);
   }
-  
+
   public Iterator getValueParamIterator() {
-    List list = new ArrayList() ;
-    Iterator i =  values().iterator() ;
-    while(i.hasNext()) {
-      Object o =  i.next() ;
-      if(o instanceof ValueParam) list.add(o) ;
+    List list = new ArrayList();
+    Iterator i = values().iterator();
+    while (i.hasNext()) {
+      Object o = i.next();
+      if (o instanceof ValueParam)
+        list.add(o);
     }
-    return list.iterator() ;
+    return list.iterator();
   }
-  
+
   public Iterator getValuesParamIterator() {
-    List list = new ArrayList() ;
-    Iterator i =  values().iterator() ;
-    while(i.hasNext()) {
-      Object o =  i.next() ;
-      if(o instanceof ValuesParam) list.add(o) ;
+    List list = new ArrayList();
+    Iterator i = values().iterator();
+    while (i.hasNext()) {
+      Object o = i.next();
+      if (o instanceof ValuesParam)
+        list.add(o);
     }
-    return list.iterator() ;
+    return list.iterator();
   }
-  
+
   public Iterator getPropertiesParamIterator() {
-    List list = new ArrayList() ;
-    Iterator i =  values().iterator() ;
-    while(i.hasNext()) {
-      Object o =  i.next() ;
-      if(o instanceof PropertiesParam) list.add(o) ;
+    List list = new ArrayList();
+    Iterator i = values().iterator();
+    while (i.hasNext()) {
+      Object o = i.next();
+      if (o instanceof PropertiesParam)
+        list.add(o);
     }
-    return list.iterator() ;
+    return list.iterator();
   }
-  
+
   public Iterator getObjectParamIterator() {
-    List list = new ArrayList() ;
-    Iterator i =  values().iterator() ;
-    while(i.hasNext()) {
-      Object o =  i.next() ;
-      if(o instanceof ObjectParam) list.add(o) ;
+    List list = new ArrayList();
+    Iterator i = values().iterator();
+    while (i.hasNext()) {
+      Object o = i.next();
+      if (o instanceof ObjectParam)
+        list.add(o);
     }
-    return list.iterator() ;
+    return list.iterator();
   }
 }

@@ -18,20 +18,18 @@ package org.exoplatform.services.cache;
 
 import java.io.Serializable;
 import java.util.Collection;
+
 /**
- * Created by The eXo Platform SAS.
- * Author : Tuan Nguyen
- *          tuan08@users.sourceforge.net
- * Date: Jun 14, 2003
- * Time: 1:12:22 PM
+ * Created by The eXo Platform SAS. Author : Tuan Nguyen
+ * tuan08@users.sourceforge.net Date: Jun 14, 2003 Time: 1:12:22 PM
  */
-public interface CacheService  {
-  
-  public void addExoCacheConfig(ExoCacheConfigPlugin plugin) ;
-  
-  public ExoCache getCacheInstance(String region) throws Exception ;
-  
-  public Collection getAllCacheInstances() throws Exception ;
-  
-  public void synchronize(String region, Serializable key, Object value) throws Exception ;
+public interface CacheService {
+
+  public void addExoCacheConfig(ExoCacheConfigPlugin plugin);
+
+  public ExoCache getCacheInstance(String region) throws Exception;
+
+  public Collection getAllCacheInstances() throws Exception;
+
+  public void synchronize(String region, Serializable key, Object value) throws Exception;
 }

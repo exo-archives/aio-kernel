@@ -14,18 +14,17 @@ package org.exoplatform.mocks;
 
 import org.picocontainer.Startable;
 
-
-public class MockServiceBImp implements MockServiceB , Startable{
+public class MockServiceBImp implements MockServiceB, Startable {
 
   public MockServiceBImp() {
     System.out.println("MockServiceBImp constructor");
   }
 
-  public void methodServiceB(){
+  public void methodServiceB() {
     System.out.println("Method Service B");
   }
 
-  public void start(){
+  public void start() {
     System.out.println("Start in MockServiceBImp");
   }
 

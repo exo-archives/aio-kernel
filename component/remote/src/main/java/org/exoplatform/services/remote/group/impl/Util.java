@@ -17,11 +17,14 @@
 package org.exoplatform.services.remote.group.impl;
 
 import java.util.List;
-import org.exoplatform.services.remote.group.MemberInfo;
-import org.jgroups.stack.IpAddress;
+
 import org.jgroups.Address;
-import org.jgroups.JChannel ;
+import org.jgroups.JChannel;
 import org.jgroups.View;
+import org.jgroups.stack.IpAddress;
+
+import org.exoplatform.services.remote.group.MemberInfo;
+
 /**
  * @author Tuan Nguyen (tuan08@users.sourceforge.net)
  * @since Mar 4, 2005
@@ -30,33 +33,34 @@ import org.jgroups.View;
 public class Util {
   static public Address findAddress(JChannel channel, MemberInfo info) {
     View view = channel.getView();
-    List members = view.getMembers() ;
-    String ip = info.getIpAddress() ;
-    for(int i = 0; i < members.size() ; i++) {
-      Object member = members.get(i) ;
-      if(member instanceof IpAddress) {
+    List members = view.getMembers();
+    String ip = info.getIpAddress();
+    for (int i = 0; i < members.size(); i++) {
+      Object member = members.get(i);
+      if (member instanceof IpAddress) {
         IpAddress addr = (IpAddress) member;
-        if(ip.equals(addr.getIpAddress().getHostAddress())) return addr ;
+        if (ip.equals(addr.getIpAddress().getHostAddress()))
+          return addr;
       } else {
-        if(info.getIpAddress().equals(member.toString())) {
-          return (Address) member ;
+        if (info.getIpAddress().equals(member.toString())) {
+          return (Address) member;
         }
       }
     }
-    return null ;
+    return null;
   }
-  
+
   static public MemberInfo createMemberInfo(Object member) {
-    MemberInfo info = new MemberInfo() ;
-    if(member instanceof IpAddress) {
+    MemberInfo info = new MemberInfo();
+    if (member instanceof IpAddress) {
       IpAddress addr = (IpAddress) member;
-      info.setHostName(addr.getIpAddress().getHostName()) ;
-      info.setIpAddress(addr.getIpAddress().getHostAddress()) ;
+      info.setHostName(addr.getIpAddress().getHostName());
+      info.setIpAddress(addr.getIpAddress().getHostAddress());
       info.setPort(addr.getPort());
     } else {
-      info.setHostName(member.toString()) ;
-      info.setIpAddress(member.toString()) ;
+      info.setHostName(member.toString());
+      info.setIpAddress(member.toString());
     }
-    return info ;
+    return info;
   }
 }

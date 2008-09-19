@@ -17,8 +17,7 @@
 package org.exoplatform.services.threadpool;
 
 /**
- * @author Mestrallet Benjamin
- *         benjmestrallet@users.sourceforge.net
+ * @author Mestrallet Benjamin benjmestrallet@users.sourceforge.net
  * @deprecated unused
  */
 public interface ThreadPoolService {

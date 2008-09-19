@@ -30,12 +30,14 @@ import javax.naming.spi.ObjectFactory;
 
 /**
  * Created by The eXo Platform SAS.
- * @author <a href="mailto:gennady.azarenkov@exoplatform.com">Gennady Azarenkov</a>
+ * 
+ * @author <a href="mailto:gennady.azarenkov@exoplatform.com">Gennady
+ *         Azarenkov</a>
  * @version $Id: SimpleContext.java 7117 2006-07-17 11:47:46Z peterit $
  */
 
 public class SimpleContext implements Context {
-  
+
   private static Hashtable objects = new Hashtable();
 
   public SimpleContext() {
@@ -47,11 +49,11 @@ public class SimpleContext implements Context {
 
   public Object lookup(String name) throws NamingException {
     Object obj = objects.get(name);
-    if(obj instanceof Reference) {
+    if (obj instanceof Reference) {
       Reference ref = (Reference) obj;
       String factoryCN = ref.getFactoryClassName();
       try {
-        ObjectFactory factory = (ObjectFactory)Class.forName(factoryCN).newInstance();
+        ObjectFactory factory = (ObjectFactory) Class.forName(factoryCN).newInstance();
         obj = factory.getObjectInstance(ref, null, null, null);
       } catch (Exception e) {
         e.printStackTrace();
@@ -66,7 +68,7 @@ public class SimpleContext implements Context {
   }
 
   public void bind(String name, Object value) throws NamingException {
-    //System.out.println("Bind: "+name+" "+value+" "+objects);
+    // System.out.println("Bind: "+name+" "+value+" "+objects);
     objects.put(name, value);
   }
 
@@ -96,23 +98,19 @@ public class SimpleContext implements Context {
     objects.put(name2, val);
   }
 
-  public NamingEnumeration<NameClassPair> list(Name arg0)
-      throws NamingException {
+  public NamingEnumeration<NameClassPair> list(Name arg0) throws NamingException {
     throw new NamingException("Not supported");
   }
 
-  public NamingEnumeration<NameClassPair> list(String arg0)
-      throws NamingException {
+  public NamingEnumeration<NameClassPair> list(String arg0) throws NamingException {
     throw new NamingException("Not supported");
   }
 
-  public NamingEnumeration<Binding> listBindings(Name arg0)
-      throws NamingException {
+  public NamingEnumeration<Binding> listBindings(Name arg0) throws NamingException {
     throw new NamingException("Not supported");
   }
 
-  public NamingEnumeration<Binding> listBindings(String arg0)
-      throws NamingException {
+  public NamingEnumeration<Binding> listBindings(String arg0) throws NamingException {
     // TODO Auto-generated method stub
     return null;
   }
@@ -157,8 +155,7 @@ public class SimpleContext implements Context {
     throw new NamingException("Not supported");
   }
 
-  public Object addToEnvironment(String arg0, Object arg1)
-      throws NamingException {
+  public Object addToEnvironment(String arg0, Object arg1) throws NamingException {
     throw new NamingException("Not supported");
   }
 

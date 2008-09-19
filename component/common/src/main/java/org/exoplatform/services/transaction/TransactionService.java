@@ -24,56 +24,61 @@ import javax.transaction.xa.XAResource;
 import javax.transaction.xa.Xid;
 
 /**
- * Created by The eXo Platform SAS.<br/>
- * The transaction service 
- * @author <a href="mailto:gennady.azarenkov@exoplatform.com">Gennady Azarenkov</a>
+ * Created by The eXo Platform SAS.<br/> The transaction service
+ * 
+ * @author <a href="mailto:gennady.azarenkov@exoplatform.com">Gennady
+ *         Azarenkov</a>
  * @version $Id: $
  */
 
 public interface TransactionService {
-  
+
   /**
-   * @return TransactionManager  
+   * @return TransactionManager
    */
   TransactionManager getTransactionManager();
-  
+
   /**
-   * @return UserTransaction 
+   * @return UserTransaction
    */
   UserTransaction getUserTransaction();
-  
+
   /**
    * @return default timeout in seconds
    */
   int getDefaultTimeout();
-  
+
   /**
    * sets timeout in seconds
-   * @param seconds 
+   * 
+   * @param seconds
    * @throws SystemException
    */
   void setTransactionTimeout(int seconds) throws SystemException;
-  
+
   /**
    * enlists XA resource in transaction manager
+   * 
    * @param xares XAResource
    * @throws RollbackException
    * @throws SystemException
    */
   void enlistResource(XAResource xares) throws RollbackException, SystemException;
-  
+
   /**
    * delists XA resource from transaction manager
+   * 
    * @param xares XAResource
    * @throws RollbackException
    * @throws SystemException
    */
   void delistResource(XAResource xares) throws RollbackException, SystemException;
-  
+
   /**
    * creates unique XA transaction identifier
+   * 
    * @return Xid
    */
   Xid createXid();
-  
+
 }

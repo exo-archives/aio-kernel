@@ -15,6 +15,7 @@
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
 package org.exoplatform.commons.exception;
+
 /*
  * @author: Tuan Nguyen
  * @version: $Id: ObjectNotFoundException.java,v 1.2 2004/04/06 21:07:18 tuan08 Exp $
@@ -22,9 +23,9 @@ package org.exoplatform.commons.exception;
  * @email: tuan08@yahoo.com
  */
 public class ObjectNotFoundException extends Exception {
-  
+
   public ObjectNotFoundException(String s) {
-    super(s) ;
+    super(s);
   }
-  
+
 }

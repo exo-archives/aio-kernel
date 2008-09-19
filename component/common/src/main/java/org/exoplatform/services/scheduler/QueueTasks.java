@@ -16,14 +16,12 @@
  */
 package org.exoplatform.services.scheduler;
 
-import java.util.concurrent.ConcurrentLinkedQueue ;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
- * Created by The eXo Platform SAS
- * Author : Tuan Nguyen
- *          tuan08@users.sourceforge.net
- * Dec 29, 2005
+ * Created by The eXo Platform SAS Author : Tuan Nguyen
+ * tuan08@users.sourceforge.net Dec 29, 2005
  */
-public class QueueTasks extends ConcurrentLinkedQueue<Task>  {
-  
+public class QueueTasks extends ConcurrentLinkedQueue<Task> {
+
 }

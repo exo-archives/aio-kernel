@@ -21,130 +21,133 @@ import javax.management.MBeanServer;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 
+import org.picocontainer.PicoContainer;
+import org.picocontainer.defaults.ComponentAdapterFactory;
+import org.picocontainer.defaults.DefaultPicoContainer;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import org.exoplatform.container.component.ComponentLifecyclePlugin;
 import org.exoplatform.container.configuration.ConfigurationManager;
 import org.exoplatform.container.jmx.ExoContainerMBean;
 import org.exoplatform.container.util.ContainerUtil;
 import org.exoplatform.container.xml.Component;
 import org.exoplatform.container.xml.InitParams;
-import org.picocontainer.PicoContainer;
-import org.picocontainer.defaults.ComponentAdapterFactory;
-import org.picocontainer.defaults.DefaultPicoContainer;
-
 
 /**
- * Created by The eXo Platform SAS
- * Author : Tuan Nguyen
- *          tuan08@users.sourceforge.net
- * Date: Jul 18, 2004
- * Time: 12:15:28 AM
+ * Created by The eXo Platform SAS Author : Tuan Nguyen
+ * tuan08@users.sourceforge.net Date: Jul 18, 2004 Time: 12:15:28 AM
  */
 public class ExoContainer extends DefaultPicoContainer {
-  
-  Log log = LogFactory.getLog(ExoContainer.class);
-  
-  private Map<String, ComponentLifecyclePlugin> componentLifecylePlugin_ = new HashMap<String, ComponentLifecyclePlugin>();
-  private List<ContainerLifecyclePlugin> containerLifecyclePlugin_ = new ArrayList<ContainerLifecyclePlugin>();
-  protected ExoContainerContext context;
-  
-  public ExoContainer(PicoContainer parent) {
-    super(parent)  ;
-    context = new ExoContainerContext(this);
-    context.setName(this.getClass().getName());
-    registerComponentInstance(context);
-  }
-  
-  public ExoContainer(ComponentAdapterFactory factory, PicoContainer parent) {
-    super(factory, parent)  ;
-    context = new ExoContainerContext(this);
-    context.setName(this.getClass().getName());
-    registerComponentInstance(context);
-  }
-  
-  public ExoContainerContext getContext() { return context; }
 
-  public void  initContainer() throws Exception {
-    ConfigurationManager  manager = 
-      (ConfigurationManager) getComponentInstanceOfType(ConfigurationManager.class) ;
-    ContainerUtil.addContainerLifecyclePlugin(this, manager) ;
-    ContainerUtil.addComponentLifecyclePlugin(this, manager) ;
-    for(ContainerLifecyclePlugin plugin : containerLifecyclePlugin_) {
-      plugin.initContainer(this) ;
+  Log                                           log                       = LogFactory.getLog(ExoContainer.class);
+
+  private Map<String, ComponentLifecyclePlugin> componentLifecylePlugin_  = new HashMap<String, ComponentLifecyclePlugin>();
+
+  private List<ContainerLifecyclePlugin>        containerLifecyclePlugin_ = new ArrayList<ContainerLifecyclePlugin>();
+
+  protected ExoContainerContext                 context;
+
+  public ExoContainer(PicoContainer parent) {
+    super(parent);
+    context = new ExoContainerContext(this);
+    context.setName(this.getClass().getName());
+    registerComponentInstance(context);
+  }
+
+  public ExoContainer(ComponentAdapterFactory factory, PicoContainer parent) {
+    super(factory, parent);
+    context = new ExoContainerContext(this);
+    context.setName(this.getClass().getName());
+    registerComponentInstance(context);
+  }
+
+  public ExoContainerContext getContext() {
+    return context;
+  }
+
+  public void initContainer() throws Exception {
+    ConfigurationManager manager = (ConfigurationManager) getComponentInstanceOfType(ConfigurationManager.class);
+    ContainerUtil.addContainerLifecyclePlugin(this, manager);
+    ContainerUtil.addComponentLifecyclePlugin(this, manager);
+    for (ContainerLifecyclePlugin plugin : containerLifecyclePlugin_) {
+      plugin.initContainer(this);
     }
-    ContainerUtil.addComponents(this, manager) ;
+    ContainerUtil.addComponents(this, manager);
   }
-  
-  public void  startContainer() throws Exception {
-    for(ContainerLifecyclePlugin plugin : containerLifecyclePlugin_) {
-      plugin.startContainer(this) ;
+
+  public void startContainer() throws Exception {
+    for (ContainerLifecyclePlugin plugin : containerLifecyclePlugin_) {
+      plugin.startContainer(this);
     }
   }
-  
-  public void  stopContainer() throws Exception {
-    for(ContainerLifecyclePlugin plugin : containerLifecyclePlugin_) {
-      plugin.stopContainer(this) ;
+
+  public void stopContainer() throws Exception {
+    for (ContainerLifecyclePlugin plugin : containerLifecyclePlugin_) {
+      plugin.stopContainer(this);
     }
   }
-  
-  public void  destroyContainer() throws Exception {
-    for(ContainerLifecyclePlugin plugin : containerLifecyclePlugin_) {
-      plugin.destroyContainer(this) ;
+
+  public void destroyContainer() throws Exception {
+    for (ContainerLifecyclePlugin plugin : containerLifecyclePlugin_) {
+      plugin.destroyContainer(this);
     }
   }
-  
-  public MBeanServer getMBeanServer() {  
-    throw new UnsupportedOperationException("This container do not support jmx management") ; 
+
+  public MBeanServer getMBeanServer() {
+    throw new UnsupportedOperationException("This container do not support jmx management");
   }
-  
+
   public void addComponentLifecylePlugin(ComponentLifecyclePlugin plugin) {
     List<String> list = plugin.getManageableComponents();
-    for(String component : list)
-    componentLifecylePlugin_.put(component, plugin) ;
+    for (String component : list)
+      componentLifecylePlugin_.put(component, plugin);
   }
-  
+
   public void addContainerLifecylePlugin(ContainerLifecyclePlugin plugin) {
-    containerLifecyclePlugin_.add(plugin) ;
+    containerLifecyclePlugin_.add(plugin);
   }
-  
+
   public <T> T createComponent(Class<T> clazz) throws Exception {
-    return createComponent(clazz, null) ;
+    return createComponent(clazz, null);
   }
-  
+
   public <T> T createComponent(Class<T> clazz, InitParams params) throws Exception {
     if (log.isDebugEnabled())
-      log.debug(clazz.getName() + " " + ((params!=null)?params:"") + " added to " + getContext().getName());    
-    Constructor<?>[] constructors = ContainerUtil.getSortedConstructors(clazz) ;
+      log.debug(clazz.getName() + " " + ((params != null) ? params : "") + " added to "
+          + getContext().getName());
+    Constructor<?>[] constructors = ContainerUtil.getSortedConstructors(clazz);
     Class<?> unknownParameter = null;
-    for(int k = 0; k < constructors.length; k++) {
-      Constructor<?> constructor =  constructors[k];
-      Class<?>[] parameters = constructor.getParameterTypes() ;
-      Object[] args = new Object[parameters.length] ;
-      boolean satisfied = true ;
+    for (int k = 0; k < constructors.length; k++) {
+      Constructor<?> constructor = constructors[k];
+      Class<?>[] parameters = constructor.getParameterTypes();
+      Object[] args = new Object[parameters.length];
+      boolean satisfied = true;
       for (int i = 0; i < args.length; i++) {
-        if(parameters[i].equals(InitParams.class)) {
-          args[i] = params ;
+        if (parameters[i].equals(InitParams.class)) {
+          args[i] = params;
         } else {
-          args[i] = getComponentInstanceOfType(parameters[i]) ;
+          args[i] = getComponentInstanceOfType(parameters[i]);
           if (args[i] == null) {
-            satisfied = false ;
+            satisfied = false;
             unknownParameter = parameters[i];
-            break ;
+            break;
           }
         }
       }
-      if(satisfied) return  clazz.cast(constructor.newInstance(args)) ;
+      if (satisfied)
+        return clazz.cast(constructor.newInstance(args));
     }
-    throw new Exception("Cannot find a satisfying constructor for " + clazz 
-                        + " with parameter "+unknownParameter) ;
+    throw new Exception("Cannot find a satisfying constructor for " + clazz + " with parameter "
+        + unknownParameter);
   }
-  
+
   public void manageMBean(Component component, String componentKey, Object bean) {
     ObjectName name = null;
     MBeanServer mbeanServer = getMBeanServer();
 
-   Object mbean = null;
+    Object mbean = null;
 
     synchronized (mbeanServer) {
       try {
@@ -168,7 +171,7 @@ public class ExoContainer extends DefaultPicoContainer {
 
     }
   }
-  
+
   /**
    * Ensures that the given componentKey is converted to a JMX ObjectName
    * 
@@ -176,26 +179,27 @@ public class ExoContainer extends DefaultPicoContainer {
    * @return an ObjectName based on the given componentKey
    */
   private static ObjectName asObjectName(Component component, String componentKey) throws MalformedObjectNameException {
-   String name = null ;
-   if(component != null && component.getJMXName() != null) {
-     name = component.getJMXName() ;
-   }
+    String name = null;
+    if (component != null && component.getJMXName() != null) {
+      name = component.getJMXName();
+    }
     // Fix, so it works under WebSphere ver. 5
-    if (name == null  || name.indexOf(':') == -1) {
-      name = "component:type=" + componentKey ;
+    if (name == null || name.indexOf(':') == -1) {
+      name = "component:type=" + componentKey;
     }
     return new ObjectName(name);
   }
-  
-  public  void printMBeanServer() {
-    MBeanServer server = getMBeanServer() ;
+
+  public void printMBeanServer() {
+    MBeanServer server = getMBeanServer();
     final Set names = server.queryNames(null, null);
     for (final Iterator i = names.iterator(); i.hasNext();) {
       ObjectName name = (ObjectName) i.next();
       try {
         MBeanInfo info = server.getMBeanInfo(name);
         MBeanAttributeInfo[] attrs = info.getAttributes();
-        if (attrs == null) continue;
+        if (attrs == null)
+          continue;
         for (int j = 0; j < attrs.length; j++) {
           if (attrs[j].isReadable()) {
             try {
@@ -207,12 +211,12 @@ public class ExoContainer extends DefaultPicoContainer {
         }
         MBeanOperationInfo[] methods = info.getOperations();
         for (int j = 0; j < methods.length; j++) {
-          MBeanParameterInfo[] params =  methods[j].getSignature() ;
-          for(int k = 0 ; k < params.length; k++) {
+          MBeanParameterInfo[] params = methods[j].getSignature();
+          for (int k = 0; k < params.length; k++) {
           }
         }
       } catch (Exception x) {
-        //x.printStackTrace(System. err);
+        // x.printStackTrace(System. err);
       }
     }
   }

@@ -25,48 +25,45 @@ import org.exoplatform.services.remote.group.CommunicationService;
 import org.exoplatform.services.remote.group.Message;
 
 /**
- * Created by The eXo Platform SAS
- * Author : Tuan Nguyen
- *          tuan08@users.sourceforge.net
- * Sep 19, 2005
+ * Created by The eXo Platform SAS Author : Tuan Nguyen
+ * tuan08@users.sourceforge.net Sep 19, 2005
  */
 public class DistributedCacheListener extends BaseComponentPlugin implements CacheListener {
-  private CommunicationService communicationService_ ;
-  
+  private CommunicationService communicationService_;
+
   public DistributedCacheListener(CommunicationService communicationService) {
-    communicationService_ = communicationService ;
+    communicationService_ = communicationService;
   }
 
   public void onExpire(ExoCache cache, Serializable key, Object obj) throws Exception {
-    
+
   }
 
   public void onRemove(ExoCache cache, Serializable key, Object obj) throws Exception {
-    broadcast(cache, key, null) ;
+    broadcast(cache, key, null);
   }
 
   public void onPut(ExoCache cache, Serializable key, Object obj) throws Exception {
-    broadcast(cache, key, obj) ;
+    broadcast(cache, key, obj);
   }
 
   public void onGet(ExoCache cache, Serializable key, Object obj) throws Exception {
 
   }
-  
-  public void onClearCache(ExoCache  cache) throws Exception  {
-    broadcast(cache, null, null) ;
+
+  public void onClearCache(ExoCache cache) throws Exception {
+    broadcast(cache, null, null);
   }
-  
+
   private void broadcast(ExoCache cache, Serializable key, Object value) throws Exception {
-    Message message = 
-      communicationService_.createMessage(SynchronizeCacheMessageHandler.IDENTIFIER) ;
-    SynchronizeCacheMessage synMessage = null ;
-    if(cache.isReplicated()) {
-      synMessage = new SynchronizeCacheMessage(cache.getName(), key, (Serializable)value) ;
+    Message message = communicationService_.createMessage(SynchronizeCacheMessageHandler.IDENTIFIER);
+    SynchronizeCacheMessage synMessage = null;
+    if (cache.isReplicated()) {
+      synMessage = new SynchronizeCacheMessage(cache.getName(), key, (Serializable) value);
     } else {
-      synMessage = new SynchronizeCacheMessage(cache.getName(), key, null) ;
+      synMessage = new SynchronizeCacheMessage(cache.getName(), key, null);
     }
-    message.setMessage(synMessage) ;
-    communicationService_.broadcast(message, false) ;
+    message.setMessage(synMessage);
+    communicationService_.broadcast(message, false);
   }
 }

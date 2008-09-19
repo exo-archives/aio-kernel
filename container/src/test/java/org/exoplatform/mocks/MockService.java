@@ -19,28 +19,34 @@ import java.util.Map;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.container.xml.InitParams;
 
-public class MockService { 
-  Map plugins_ = new HashMap() ;
-  Map listeners_ = new HashMap() ;
-  
+public class MockService {
+  Map plugins_   = new HashMap();
+
+  Map listeners_ = new HashMap();
+
   public MockService(InitParams params) {
     System.out.println("MockService constructor, init params: " + params);
   }
 
-  public String hello() {  return "HELLO WORLD SERVICE"; }
+  public String hello() {
+    return "HELLO WORLD SERVICE";
+  }
 
-  public String getTest(){   return "heh"; }
-
+  public String getTest() {
+    return "heh";
+  }
 
   public void addPlugin(ComponentPlugin plugin) {
-    System.out.println("add plugin === >" + plugin.getName()) ;
-    plugins_.put(plugin.getName(), plugin) ;
+    System.out.println("add plugin === >" + plugin.getName());
+    plugins_.put(plugin.getName(), plugin);
   }
-  
+
   public ComponentPlugin removePlugin(String name) {
     return (ComponentPlugin) plugins_.remove(name);
   }
 
-  public Collection getPlugins() {  return plugins_.values() ; }
+  public Collection getPlugins() {
+    return plugins_.values();
+  }
 
 }

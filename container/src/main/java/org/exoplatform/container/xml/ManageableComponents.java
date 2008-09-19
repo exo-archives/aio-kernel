@@ -19,15 +19,21 @@ package org.exoplatform.container.xml;
 import java.util.ArrayList;
 
 /**
- * Jul 19, 2004 
+ * Jul 19, 2004
+ * 
  * @author: Tuan Nguyen
- * @email:   tuan08@users.sourceforge.net
+ * @email: tuan08@users.sourceforge.net
  * @version: $Id: ManageableComponents.java 5799 2006-05-28 17:55:42Z geaz $
  */
-public class ManageableComponents  {
-  
-	private ArrayList		componentsType = new ArrayList(3);
+public class ManageableComponents {
 
-	public ArrayList getComponentsType() {	return componentsType; }
-	public void setComponentsType(ArrayList values) { this.componentsType = values; }
+  private ArrayList componentsType = new ArrayList(3);
+
+  public ArrayList getComponentsType() {
+    return componentsType;
+  }
+
+  public void setComponentsType(ArrayList values) {
+    this.componentsType = values;
+  }
 }

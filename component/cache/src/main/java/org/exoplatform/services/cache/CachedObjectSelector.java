@@ -19,12 +19,11 @@ package org.exoplatform.services.cache;
 import java.io.Serializable;
 
 /**
- * Created by The eXo Platform SAS
- * Author : Thuannd
- *         nhudinhthuan@yahoo.com
- * Apr 4, 2006
+ * Created by The eXo Platform SAS Author : Thuannd nhudinhthuan@yahoo.com Apr
+ * 4, 2006
  */
 public interface CachedObjectSelector {
-  public boolean select(Serializable key,  ObjectCacheInfo ocinfo) ;
-  public void    onSelect(ExoCache cache, Serializable key,  ObjectCacheInfo ocinfo) throws Exception ;
+  public boolean select(Serializable key, ObjectCacheInfo ocinfo);
+
+  public void onSelect(ExoCache cache, Serializable key, ObjectCacheInfo ocinfo) throws Exception;
 }

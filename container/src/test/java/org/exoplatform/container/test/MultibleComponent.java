@@ -23,11 +23,11 @@ import org.exoplatform.mocks.MockService;
  * @version $Id: $
  */
 public class MultibleComponent {
-  
+
   public MultibleComponent(MockService ms) {
     System.out.println("(Constructor) MoskService in MultibleComponent: " + ms);
   }
-  
+
   public int hash() {
     return this.hashCode();
   }

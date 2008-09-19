@@ -18,6 +18,7 @@ package org.exoplatform.commons.exception;
 
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
+
 /*
  * @author: Tuan Nguyen
  * @version: $Id: ExoMessageException.java,v 1.2 2004/11/03 01:24:55 tuan08 Exp $
@@ -25,35 +26,42 @@ import java.util.ResourceBundle;
  * @email: tuan08@yahoo.com
  */
 public class ExoMessageException extends ExoException {
-  
-  private String messageKey_ ;
-  private Object[] args_ ;
-  
+
+  private String   messageKey_;
+
+  private Object[] args_;
+
   public ExoMessageException(String messageKey) {
-    messageKey_ = messageKey ;
+    messageKey_ = messageKey;
   }
-  
+
   public ExoMessageException(String messageKey, Object[] args) {
-    messageKey_ = messageKey ;
-    args_ = args ;
+    messageKey_ = messageKey;
+    args_ = args;
   }
-  
-  public String getMessageKey() { return messageKey_ ; }
-  
-  public Object[] getArguments() { return args_ ; }
-  
+
+  public String getMessageKey() {
+    return messageKey_;
+  }
+
+  public Object[] getArguments() {
+    return args_;
+  }
+
   public String getMessage(ResourceBundle res) {
-    if(args_ == null) {
-      return res.getString(messageKey_) ;
-    } 
-    return MessageFormat.format(res.getString(messageKey_) , args_) ; 
+    if (args_ == null) {
+      return res.getString(messageKey_);
+    }
+    return MessageFormat.format(res.getString(messageKey_), args_);
   }
-  
+
   public String getExceptionDescription() {
-    return "Usually, this is not a critical exception. The exception is raised " +
-           "when unexpected condition such wrong input, object not found...." +
-           "The application should not crashed and it should continue working";
+    return "Usually, this is not a critical exception. The exception is raised "
+        + "when unexpected condition such wrong input, object not found...."
+        + "The application should not crashed and it should continue working";
   }
-  
-  public String getErrorCode() {  return "EXO ERROR: " ; }
+
+  public String getErrorCode() {
+    return "EXO ERROR: ";
+  }
 }

@@ -27,127 +27,147 @@ import javax.transaction.UserTransaction;
 import javax.transaction.xa.XAResource;
 import javax.transaction.xa.Xid;
 
-import org.apache.commons.logging.Log;
-import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.naming.InitialContextInitializer;
-import org.exoplatform.services.transaction.TransactionService;
 import org.objectweb.jotm.Current;
 import org.objectweb.jotm.TransactionFactory;
 import org.objectweb.jotm.TransactionFactoryImpl;
 import org.objectweb.jotm.XidImpl;
 import org.objectweb.transaction.jta.ResourceManagerEvent;
 
+import org.apache.commons.logging.Log;
+
+import org.exoplatform.container.xml.InitParams;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.naming.InitialContextInitializer;
+import org.exoplatform.services.transaction.TransactionService;
 
 /**
- * Created by The eXo Platform SAS.<br/>
- * JOTM based implementation of TransactionService
- * @author <a href="mailto:gennady.azarenkov@exoplatform.com">Gennady Azarenkov</a>
+ * Created by The eXo Platform SAS.<br/> JOTM based implementation of
+ * TransactionService
+ * 
+ * @author <a href="mailto:gennady.azarenkov@exoplatform.com">Gennady
+ *         Azarenkov</a>
  * @version $Id: $
  */
- 
-public class TransactionServiceJotmImpl implements TransactionService{
-  
+
+public class TransactionServiceJotmImpl implements TransactionService {
+
   protected static Log log = ExoLogger.getLogger("transaction.TransactionServiceJotmImpl");
-  
-  private Current current;
-  
-  public TransactionServiceJotmImpl(InitialContextInitializer initializer, 
-      InitParams params) throws RemoteException {
+
+  private Current      current;
+
+  public TransactionServiceJotmImpl(InitialContextInitializer initializer, InitParams params) throws RemoteException {
     current = Current.getCurrent();
-    if(current == null) {
+    if (current == null) {
       TransactionFactory tm = new TransactionFactoryImpl();
       current = new Current(tm);
-      
+
       // Change the timeout only if JOTM is not initialized yet
-      if(params != null && params.getValueParam("timeout") != null) {
-        int t = Integer.parseInt(params.getValueParam("timeout").getValue()); 
+      if (params != null && params.getValueParam("timeout") != null) {
+        int t = Integer.parseInt(params.getValueParam("timeout").getValue());
         current.setDefaultTimeout(t);
       }
     } else {
-      log.info("Use externally initialized JOTM: "+current);
+      log.info("Use externally initialized JOTM: " + current);
     }
   }
 
-  /* (non-Javadoc)
-   * @see org.exoplatform.services.transaction.TransactionService#getTransactionManager()
+  /*
+   * (non-Javadoc)
+   * @see
+   * org.exoplatform.services.transaction.TransactionService#getTransactionManager
+   * ()
    */
   public TransactionManager getTransactionManager() {
     return current;
   }
 
-  /* (non-Javadoc)
-   * @see org.exoplatform.services.transaction.TransactionService#getUserTransaction()
+  /*
+   * (non-Javadoc)
+   * @see
+   * org.exoplatform.services.transaction.TransactionService#getUserTransaction
+   * ()
    */
   public UserTransaction getUserTransaction() {
     return current;
   }
-  
-  /* (non-Javadoc)
-   * @see org.exoplatform.services.transaction.TransactionService#enlistResource(javax.transaction.xa.XAResource)
+
+  /*
+   * (non-Javadoc)
+   * @see
+   * org.exoplatform.services.transaction.TransactionService#enlistResource(
+   * javax.transaction.xa.XAResource)
    */
   public void enlistResource(XAResource xares) throws RollbackException, SystemException {
     Transaction tx = getTransactionManager().getTransaction();
-    if(tx != null)
+    if (tx != null)
       current.getTransaction().enlistResource(xares);
     else
-      current.connectionOpened((ResourceManagerEvent)xares);
+      current.connectionOpened((ResourceManagerEvent) xares);
   }
 
-  /* (non-Javadoc)
-   * @see org.exoplatform.services.transaction.TransactionService#delistResource(javax.transaction.xa.XAResource)
+  /*
+   * (non-Javadoc)
+   * @see
+   * org.exoplatform.services.transaction.TransactionService#delistResource(
+   * javax.transaction.xa.XAResource)
    */
   public void delistResource(XAResource xares) throws RollbackException, SystemException {
     Transaction tx = getTransactionManager().getTransaction();
-    if(tx != null)
+    if (tx != null)
       current.getTransaction().delistResource(xares, XAResource.TMNOFLAGS);
     else
-      current.connectionClosed((ResourceManagerEvent)xares);
+      current.connectionClosed((ResourceManagerEvent) xares);
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
    * @see org.exoplatform.services.transaction.TransactionService#createXid()
    */
   public Xid createXid() {
     return new XidImpl();
   }
-  
-  /* (non-Javadoc)
-   * @see org.exoplatform.services.transaction.TransactionService#getDefaultTimeout()
+
+  /*
+   * (non-Javadoc)
+   * @see
+   * org.exoplatform.services.transaction.TransactionService#getDefaultTimeout()
    */
   public int getDefaultTimeout() {
     return current.getDefaultTimeout();
   }
 
-  /* (non-Javadoc)
-   * @see org.exoplatform.services.transaction.TransactionService#setTransactionTimeout(int)
+  /*
+   * (non-Javadoc)
+   * @see
+   * org.exoplatform.services.transaction.TransactionService#setTransactionTimeout
+   * (int)
    */
   public void setTransactionTimeout(int seconds) throws SystemException {
     current.setTransactionTimeout(seconds);
   }
-  
 
   /**
-   * Push a new event list on the stack of thread local resource event sets.
-   * The list must contain only <code>ResourceManagerEvent</code> objects.
+   * Push a new event list on the stack of thread local resource event sets. The
+   * list must contain only <code>ResourceManagerEvent</code> objects.
    * 
    * @param eventList the possibly null list of events to store forecoming
-   * <code>ResourceManagerEvent</code> events occuring in the current thread.
+   *          <code>ResourceManagerEvent</code> events occuring in the current
+   *          thread.
    */
-  public void pushThreadLocalRMEventList(List eventList){
+  public void pushThreadLocalRMEventList(List eventList) {
     current.pushThreadLocalRMEventList(eventList);
   };
 
   /**
-   * Pop the current set from the stack of thread local resource event sets
-   * The list contains <code>ResourceManagerEvent</code> objects.
+   * Pop the current set from the stack of thread local resource event sets The
+   * list contains <code>ResourceManagerEvent</code> objects.
    * 
-   * @return The possibly null <code>ResourceManagerEvent</code> 
-   * list of events that have occured in the  current thread since the last 
-   * call of <code>pushThreadLocalRMEventList</code> or since the thread 
-   * started.
+   * @return The possibly null <code>ResourceManagerEvent</code> list of events
+   *         that have occured in the current thread since the last call of
+   *         <code>pushThreadLocalRMEventList</code> or since the thread
+   *         started.
    */
-  public  List popThreadLocalRMEventList(){
+  public List popThreadLocalRMEventList() {
     return current.popThreadLocalRMEventList();
   };
 }

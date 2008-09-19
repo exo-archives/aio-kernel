@@ -34,7 +34,7 @@ public class TestJ2EEServerInfo extends TestCase {
       if (confFile.createNewFile()) {
         confPath = confFile.getAbsolutePath();
         confDir = confPath.replace(System.getProperty("file.separator") + "exo-configuration.xml",
-            "");
+                                   "");
       }
     } catch (IOException e) {
       e.printStackTrace();
@@ -76,8 +76,8 @@ public class TestJ2EEServerInfo extends TestCase {
       System.out.println("delete ok!");
   }
 
-  private static void initConfigurationURL(ClassLoader configClassLoader)
-      throws MalformedURLException, ConfigurationException {
+  private static void initConfigurationURL(ClassLoader configClassLoader) throws MalformedURLException,
+                                                                         ConfigurationException {
     // (1) set by setConfigurationURL or setConfigurationPath
     // or
     if (configurationURL == null) {
@@ -97,8 +97,9 @@ public class TestJ2EEServerInfo extends TestCase {
       // one jars with conf/standalone/configuration.xml file
       /*
        * if(!fileExists(configurationURL)) { configurationURL =
-       * Thread.currentThread().getContextClassLoader().getResource("conf/standalone/configuration.xml");
-       * if (configurationURL == null) throw new ConfigurationException( "No
+       * Thread.currentThread
+       * ().getContextClassLoader().getResource("conf/standalone/configuration.xml"
+       * ); if (configurationURL == null) throw new ConfigurationException( "No
        * StandaloneContainer config found. Check if
        * conf/standalone/configuration.xml exists !"); }
        */

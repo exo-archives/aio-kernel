@@ -19,11 +19,9 @@ import org.picocontainer.defaults.ComponentAdapterFactory;
 import org.picocontainer.defaults.NotConcreteRegistrationException;
 
 public class MX4JComponentAdapterFactory implements ComponentAdapterFactory, Serializable {
-  public ComponentAdapter createComponentAdapter(Object key, Class impl, Parameter[] params) 
-    throws PicoIntrospectionException, 
-           AssignabilityRegistrationException, 
-           NotConcreteRegistrationException 
-  {
+  public ComponentAdapter createComponentAdapter(Object key, Class impl, Parameter[] params) throws PicoIntrospectionException,
+                                                                                            AssignabilityRegistrationException,
+                                                                                            NotConcreteRegistrationException {
     return new MX4JComponentAdapter(key, impl);
   }
 }

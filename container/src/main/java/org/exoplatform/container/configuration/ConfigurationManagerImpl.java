@@ -16,9 +16,9 @@
  */
 package org.exoplatform.container.configuration;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.File;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Iterator;
@@ -26,11 +26,12 @@ import java.util.List;
 
 import javax.servlet.ServletContext;
 
-import org.exoplatform.container.xml.Component;
-import org.exoplatform.container.xml.Configuration;
 import org.jibx.runtime.BindingDirectory;
 import org.jibx.runtime.IBindingFactory;
 import org.jibx.runtime.IUnmarshallingContext;
+
+import org.exoplatform.container.xml.Component;
+import org.exoplatform.container.xml.Configuration;
 
 /**
  * Jul 19, 2004
@@ -41,21 +42,22 @@ import org.jibx.runtime.IUnmarshallingContext;
  *           Exp $
  */
 public class ConfigurationManagerImpl implements ConfigurationManager {
-  final static public String WAR_CONF_LOCATION = "/WEB-INF";
-  
-  final static public String LOG_DEBUG_PROPERTY = "org.exoplatform.container.configuration.debug";
-  
-  final static public boolean LOG_DEBUG = System.getProperty(LOG_DEBUG_PROPERTY) != null;
+  final static public String  WAR_CONF_LOCATION  = "/WEB-INF";
 
-  protected Configuration    configurations_;
+  final static public String  LOG_DEBUG_PROPERTY = "org.exoplatform.container.configuration.debug";
 
-  private ServletContext     scontext_;
+  final static public boolean LOG_DEBUG          = System.getProperty(LOG_DEBUG_PROPERTY) != null;
 
-  private ClassLoader scontextClassLoader_;
+  protected Configuration     configurations_;
 
-  private String             contextPath       = null;
+  private ServletContext      scontext_;
 
-  public ConfigurationManagerImpl() { }
+  private ClassLoader         scontextClassLoader_;
+
+  private String              contextPath        = null;
+
+  public ConfigurationManagerImpl() {
+  }
 
   public ConfigurationManagerImpl(ServletContext context) {
     scontext_ = context;
@@ -114,13 +116,14 @@ public class ConfigurationManagerImpl implements ConfigurationManager {
             if (LOG_DEBUG)
               System.out.println("\timport " + urlObject);
           } else {
-            System.err.println("WARNING: Couldn't process the URL for " + uri + " configuration file ignored ");
+            System.err.println("WARNING: Couldn't process the URL for " + uri
+                + " configuration file ignored ");
           }
         }
       }
     } catch (Exception ex) {
       // System .err.println("Error: " + ex.getMessage());
-      System .err.println("ERROR: cannot process the configuration " + url);
+      System.err.println("ERROR: cannot process the configuration " + url);
       ex.printStackTrace();
     }
   }
@@ -168,7 +171,8 @@ public class ConfigurationManagerImpl implements ConfigurationManager {
   public InputStream getInputStream(String uri) throws Exception {
     URL url = getURL(uri);
     if (url == null) {
-      throw new IOException("Resource (" + uri
+      throw new IOException("Resource ("
+          + uri
           + ") could not be found or the invoker doesn't have adequate privileges to get the resource");
     }
     return url.openStream();

@@ -19,6 +19,7 @@ package org.exoplatform.container.component;
 import org.exoplatform.container.ExoContainer;
 
 public interface ComponentRequestLifecycle {
-  public void  startRequest(ExoContainer container) ;
-  public void  endRequest(ExoContainer container) ;
+  public void startRequest(ExoContainer container);
+
+  public void endRequest(ExoContainer container);
 }

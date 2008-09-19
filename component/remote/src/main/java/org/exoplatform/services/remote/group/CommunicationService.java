@@ -25,16 +25,21 @@ import java.util.List;
  * @deprecated unused
  */
 public interface CommunicationService {
-  
-  public List getMembersInfo()   ;
-  public CommunicationServiceMonitor getCommunicationServiceMonitor(MemberInfo info) throws Exception ;
-  
-  public Message createMessage(String handlerId) ; 
-  public void broadcast(Message message, boolean include) throws Exception ;
-  public void broadcast(Message message, ResultHandler handler, boolean include) throws Exception ;
-  public Object send(MemberInfo dest, Message message) throws Exception ;
-  
-  public PingResult ping(MemberInfo info, String message) throws Exception ;
-  public List       pingAll(String message) throws Exception ;
+
+  public List getMembersInfo();
+
+  public CommunicationServiceMonitor getCommunicationServiceMonitor(MemberInfo info) throws Exception;
+
+  public Message createMessage(String handlerId);
+
+  public void broadcast(Message message, boolean include) throws Exception;
+
+  public void broadcast(Message message, ResultHandler handler, boolean include) throws Exception;
+
+  public Object send(MemberInfo dest, Message message) throws Exception;
+
+  public PingResult ping(MemberInfo info, String message) throws Exception;
+
+  public List pingAll(String message) throws Exception;
 
 }

@@ -20,23 +20,28 @@ import java.lang.management.ManagementFactory;
 
 import org.exoplatform.container.BaseContainerLifecyclePlugin;
 import org.exoplatform.container.ExoContainer;
+
 /**
  * @author Tuan Nguyen (tuan08@users.sourceforge.net)
  * @since Jan 11, 2005
- * @version $Id: AddJVMComponentsToRootContainer.java 5799 2006-05-28 17:55:42Z geaz $
+ * @version $Id: AddJVMComponentsToRootContainer.java 5799 2006-05-28 17:55:42Z
+ *          geaz $
  */
 public class AddJVMComponentsToRootContainer extends BaseContainerLifecyclePlugin {
-  
+
   public void initContainer(ExoContainer container) {
-    container.registerComponentInstance(ManagementFactory.getOperatingSystemMXBean()) ;
-    container.registerComponentInstance(ManagementFactory.getRuntimeMXBean()) ;
-    container.registerComponentInstance(ManagementFactory.getThreadMXBean()) ;
-    container.registerComponentInstance(ManagementFactory.getClassLoadingMXBean()) ;
-    container.registerComponentInstance(ManagementFactory.getCompilationMXBean()) ;
-    
-    container.registerComponentInstance(new MemoryInfo()) ;
-    container.registerComponentInstance(JVMRuntimeInfo.MEMORY_MANAGER_MXBEANS, ManagementFactory.getMemoryManagerMXBeans()) ;
-    container.registerComponentInstance(JVMRuntimeInfo.MEMORY_POOL_MXBEANS, ManagementFactory.getMemoryPoolMXBeans()) ;
-    container.registerComponentInstance(JVMRuntimeInfo.GARBAGE_COLLECTOR_MXBEANS, ManagementFactory.getGarbageCollectorMXBeans()) ;
+    container.registerComponentInstance(ManagementFactory.getOperatingSystemMXBean());
+    container.registerComponentInstance(ManagementFactory.getRuntimeMXBean());
+    container.registerComponentInstance(ManagementFactory.getThreadMXBean());
+    container.registerComponentInstance(ManagementFactory.getClassLoadingMXBean());
+    container.registerComponentInstance(ManagementFactory.getCompilationMXBean());
+
+    container.registerComponentInstance(new MemoryInfo());
+    container.registerComponentInstance(JVMRuntimeInfo.MEMORY_MANAGER_MXBEANS,
+                                        ManagementFactory.getMemoryManagerMXBeans());
+    container.registerComponentInstance(JVMRuntimeInfo.MEMORY_POOL_MXBEANS,
+                                        ManagementFactory.getMemoryPoolMXBeans());
+    container.registerComponentInstance(JVMRuntimeInfo.GARBAGE_COLLECTOR_MXBEANS,
+                                        ManagementFactory.getGarbageCollectorMXBeans());
   }
 }

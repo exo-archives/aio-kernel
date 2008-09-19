@@ -22,28 +22,24 @@ import org.exoplatform.services.scheduler.JobContext;
 import org.exoplatform.services.scheduler.QueueTasks;
 import org.exoplatform.services.scheduler.Task;
 
-
 /**
- * Created by The eXo Platform SAS
- * Author : Hoa  Pham
- *          hoapham@exoplatform.com,phamvuxuanhoa@yahoo.com
- * Oct 7, 2005
+ * Created by The eXo Platform SAS Author : Hoa Pham
+ * hoapham@exoplatform.com,phamvuxuanhoa@yahoo.com Oct 7, 2005
  * 
  * @version $Id$
  */
-public class QueueTaskJob extends BaseJob {  
-  public void  execute(JobContext  context) throws Exception {      
-    PortalContainer manager = PortalContainer.getInstance() ;
-    QueueTasks qtasks = 
-      (QueueTasks) manager.getComponentInstanceOfType(QueueTasks.class) ;    
-    Task task =  qtasks.poll() ;
-    while(task != null) {
+public class QueueTaskJob extends BaseJob {
+  public void execute(JobContext context) throws Exception {
+    PortalContainer manager = PortalContainer.getInstance();
+    QueueTasks qtasks = (QueueTasks) manager.getComponentInstanceOfType(QueueTasks.class);
+    Task task = qtasks.poll();
+    while (task != null) {
       try {
-        task.execute() ;
-      } catch(Exception ex) {
-        ex.printStackTrace() ;
+        task.execute();
+      } catch (Exception ex) {
+        ex.printStackTrace();
       }
-      task = qtasks.poll() ;
+      task = qtasks.poll();
     }
   }
 }

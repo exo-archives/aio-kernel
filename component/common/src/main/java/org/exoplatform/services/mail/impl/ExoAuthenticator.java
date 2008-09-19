@@ -24,14 +24,14 @@ import javax.mail.PasswordAuthentication;
  * @since Sep 12, 2004
  * @version $Id: ExoAuthenticator.java 5332 2006-04-29 18:32:44Z geaz $
  */
-public class ExoAuthenticator extends Authenticator{
-  private PasswordAuthentication authentication_ ;
-  
-  public ExoAuthenticator(String userName , String password) {
-    authentication_ = new PasswordAuthentication(userName, password) ;
+public class ExoAuthenticator extends Authenticator {
+  private PasswordAuthentication authentication_;
+
+  public ExoAuthenticator(String userName, String password) {
+    authentication_ = new PasswordAuthentication(userName, password);
   }
-  
+
   protected PasswordAuthentication getPasswordAuthentication() {
-    return authentication_ ;
+    return authentication_;
   }
 }

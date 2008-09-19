@@ -21,24 +21,22 @@ import java.net.Socket;
 import org.exoplatform.services.net.NetService;
 
 /**
- * Created by The eXo Platform SAS
- * Author : HoaPham
- *          phamvuxuanhoa@yahoo.com
- * Jan 10, 2006
+ * Created by The eXo Platform SAS Author : HoaPham phamvuxuanhoa@yahoo.com Jan
+ * 10, 2006
  */
-public class NetServiceImpl implements NetService{
+public class NetServiceImpl implements NetService {
 
-  public long ping(String host, int port) throws Exception{
-    long startTime = 0 ;
-    long endTime = 0 ;    
-    try{      
-      startTime = System.currentTimeMillis() ;
-      Socket socket = new Socket(host,port)  ;
-      endTime = System.currentTimeMillis() ;
-    }catch (Exception e) {
-      //e.printStackTrace() ;
-      return -1 ;
-    }        
+  public long ping(String host, int port) throws Exception {
+    long startTime = 0;
+    long endTime = 0;
+    try {
+      startTime = System.currentTimeMillis();
+      Socket socket = new Socket(host, port);
+      endTime = System.currentTimeMillis();
+    } catch (Exception e) {
+      // e.printStackTrace() ;
+      return -1;
+    }
     return endTime - startTime;
-  }  
+  }
 }

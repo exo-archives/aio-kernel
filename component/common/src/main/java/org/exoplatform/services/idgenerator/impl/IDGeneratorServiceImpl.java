@@ -19,41 +19,44 @@ package org.exoplatform.services.idgenerator.impl;
 import java.io.Serializable;
 import java.net.InetAddress;
 import java.security.SecureRandom;
+
 import org.exoplatform.services.idgenerator.IDGeneratorService;
+
 /**
  * @author Tuan Nguyen (tuan08@users.sourceforge.net)
  * @since Oct 14, 2004
  * @version $Id: IDGeneratorServiceImpl.java 5332 2006-04-29 18:32:44Z geaz $
  */
 public class IDGeneratorServiceImpl implements IDGeneratorService {
-  private static String hexServerIP_ = null;
-  private static final SecureRandom seeder_ = new SecureRandom();
-  
-  
+  private static String             hexServerIP_ = null;
+
+  private static final SecureRandom seeder_      = new SecureRandom();
+
   public Serializable generateID(Object o) {
-    return generateStringID(o) ;
+    return generateStringID(o);
   }
-  
-  public long generateLongID(Object o)  {
-    String uuid = generateStringID(o) ;
-    return  uuid.hashCode() ;
+
+  public long generateLongID(Object o) {
+    String uuid = generateStringID(o);
+    return uuid.hashCode();
   }
-  
+
   public int generatIntegerID(Object o) {
-    String uuid = generateStringID(o) ;
-    return  uuid.hashCode() ;
+    String uuid = generateStringID(o);
+    return uuid.hashCode();
   }
-  
-  public String generateStringID(Object o)   {
+
+  public String generateStringID(Object o) {
     StringBuffer tmpBuffer = new StringBuffer(16);
     if (hexServerIP_ == null) {
       InetAddress localInetAddress = null;
       try {
         // get the inet address
         localInetAddress = InetAddress.getLocalHost();
-      }
-      catch (java.net.UnknownHostException uhe) {
-//        System .err.println("ContentSetUtil: Could not get the local IP address using InetAddress.getLocalHost()!");
+      } catch (java.net.UnknownHostException uhe) {
+        // System .err.println(
+        // "ContentSetUtil: Could not get the local IP address using InetAddress.getLocalHost()!"
+        // );
         // todo: find better way to get around this...
         uhe.printStackTrace();
         return null;
@@ -64,11 +67,11 @@ public class IDGeneratorServiceImpl implements IDGeneratorService {
     String hashcode = hexFormat(System.identityHashCode(o), 8);
     tmpBuffer.append(hexServerIP_);
     tmpBuffer.append(hashcode);
-  
-    long timeNow      = System.currentTimeMillis();
-    int timeLow       = (int)timeNow & 0xFFFFFFFF;
-    int node          = seeder_.nextInt();
-  
+
+    long timeNow = System.currentTimeMillis();
+    int timeLow = (int) timeNow & 0xFFFFFFFF;
+    int node = seeder_.nextInt();
+
     StringBuffer guid = new StringBuffer(32);
     guid.append(hexFormat(timeLow, 8));
     guid.append(tmpBuffer.toString());

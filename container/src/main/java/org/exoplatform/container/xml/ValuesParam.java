@@ -20,23 +20,30 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
- * Jul 19, 2004 
+ * Jul 19, 2004
+ * 
  * @author: Tuan Nguyen
- * @email:   tuan08@users.sourceforge.net
+ * @email: tuan08@users.sourceforge.net
  * @version: $Id: ValuesParam.java 5799 2006-05-28 17:55:42Z geaz $
  */
-public class ValuesParam extends  Parameter {
-  
-	private ArrayList		values = new ArrayList(2);
+public class ValuesParam extends Parameter {
 
-	public ArrayList getValues() {	return values; }
-	public void setValues(ArrayList values) { this.values = values; }
-  
-  public String getValue() {
-   if(values.size() == 0) return null ;
-   return (String) values.get(0) ;
+  private ArrayList values = new ArrayList(2);
+
+  public ArrayList getValues() {
+    return values;
   }
-  
+
+  public void setValues(ArrayList values) {
+    this.values = values;
+  }
+
+  public String getValue() {
+    if (values.size() == 0)
+      return null;
+    return (String) values.get(0);
+  }
+
   public String toString() {
     Iterator it = values.iterator();
     StringBuilder builder = new StringBuilder();

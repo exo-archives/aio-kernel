@@ -17,24 +17,27 @@
 package org.exoplatform.commons.utils;
 
 import java.util.List;
+
 /**
  * @author Tuan Nguyen (tuan08@users.sourceforge.net)
  * @since Oct 21, 2004
  * @version $Id: ObjectPageList.java,v 1.1 2004/10/22 14:18:46 tuan08 Exp $
  */
 public class ObjectPageList extends PageList {
-  
-  private List objects_  ;
-  
+
+  private List objects_;
+
   public ObjectPageList(List list, int pageSize) {
-    super(pageSize) ;
-    objects_ = list ;
-    setAvailablePage(list.size()) ;
+    super(pageSize);
+    objects_ = list;
+    setAvailablePage(list.size());
   }
-  
-  protected void populateCurrentPage(int page) throws Exception  {
-    currentListPage_ = objects_.subList(getFrom(), getTo()) ;
+
+  protected void populateCurrentPage(int page) throws Exception {
+    currentListPage_ = objects_.subList(getFrom(), getTo());
   }
-  
-  public List getAll() throws Exception  { return objects_ ; }
+
+  public List getAll() throws Exception {
+    return objects_;
+  }
 }

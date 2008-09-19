@@ -16,9 +16,9 @@
  */
 package org.exoplatform.services.command.action;
 
-
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author Gennady Azarenkov
  * @version $Id: $
  */

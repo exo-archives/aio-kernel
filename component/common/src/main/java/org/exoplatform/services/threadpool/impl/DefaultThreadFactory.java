@@ -26,15 +26,14 @@ package org.exoplatform.services.threadpool.impl;
  * Contributor(s): Mark Grand
  */
 
-
 /**
  * This is a default thread factory that creates vanilla threads.
  */
 public class DefaultThreadFactory implements ThreadFactoryIF {
-    /**
-     * Return a Thread that runs the given Runnable object.
-     */
-    public Thread createThread(Runnable r) {
-        return new Thread(r);
-    } // createThread(Runnable)
+  /**
+   * Return a Thread that runs the given Runnable object.
+   */
+  public Thread createThread(Runnable r) {
+    return new Thread(r);
+  } // createThread(Runnable)
 } // class DefaultThreadFactory

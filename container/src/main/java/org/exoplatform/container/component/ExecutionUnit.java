@@ -16,22 +16,23 @@
  */
 package org.exoplatform.container.component;
 
-
 /**
- * Created by The eXo Platform SAS
- * Author : Tuan Nguyen
- *          tuan08@users.sourceforge.net
- * Sep 17, 2005
+ * Created by The eXo Platform SAS Author : Tuan Nguyen
+ * tuan08@users.sourceforge.net Sep 17, 2005
  */
 abstract public class ExecutionUnit extends BaseComponentPlugin {
-  private  ExecutionUnit next_ ;
-  
-  public  void  addExecutionUnit(ExecutionUnit next) {
-    if(next_  == null) next_ = next ;
-    else  next_.addExecutionUnit(next) ;
+  private ExecutionUnit next_;
+
+  public void addExecutionUnit(ExecutionUnit next) {
+    if (next_ == null)
+      next_ = next;
+    else
+      next_.addExecutionUnit(next);
   }
-  
-  public ExecutionUnit getNextUnit()  { return next_ ; }
-  
-  abstract public Object execute(ExecutionContext context) throws Throwable ;
+
+  public ExecutionUnit getNextUnit() {
+    return next_;
+  }
+
+  abstract public Object execute(ExecutionContext context) throws Throwable;
 }

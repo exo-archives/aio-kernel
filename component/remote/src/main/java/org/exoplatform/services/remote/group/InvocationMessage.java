@@ -22,14 +22,20 @@ package org.exoplatform.services.remote.group;
  * @version $Id: InvocationMessage.java 5799 2006-05-28 17:55:42Z geaz $
  */
 public class InvocationMessage {
-  private String method_ ;
-  private Object[] args_ ;
-  
+  private String   method_;
+
+  private Object[] args_;
+
   public InvocationMessage(String method, Object[] args) {
-    method_ = method ;
-    args_ = args ;
+    method_ = method;
+    args_ = args;
   }
-  
-  public String getMethod() { return method_ ; }
-  public Object[] getArguments() { return args_; }
+
+  public String getMethod() {
+    return method_;
+  }
+
+  public Object[] getArguments() {
+    return args_;
+  }
 }

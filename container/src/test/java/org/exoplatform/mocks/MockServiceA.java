@@ -15,6 +15,7 @@ package org.exoplatform.mocks;
 public interface MockServiceA {
 
   public void methodServiceA();
+
   public void testArguments(String test, int num);
 
 }

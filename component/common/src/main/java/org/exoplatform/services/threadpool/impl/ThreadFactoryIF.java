@@ -27,15 +27,14 @@ package org.exoplatform.services.threadpool.impl;
  */
 
 /**
- * This interface in implemented by objects that create Thread
- * objects.  Classes that create Thread objects through this
- * interface can be passed a ThreadFactoryIF object that
- * creates an instance of Thread or a subclass of Thread with
- * different properties.
+ * This interface in implemented by objects that create Thread objects. Classes
+ * that create Thread objects through this interface can be passed a
+ * ThreadFactoryIF object that creates an instance of Thread or a subclass of
+ * Thread with different properties.
  */
 public interface ThreadFactoryIF {
-    /**
-     * Return a Thread that runs the given Runnable object.
-     */
-    public Thread createThread(Runnable r);
+  /**
+   * Return a Thread that runs the given Runnable object.
+   */
+  public Thread createThread(Runnable r);
 } // interface ThreadFactoryIF

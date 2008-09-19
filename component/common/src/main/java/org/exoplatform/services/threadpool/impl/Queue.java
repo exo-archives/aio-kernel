@@ -1,4 +1,5 @@
 package org.exoplatform.services.threadpool.impl;
+
 /**
  * $Id: Queue.java 5332 2006-04-29 18:32:44Z geaz $
  *
@@ -28,20 +29,22 @@ package org.exoplatform.services.threadpool.impl;
 import java.util.ArrayList;
 
 public class Queue {
-  private ArrayList data = new ArrayList();
-  private int maxQueueSize = Integer.MAX_VALUE;
+  private ArrayList data         = new ArrayList();
+
+  private int       maxQueueSize = Integer.MAX_VALUE;
 
   /**
-   * Put an object on the end of the queue.  If the size of
-   * the queue is equal to or greater than the current value
-   * of maxQueueSize then this method will wait until the
-   * size of the queue shrinks to less than maxQueueSize.
-   *
+   * Put an object on the end of the queue. If the size of the queue is equal to
+   * or greater than the current value of maxQueueSize then this method will
+   * wait until the size of the queue shrinks to less than maxQueueSize.
+   * 
    * @param obj the object to put at end of queue
    */
   synchronized public void put(Object obj) throws InterruptedException {
-    if (Thread.currentThread().isInterrupted()) throw new InterruptedException();
-    if (obj == null)  throw new IllegalArgumentException("null");
+    if (Thread.currentThread().isInterrupted())
+      throw new InterruptedException();
+    if (obj == null)
+      throw new IllegalArgumentException("null");
     while (data.size() >= maxQueueSize) {
       try {
         wait();
@@ -54,28 +57,28 @@ public class Queue {
   } // put(Object)
 
   /**
-   * Put an object on the end of the queue.  If the size of
-   * the queue is equal to or greater than the current value
-   * of maxQueueSize then this method will wait until the
-   * size of the queue shrinks to less than maxQueueSize.
-   *
-   * @param obj   the object to put at end of queue
-   * @param msecs If this method has to wait for the size of the
-   *              queue to shrink to less than maxQueueSize, it
-   *              will stop waiting after it has waited this many
-   *              milliseconds.
-   * @return false if this method returns without queuing the
-   *         given object becuase it had to wait msec
-   *         milliseconds; otherwise true.
+   * Put an object on the end of the queue. If the size of the queue is equal to
+   * or greater than the current value of maxQueueSize then this method will
+   * wait until the size of the queue shrinks to less than maxQueueSize.
+   * 
+   * @param obj the object to put at end of queue
+   * @param msecs If this method has to wait for the size of the queue to shrink
+   *          to less than maxQueueSize, it will stop waiting after it has
+   *          waited this many milliseconds.
+   * @return false if this method returns without queuing the given object
+   *         becuase it had to wait msec milliseconds; otherwise true.
    */
   synchronized public boolean put(Object obj, long msecs) throws InterruptedException {
-    if (Thread.currentThread().isInterrupted()) throw new InterruptedException();
-    if (obj == null)  throw new IllegalArgumentException("null");
+    if (Thread.currentThread().isInterrupted())
+      throw new InterruptedException();
+    if (obj == null)
+      throw new IllegalArgumentException("null");
     long startTime = System.currentTimeMillis();
     long waitTime = msecs;
     while (data.size() >= maxQueueSize) {
       waitTime = msecs - (System.currentTimeMillis() - startTime);
-      if (waitTime <= 0)  return false;
+      if (waitTime <= 0)
+        return false;
       wait(waitTime);
     } // while
     data.add(obj);
@@ -84,8 +87,8 @@ public class Queue {
   } // put(Object, long)
 
   /**
-   * Get an object from the front of the queue.
-   * If queue is empty, waits until it is not empty.
+   * Get an object from the front of the queue. If queue is empty, waits until
+   * it is not empty.
    */
   synchronized public Object get() throws InterruptedException {
     while (data.size() == 0) {
@@ -97,25 +100,25 @@ public class Queue {
   } // get()
 
   /**
-   * Get an object from the front of the queue.
-   * If queue is empty, waits until it is not empty.
-   *
-   * @param msecs The maximum number of milliseconds that this
-   *              method should wait before giving up.
-   * @return The object at the front of the queue or null if
-   *         there are no objects in the queue and the method
-   *         has waited at least the given number of
-   *         milliseconds for an object to be put in the
-   *         queue.
+   * Get an object from the front of the queue. If queue is empty, waits until
+   * it is not empty.
+   * 
+   * @param msecs The maximum number of milliseconds that this method should
+   *          wait before giving up.
+   * @return The object at the front of the queue or null if there are no
+   *         objects in the queue and the method has waited at least the given
+   *         number of milliseconds for an object to be put in the queue.
    */
   synchronized public Object get(long msecs) throws InterruptedException {
     long startTime = System.currentTimeMillis();
     long waitTime = msecs;
 
-    if (data.size() > 0)  return data.remove(0);
+    if (data.size() > 0)
+      return data.remove(0);
     while (true) {
       waitTime = msecs - (System.currentTimeMillis() - startTime);
-      if (waitTime <= 0)  return null;
+      if (waitTime <= 0)
+        return null;
       wait(waitTime);
       if (data.size() > 0) {
         Object obj = data.remove(0);

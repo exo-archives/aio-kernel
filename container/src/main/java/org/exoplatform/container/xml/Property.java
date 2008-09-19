@@ -22,19 +22,31 @@ package org.exoplatform.container.xml;
  * @version $Id: Property.java 5799 2006-05-28 17:55:42Z geaz $
  */
 public class Property {
-  String name ;
-  String value ;
-  
-  public Property() {} 
-  
-  public Property(String n, String v) {
-    this.name = n ;
-    this.value = v ;
+  String name;
+
+  String value;
+
+  public Property() {
   }
-  
-  public String getName() { return name; }
-  public void setName(String s) {  this.name = s; }
-  
-  public String getValue() {  return value;}
-  public void setValue(String s) {  this.value = s; }
+
+  public Property(String n, String v) {
+    this.name = n;
+    this.value = v;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String s) {
+    this.name = s;
+  }
+
+  public String getValue() {
+    return value;
+  }
+
+  public void setValue(String s) {
+    this.value = s;
+  }
 }

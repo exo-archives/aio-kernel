@@ -22,20 +22,43 @@ package org.exoplatform.container.xml;
  * @version $Id: LifecyclePlugin.java 5799 2006-05-28 17:55:42Z geaz $
  */
 public class LifecyclePlugin {
-  String name ;
-  String type ;
-  String description ;
-  InitParams initParams ;
-  
-  public String getName() {   return name; }
-  public void setName(String name) { this.name = name; }
-  
-  public String getType() {   return type; }
-  public void setType(String type) { this.type = type; }
-  
-  public String getDescription() {  return description; }  
-  public void setDescription(String description) {  this.description = description;  }
-  
-  public InitParams getInitParams() {  return initParams; }
-  public void setInitParams(InitParams ips) {  this.initParams = ips; }
+  String     name;
+
+  String     type;
+
+  String     description;
+
+  InitParams initParams;
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public String getType() {
+    return type;
+  }
+
+  public void setType(String type) {
+    this.type = type;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
+  public InitParams getInitParams() {
+    return initParams;
+  }
+
+  public void setInitParams(InitParams ips) {
+    this.initParams = ips;
+  }
 }

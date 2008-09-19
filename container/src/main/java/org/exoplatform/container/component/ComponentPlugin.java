@@ -22,9 +22,11 @@ package org.exoplatform.container.component;
  * @version $Id: ComponentPlugin.java 5799 2006-05-28 17:55:42Z geaz $
  */
 public interface ComponentPlugin {
-  public String getName() ;
-  public void   setName(String s) ;
-  
-  public String getDescription() ;
-  public void   setDescription(String s) ;
+  public String getName();
+
+  public void setName(String s);
+
+  public String getDescription();
+
+  public void setDescription(String s);
 }

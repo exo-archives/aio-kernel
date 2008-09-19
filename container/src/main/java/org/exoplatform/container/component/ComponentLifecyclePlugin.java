@@ -26,17 +26,23 @@ import org.exoplatform.container.ExoContainer;
  * @version $Id: ComponentLifecyclePlugin.java 5799 2006-05-28 17:55:42Z geaz $
  */
 public interface ComponentLifecyclePlugin {
-  public String getName() ;
-  public void setName(String s) ;
-  
-  public String getDescription() ;
-  public void setDescription(String s) ;
-  
-  public List<String> getManageableComponents() ;
-  public void setManageableComponents(List<String> list) ;
-  
-  public void  initComponent(ExoContainer container, Object component) throws Exception ;
-  public void  startComponent(ExoContainer container, Object component) throws Exception ;
-  public void  stopComponent(ExoContainer container, Object component) throws Exception ;
-  public void  destroyComponent(ExoContainer container, Object component) throws Exception ;
+  public String getName();
+
+  public void setName(String s);
+
+  public String getDescription();
+
+  public void setDescription(String s);
+
+  public List<String> getManageableComponents();
+
+  public void setManageableComponents(List<String> list);
+
+  public void initComponent(ExoContainer container, Object component) throws Exception;
+
+  public void startComponent(ExoContainer container, Object component) throws Exception;
+
+  public void stopComponent(ExoContainer container, Object component) throws Exception;
+
+  public void destroyComponent(ExoContainer container, Object component) throws Exception;
 }

@@ -19,15 +19,16 @@ package org.exoplatform.container;
 import java.util.List;
 
 /**
- * Created by The eXo Platform SAS
- * Author : Tuan Nguyen
- *          tuan08@users.sourceforge.net
- * Nov 4, 2005
+ * Created by The eXo Platform SAS Author : Tuan Nguyen
+ * tuan08@users.sourceforge.net Nov 4, 2005
  */
-public interface SessionManager  {
-  
-  public List<SessionContainer> getLiveSessions()  ;
-  public SessionContainer getSessionContainer(String id) ;
-  public void  removeSessionContainer(String id) ;
-  public void  addSessionContainer(SessionContainer scontainer) ;
+public interface SessionManager {
+
+  public List<SessionContainer> getLiveSessions();
+
+  public SessionContainer getSessionContainer(String id);
+
+  public void removeSessionContainer(String id);
+
+  public void addSessionContainer(SessionContainer scontainer);
 }

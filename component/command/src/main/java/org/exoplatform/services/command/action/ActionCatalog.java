@@ -24,40 +24,41 @@ import java.util.Set;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author Gennady Azarenkov
  * @version $Id: $
  */
 
 public class ActionCatalog {
-  
-  private Map <ActionMatcher, Action> commands;
-  
+
+  private Map<ActionMatcher, Action> commands;
+
   public ActionCatalog() {
     this.commands = new HashMap<ActionMatcher, Action>();
   }
-  
-  public Set <Action> getAllActions() {
+
+  public Set<Action> getAllActions() {
     return new HashSet<Action>(commands.values());
   }
-  
-  public Map <ActionMatcher, Action> getAllEntries() {
+
+  public Map<ActionMatcher, Action> getAllEntries() {
     return commands;
   }
 
-  public Set <Action> getActions(Condition conditions) {
-    HashSet <Action> actions = new HashSet<Action>();
-    for(Map.Entry <ActionMatcher, Action> entry:commands.entrySet()) {
-      if(entry.getKey().match(conditions))
+  public Set<Action> getActions(Condition conditions) {
+    HashSet<Action> actions = new HashSet<Action>();
+    for (Map.Entry<ActionMatcher, Action> entry : commands.entrySet()) {
+      if (entry.getKey().match(conditions))
         actions.add(entry.getValue());
     }
     return actions;
   }
 
   public Action getAction(Condition conditions, int index) {
-    Iterator <Action> actions = getActions(conditions).iterator();
-    for(int i=0; actions.hasNext(); i++) {
+    Iterator<Action> actions = getActions(conditions).iterator();
+    for (int i = 0; actions.hasNext(); i++) {
       Action c = actions.next();
-      if(i == index)
+      if (i == index)
         return c;
     }
     return null;

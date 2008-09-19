@@ -17,35 +17,37 @@
 package org.exoplatform.services.cache;
 
 import java.lang.ref.SoftReference;
+
 /**
- * Created by The eXo Platform SAS
- * Author : Tuan Nguyen
- *          tuan08@users.sourceforge.net
- * Sat, Sep 13, 2003 @  
- * Time: 1:12:22 PM
+ * Created by The eXo Platform SAS Author : Tuan Nguyen
+ * tuan08@users.sourceforge.net Sat, Sep 13, 2003 @ Time: 1:12:22 PM
  */
-public class SimpleExoCache  extends BaseExoCache {
-  public SimpleExoCache(int maxSize) {   super(maxSize) ; }
-  
-  public SimpleExoCache() {   
+public class SimpleExoCache extends BaseExoCache {
+  public SimpleExoCache(int maxSize) {
+    super(maxSize);
   }
-  
-  public SimpleExoCache(String name, int maxSize) {  
-    super(name, maxSize) ; 
+
+  public SimpleExoCache() {
   }
-  
+
+  public SimpleExoCache(String name, int maxSize) {
+    super(name, maxSize);
+  }
+
   protected ObjectCacheInfo createObjectCacheInfo(long expTime, Object objToCache) {
-    return new CacheSoftReference(expTime, objToCache) ;
+    return new CacheSoftReference(expTime, objToCache);
   }
-  
+
   static public class CacheSoftReference extends SoftReference implements ObjectCacheInfo {
-    private long expireTime_ ;
-    
+    private long expireTime_;
+
     public CacheSoftReference(long expireTime, Object o) {
-      super(o) ;
-      expireTime_ = expireTime ;
+      super(o);
+      expireTime_ = expireTime;
     }
-    
-    public long getExpireTime() { return expireTime_ ;  }
+
+    public long getExpireTime() {
+      return expireTime_;
+    }
   }
 }

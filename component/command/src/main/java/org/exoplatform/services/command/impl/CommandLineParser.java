@@ -20,13 +20,16 @@ import org.apache.commons.chain.Context;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author Gennady Azarenkov
  * @version $Id: $
  */
 public interface CommandLineParser {
-  
+
   /**
-   * parses command line and puts some parameters (if any) to the Context by some rules 
+   * parses command line and puts some parameters (if any) to the Context by
+   * some rules
+   * 
    * @param commandLine
    * @param context
    * @return command name

@@ -91,13 +91,13 @@ public class IOUtil {
 
   @Deprecated
   static public byte[] serialize(Object obj) throws Exception {
-    //long start = System.currentTimeMillis() ;
+    // long start = System.currentTimeMillis() ;
     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
     ObjectOutputStream out = new ObjectOutputStream(bytes);
     out.writeObject(obj);
     out.close();
     byte[] ret = bytes.toByteArray();
-    //long end = System.currentTimeMillis() ;
+    // long end = System.currentTimeMillis() ;
     return ret;
   }
 
@@ -105,7 +105,7 @@ public class IOUtil {
   static public Object deserialize(byte[] bytes) throws Exception {
     if (bytes == null)
       return null;
-    //long start = System.currentTimeMillis() ;
+    // long start = System.currentTimeMillis() ;
     ByteArrayInputStream is = new ByteArrayInputStream(bytes);
     ObjectInputStream in = new ObjectInputStream(is);
     Object obj = in.readObject();

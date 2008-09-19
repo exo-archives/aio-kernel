@@ -21,27 +21,27 @@ import java.util.Hashtable;
 import java.util.List;
 
 /**
- * Created by The eXo Platform SAS
- * Author : Tuan Nguyen
- *          tuan08@users.sourceforge.net
- * Nov 4, 2005
+ * Created by The eXo Platform SAS Author : Tuan Nguyen
+ * tuan08@users.sourceforge.net Nov 4, 2005
  */
-public class SessionManagerImpl 
-  extends Hashtable<String, SessionContainer> implements SessionManager {
-  
+public class SessionManagerImpl extends Hashtable<String, SessionContainer> implements
+    SessionManager {
+
   public List<SessionContainer> getLiveSessions() {
     List<SessionContainer> list = new ArrayList<SessionContainer>(size() + 1);
-    list.addAll(values()) ;
-    return list ;
+    list.addAll(values());
+    return list;
   }
 
-  final public SessionContainer getSessionContainer(String id) {  return get(id) ; }
+  final public SessionContainer getSessionContainer(String id) {
+    return get(id);
+  }
 
   final public void removeSessionContainer(String id) {
-    remove(id) ; 
+    remove(id);
   }
 
   final public void addSessionContainer(SessionContainer scontainer) {
-    put(scontainer.getSessionId() , scontainer) ;
+    put(scontainer.getSessionId(), scontainer);
   }
 }

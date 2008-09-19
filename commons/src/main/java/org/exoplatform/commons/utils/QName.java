@@ -16,11 +16,8 @@
  */
 package org.exoplatform.commons.utils;
 
-
 /**
- * Created by The eXo Platform SAS .
- * 
- * Qualified name
+ * Created by The eXo Platform SAS . Qualified name
  * 
  * @author Gennady Azarenkov
  * @version $Id: $
@@ -31,19 +28,19 @@ public class QName {
   protected final String namespace;
 
   protected final String name;
-  
+
   protected final String stringName;
-  
-  protected final int hashCode;
+
+  protected final int    hashCode;
 
   // [PN] 05.02.07 use of canonical representation for the string values
-  // see: http://java.sun.com/j2se/1.5.0/docs/api/java/lang/String.html#intern()  
+  // see: http://java.sun.com/j2se/1.5.0/docs/api/java/lang/String.html#intern()
   public QName(String namespace, String name) {
     this.namespace = (namespace != null ? namespace : "").intern();
     this.name = (name != null ? name : ""); // [PN] 28.01.08 .intern()
-    
+
     this.stringName = ("[" + this.namespace + "]" + this.name);
-    
+
     int hk = 31 + this.namespace.hashCode();
     this.hashCode = hk * 31 + this.name.hashCode();
   }
@@ -59,12 +56,12 @@ public class QName {
   public String getAsString() {
     return stringName;
   }
-  
+
   /** For toString() use */
   protected String asString() {
     return stringName;
   }
-  
+
   @Override
   public String toString() {
     return super.toString() + " (" + asString() + ")";
@@ -74,7 +71,7 @@ public class QName {
   public boolean equals(Object o) {
     if (o == this)
       return true;
-    
+
     if (o == null)
       return false;
 

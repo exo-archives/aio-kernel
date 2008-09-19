@@ -23,42 +23,49 @@ import javax.transaction.xa.XAException;
 import javax.transaction.xa.XAResource;
 import javax.transaction.xa.Xid;
 
-import org.apache.commons.logging.Log;
-import org.exoplatform.services.log.ExoLogger;
 import org.objectweb.transaction.jta.ResourceManagerEvent;
+
+import org.apache.commons.logging.Log;
+
+import org.exoplatform.services.log.ExoLogger;
+
 /**
  * Created by The eXo Platform SAS.
- * @author <a href="mailto:gennady.azarenkov@exoplatform.com">Gennady Azarenkov</a>
+ * 
+ * @author <a href="mailto:gennady.azarenkov@exoplatform.com">Gennady
+ *         Azarenkov</a>
  * @version $Id: $
  */
 
 public class XAResourceTestImpl implements XAResource, ResourceManagerEvent {
-  
-  private static Log log = ExoLogger.getLogger("tx.TestXAResource");
-  private int timeout = 5;
-  //private transient TransactionService ts;
 
-  private int oldFlag;
+  private static Log log     = ExoLogger.getLogger("tx.TestXAResource");
 
-  private int flag = oldFlag = 0;
-  
-//  public XAResourceTestImpl(TransactionService ts)  
-//  throws RollbackException, SystemException {
-//    this.ts = ts;
-//    ts.enlistResource(this);
-//  }
+  private int        timeout = 5;
+
+  // private transient TransactionService ts;
+
+  private int        oldFlag;
+
+  private int        flag    = oldFlag = 0;
+
+  // public XAResourceTestImpl(TransactionService ts)
+  // throws RollbackException, SystemException {
+  // this.ts = ts;
+  // ts.enlistResource(this);
+  // }
 
   public void commit(Xid arg0, boolean arg1) throws XAException {
     oldFlag = flag;
-    log.info("Commit "+arg0);
+    log.info("Commit " + arg0);
   }
 
   public void end(Xid arg0, int arg1) throws XAException {
-    log.info("End "+arg0);
+    log.info("End " + arg0);
   }
 
   public void forget(Xid arg0) throws XAException {
-    log.info("Forget "+arg0);
+    log.info("Forget " + arg0);
   }
 
   public int getTransactionTimeout() throws XAException {
@@ -70,18 +77,18 @@ public class XAResourceTestImpl implements XAResource, ResourceManagerEvent {
   }
 
   public int prepare(Xid arg0) throws XAException {
-    log.info("Prepare "+arg0);
+    log.info("Prepare " + arg0);
     return Status.STATUS_PREPARED;
   }
 
   public Xid[] recover(int arg0) throws XAException {
-    log.info("recover "+arg0);
+    log.info("recover " + arg0);
     return null;
   }
 
   public void rollback(Xid arg0) throws XAException {
     flag = oldFlag;
-    log.info("Rollback "+arg0);
+    log.info("Rollback " + arg0);
   }
 
   public boolean setTransactionTimeout(int arg0) throws XAException {
@@ -90,7 +97,7 @@ public class XAResourceTestImpl implements XAResource, ResourceManagerEvent {
   }
 
   public void start(Xid arg0, int arg1) throws XAException {
-    log.info("Start "+arg0);
+    log.info("Start " + arg0);
   }
 
   public int getFlag() {
@@ -101,10 +108,13 @@ public class XAResourceTestImpl implements XAResource, ResourceManagerEvent {
     this.flag = flag;
   }
 
-  /* (non-Javadoc)
-   * @see org.objectweb.transaction.jta.ResourceManagerEvent#enlistConnection(javax.transaction.Transaction)
+  /*
+   * (non-Javadoc)
+   * @see
+   * org.objectweb.transaction.jta.ResourceManagerEvent#enlistConnection(javax
+   * .transaction.Transaction)
    */
-  public void enlistConnection(Transaction transaction) throws javax.transaction.SystemException  {
+  public void enlistConnection(Transaction transaction) throws javax.transaction.SystemException {
     try {
       transaction.enlistResource(this);
     } catch (IllegalStateException e) {
@@ -113,13 +123,11 @@ public class XAResourceTestImpl implements XAResource, ResourceManagerEvent {
     } catch (RollbackException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
-    } 
+    }
   }
 
   public int getOldFlag() {
     return oldFlag;
   }
-
-
 
 }

@@ -21,24 +21,24 @@ import java.util.List;
 
 import org.exoplatform.container.component.BaseComponentPlugin;
 import org.exoplatform.container.xml.InitParams;
+
 /**
- * Created by The eXo Platform SAS
- * Author : Tuan Nguyen
- *          tuan08@users.sourceforge.net
- * Jan 6, 2006
+ * Created by The eXo Platform SAS Author : Tuan Nguyen
+ * tuan08@users.sourceforge.net Jan 6, 2006
  */
-public class ExoCacheConfigPlugin extends  BaseComponentPlugin {
-  private List<ExoCacheConfig> configs_ ;
-  
+public class ExoCacheConfigPlugin extends BaseComponentPlugin {
+  private List<ExoCacheConfig> configs_;
+
   public ExoCacheConfigPlugin(InitParams params) {
-    configs_ = new ArrayList<ExoCacheConfig>() ;
-    List configs = params.getObjectParamValues(ExoCacheConfig.class) ;
-    for(int i = 0 ; i  < configs.size(); i++) {
-      ExoCacheConfig config = (ExoCacheConfig)configs.get(i) ;                     
-      configs_.add(config) ;
+    configs_ = new ArrayList<ExoCacheConfig>();
+    List configs = params.getObjectParamValues(ExoCacheConfig.class);
+    for (int i = 0; i < configs.size(); i++) {
+      ExoCacheConfig config = (ExoCacheConfig) configs.get(i);
+      configs_.add(config);
     }
   }
-  
-  
-  public List<ExoCacheConfig>  getConfigs() {  return  configs_ ; }
+
+  public List<ExoCacheConfig> getConfigs() {
+    return configs_;
+  }
 }

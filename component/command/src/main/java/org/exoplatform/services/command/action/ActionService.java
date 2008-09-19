@@ -20,28 +20,30 @@ import java.util.HashMap;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author Gennady Azarenkov
  * @version $Id: $
  */
 
-public class ActionService extends HashMap <String, ActionCatalog> {
-  
-//  public void addPlugin(ComponentPlugin plugin) {
-//    if (plugin instanceof AddActionCatalogPlugin) {
-//      AddActionCatalogPlugin cplugin = (AddActionCatalogPlugin) plugin;
-//      CatalogConfiguration conf = cplugin.getCatalogConfiguration();
-//      ActionCatalog catalog = new ActionCatalog();
-//      for(ActionConfiguration ac:(List <ActionConfiguration>)conf.getActions()) {
-//        try {
-//          ActionMatcher matcher = (ActionMatcher)Class.forName(ac.getMatcherFQCN()).newInstance();
-//          Action action = (Action)Class.forName(ac.getActionFQCN()).newInstance();
-//          catalog.addAction(matcher, action);
-//        } catch (Exception e) {
-//          e.printStackTrace();
-//        } 
-//      }
-//      put(conf.getName(), catalog);
-//    }
-//  }
+public class ActionService extends HashMap<String, ActionCatalog> {
+
+  // public void addPlugin(ComponentPlugin plugin) {
+  // if (plugin instanceof AddActionCatalogPlugin) {
+  // AddActionCatalogPlugin cplugin = (AddActionCatalogPlugin) plugin;
+  // CatalogConfiguration conf = cplugin.getCatalogConfiguration();
+  // ActionCatalog catalog = new ActionCatalog();
+  // for(ActionConfiguration ac:(List <ActionConfiguration>)conf.getActions()) {
+  // try {
+  // ActionMatcher matcher =
+  // (ActionMatcher)Class.forName(ac.getMatcherFQCN()).newInstance();
+  // Action action = (Action)Class.forName(ac.getActionFQCN()).newInstance();
+  // catalog.addAction(matcher, action);
+  // } catch (Exception e) {
+  // e.printStackTrace();
+  // }
+  // }
+  // put(conf.getName(), catalog);
+  // }
+  // }
 
 }

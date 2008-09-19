@@ -24,6 +24,7 @@ import org.apache.commons.chain.Context;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author Gennady Azarenkov
  * @version $Id: $
  */
@@ -31,39 +32,43 @@ import org.apache.commons.chain.Context;
 public class SimpleCommandLineParser implements CommandLineParser {
 
   protected final String parametersPropertyName;
-  
+
   public SimpleCommandLineParser(String parametersPropertyName) {
     this.parametersPropertyName = parametersPropertyName;
   }
 
-  /* (non-Javadoc)
-   * @see org.exoplatform.services.command.impl.CommandLineParser#parse(java.lang.String, org.apache.commons.chain.Context)
+  /*
+   * (non-Javadoc)
+   * @see
+   * org.exoplatform.services.command.impl.CommandLineParser#parse(java.lang
+   * .String, org.apache.commons.chain.Context)
    */
   public String parse(String commandLine, Context context) {
-    
+
     context.remove(parametersPropertyName);
-    
+
     // TODO make regexp parser
     // the rules:
-    //first word is command name (should be returned)
-    //else are parameters of command (should be put into Context under name == parametersPropertyName as array of Strings)
-    //mind <space> contained string parameters - should be quoted (" or ')
-    ///////////////////////
-    
+    // first word is command name (should be returned)
+    // else are parameters of command (should be put into Context under name ==
+    // parametersPropertyName as array of Strings)
+    // mind <space> contained string parameters - should be quoted (" or ')
+    // /////////////////////
+
     StringTokenizer parser = new StringTokenizer(commandLine);
     String commandName = null;
-    List <String> params = new ArrayList <String>();
-    
-    while(parser.hasMoreTokens()) {
+    List<String> params = new ArrayList<String>();
+
+    while (parser.hasMoreTokens()) {
       String str = parser.nextToken();
-      if(commandName == null)
+      if (commandName == null)
         commandName = str;
       else
         params.add(str);
     }
-    ////////////////////////
+    // //////////////////////
     context.put(parametersPropertyName, params);
-    return commandName; 
+    return commandName;
   }
 
   /**

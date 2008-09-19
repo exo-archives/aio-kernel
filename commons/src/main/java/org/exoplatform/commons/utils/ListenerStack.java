@@ -16,7 +16,8 @@
  */
 package org.exoplatform.commons.utils;
 
-import java.util.ArrayList ;
+import java.util.ArrayList;
+
 /**
  * @author Tuan Nguyen (tuan08@users.sourceforge.net)
  * @since Nov 10, 2004
@@ -24,26 +25,26 @@ import java.util.ArrayList ;
  */
 public class ListenerStack extends ArrayList {
   public ListenerStack() {
-    super() ;
+    super();
   }
-  
+
   public ListenerStack(int size) {
-    super(size) ;
+    super(size);
   }
-  
-  public void add(int index,  Object element) {
-    throw new UnsupportedOperationException("use add(java.lang.Object)") ;
+
+  public void add(int index, Object element) {
+    throw new UnsupportedOperationException("use add(java.lang.Object)");
   }
-  
+
   public boolean add(java.lang.Object obj) {
-    String name = obj.getClass().getName(); 
-    for(int i = 0; i < size(); i++) {
-      Object found = get(i) ;
-      if(name.equals(found.getClass().getName())) {
-        remove(i) ;
-        break ;
+    String name = obj.getClass().getName();
+    for (int i = 0; i < size(); i++) {
+      Object found = get(i);
+      if (name.equals(found.getClass().getName())) {
+        remove(i);
+        break;
       }
     }
-    return super.add(obj) ;
+    return super.add(obj);
   }
 }

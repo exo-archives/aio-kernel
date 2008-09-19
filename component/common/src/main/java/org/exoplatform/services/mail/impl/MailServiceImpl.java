@@ -39,7 +39,7 @@ import org.exoplatform.services.mail.Message;
  * Dec 23, 2005
  */
 public class MailServiceImpl implements MailService {
-  
+
   private Session    mailSession_;
 
   private Properties props_;
@@ -51,7 +51,8 @@ public class MailServiceImpl implements MailService {
       String username = props_.getProperty("mail.smtp.auth.username");
       String password = props_.getProperty("mail.smtp.auth.password");
       ExoAuthenticator auth = new ExoAuthenticator(username, password);
-//      S ystem.out.println("username: " + username + " , password " + password);
+      // S ystem.out.println("username: " + username + " , password " +
+      // password);
       mailSession_ = Session.getDefaultInstance(props_, auth);
     } else {
       mailSession_ = Session.getDefaultInstance(props_, null);
@@ -66,8 +67,8 @@ public class MailServiceImpl implements MailService {
     return props_.getProperty("mail.smtp.host");
   }
 
-  public void sendMessage(String from, String to, String subject, String body)
-      throws MessagingException, IOException {
+  public void sendMessage(String from, String to, String subject, String body) throws MessagingException,
+                                                                              IOException {
     Message message = new Message();
     message.setFrom(from);
     message.setTo(to);

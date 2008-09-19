@@ -24,11 +24,14 @@ import java.net.URL;
  * @version $Id: OperatingSystemInfo.java 5799 2006-05-28 17:55:42Z geaz $
  */
 public interface OperatingSystemInfo {
-  
-  public String getArch() ; 
-  public String getName() ; 
-  public int    getAvailableProcessors()  ;
-  public String getVersion() ;
-  
-  public URL createURL(String file)  throws Exception ;
+
+  public String getArch();
+
+  public String getName();
+
+  public int getAvailableProcessors();
+
+  public String getVersion();
+
+  public URL createURL(String file) throws Exception;
 }

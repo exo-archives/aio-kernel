@@ -25,17 +25,28 @@ import org.exoplatform.container.xml.InitParams;
  * @version $Id: MockServicePlugin.java 5799 2006-05-28 17:55:42Z geaz $
  */
 public class MockServicePlugin implements ComponentPlugin {
-  String name ;
-  String description ;
-  
+  String name;
+
+  String description;
+
   public MockServicePlugin(InitParams params) {
-    System.out.println("plugin init params: " + params) ;
+    System.out.println("plugin init params: " + params);
   }
-  
-  public String getName() {  return name; }
-  public void setName(String s) { name =  s ;}
-  
-  public String getDescription() {   return description ; }
-  public void setDescription(String s) {  description = s ; }
-  
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String s) {
+    name = s;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String s) {
+    description = s;
+  }
+
 }

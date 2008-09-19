@@ -23,10 +23,12 @@ import java.io.Serializable;
  * @since Feb 21, 2005
  * @version $Id: Message.java 5799 2006-05-28 17:55:42Z geaz $
  */
-public interface Message  extends Serializable {
-  public String getTargetHandler() ;
-  public void   setTargetHandler(String handlerId) ;
-  
-  public Object getMessage() ;
-  public void   setMessage(Object obj) ;
+public interface Message extends Serializable {
+  public String getTargetHandler();
+
+  public void setTargetHandler(String handlerId);
+
+  public Object getMessage();
+
+  public void setMessage(Object obj);
 }

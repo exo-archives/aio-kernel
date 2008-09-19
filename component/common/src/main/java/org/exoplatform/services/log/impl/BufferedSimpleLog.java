@@ -16,18 +16,17 @@
  */
 package org.exoplatform.services.log.impl;
 
-
 /**
- * Created by The eXo Platform SAS.
+ * Created by The eXo Platform SAS. <br/> Extends
+ * org.apache.commons.logging.impl.SimpleLog adding the buffering feature.
  * 
- * <br/> Extends org.apache.commons.logging.impl.SimpleLog adding the buffering feature.  
- * 
- * @author <a href="mailto:gennady.azarenkov@exoplatform.com">Gennady Azarenkov</a>
+ * @author <a href="mailto:gennady.azarenkov@exoplatform.com">Gennady
+ *         Azarenkov</a>
  * @version $Id: BufferedSimpleLog.java 5332 2006-04-29 18:32:44Z geaz $
  */
 
 public class BufferedSimpleLog extends SimpleLogWrapper {
-  
+
   private BufferedLog bufLogger;
 
   public BufferedSimpleLog(String name) {
