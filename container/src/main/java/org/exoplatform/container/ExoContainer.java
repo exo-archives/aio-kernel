@@ -113,7 +113,8 @@ public class ExoContainer extends DefaultPicoContainer {
   }
   
   public <T> T createComponent(Class<T> clazz, InitParams params) throws Exception {
-    log.info(clazz.getName() + " " + ((params!=null)?params:"") + " added to " + getContext().getName());    
+    if (log.isDebugEnabled())
+      log.debug(clazz.getName() + " " + ((params!=null)?params:"") + " added to " + getContext().getName());    
     Constructor<?>[] constructors = ContainerUtil.getSortedConstructors(clazz) ;
     Class<?> unknownParameter = null;
     for(int k = 0; k < constructors.length; k++) {
