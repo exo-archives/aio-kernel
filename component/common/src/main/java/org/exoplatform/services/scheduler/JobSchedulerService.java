@@ -20,6 +20,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.quartz.JobDataMap;
+import org.quartz.JobDetail;
 import org.quartz.JobListener;
 import org.quartz.Trigger;
 import org.quartz.TriggerListener;
@@ -92,4 +93,6 @@ public interface JobSchedulerService {
   public Trigger[] getTriggersOfJob(String jobName, String groupName) throws Exception;
 
   public Date rescheduleJob(String triggerName, String groupName, Trigger newTrigger) throws Exception;
+  
+  public JobDetail getJob(JobInfo jobInfo) throws Exception;
 }

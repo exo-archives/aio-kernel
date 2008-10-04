@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
 
-import org.exoplatform.container.StandaloneContainer;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.container.xml.PortalContainerInfo;
 import org.exoplatform.services.scheduler.CronJob;
@@ -173,7 +172,6 @@ public class JobSchedulerServiceImpl implements JobSchedulerService, Startable {
     job.setDescription(jobinfo.getDescription());    
     scheduler_.scheduleJob(job,trigger);
 	}
-
 	
 	public boolean removeJob(JobInfo jinfo) throws Exception {
     JobInfo jobinfo = getJobInfo(jinfo) ;
@@ -342,5 +340,10 @@ public class JobSchedulerServiceImpl implements JobSchedulerService, Startable {
       ex.printStackTrace() ;
     }
   }
-    
+
+
+  public JobDetail getJob(JobInfo jobInfo) throws Exception {
+    JobInfo innerJobInfo = getJobInfo(jobInfo);
+    return scheduler_.getJobDetail(innerJobInfo.getJobName(), innerJobInfo.getGroupName());
+  }    
 }
