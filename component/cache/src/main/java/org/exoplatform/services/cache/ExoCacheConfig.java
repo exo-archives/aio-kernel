@@ -35,6 +35,8 @@ public class ExoCacheConfig {
   private boolean replicated  = false;
 
   private String  implementation;
+  
+  private boolean logEnabled = false;
 
   public String getName() {
     return name;
@@ -92,5 +94,13 @@ public class ExoCacheConfig {
 
   public void setImplementation(String alg) {
     implementation = alg;
+  }
+
+  public boolean isLogEnabled() {
+    return logEnabled;
+  }
+
+  public void setLogEnabled(boolean enableLogging) {
+    this.logEnabled = enableLogging;
   }
 }

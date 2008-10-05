@@ -1,5 +1,31 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <configuration>
+
+  
+  <component>
+    <key>org.exoplatform.services.log.LogConfigurationInitializer</key>
+    <type>org.exoplatform.services.log.LogConfigurationInitializer</type>
+    <init-params>
+
+      <value-param>
+        <name>logger</name>
+        <value>org.exoplatform.services.cache.test.MockTestLogger</value>
+      </value-param>
+      <value-param>
+        <name>configurator</name>
+        <value>org.exoplatform.services.log.impl.SimpleLogConfigurator</value>
+      </value-param>
+      <properties-param>
+        <name>properties</name>
+        <description>SimpleLog properties</description>
+        <property name="org.apache.commons.logging.simplelog.defaultlog" value="info"/>
+        <property name="org.apache.commons.logging.simplelog.log.kernel.cache.log" value="trace"/>
+        <property name="org.apache.commons.logging.simplelog.showdatetime" value="false"/>
+      </properties-param>
+
+    </init-params>
+  </component>  
+  
   <component>
   	<key>org.exoplatform.services.cache.CacheService</key>
   	<type>org.exoplatform.services.cache.impl.CacheServiceImpl</type>
@@ -68,6 +94,7 @@
       </object-param>                  
     </init-params>	
   </component>  
+
   
   <external-component-plugins>
     <target-component>org.exoplatform.services.cache.CacheService</target-component>
@@ -100,6 +127,19 @@
 	          <field  name="implementation"><string>org.exoplatform.services.cache.FIFOExoCache</string></field>
 	        </object>
 	      </object-param>
+	      
+	      <object-param>	      
+	        <name>TestLogEnabledCachePlugin</name>
+	        <description>The log enabled cache configuration for tests</description>
+	        <object type="org.exoplatform.services.cache.ExoCacheConfig">
+	          <field  name="name"><string>TestLogCache</string></field>
+	          <field  name="maxSize"><int>100</int></field>
+	          <field  name="liveTime"><long>10</long></field>
+	          <field  name="logEnabled"><boolean>true</boolean></field>
+	          <field  name="implementation"><string>org.exoplatform.services.cache.SimpleExoCache</string></field>
+	        </object>
+	      </object-param>	      
+	      
       </init-params>	
     </component-plugin>
   </external-component-plugins>  

@@ -19,6 +19,8 @@ package org.exoplatform.services.cache.test;
 import java.util.Collection;
 import java.util.Comparator;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.services.cache.CacheService;
 import org.exoplatform.services.cache.ExoCache;
@@ -155,6 +157,21 @@ public class TestCacheService extends BasicTestCase {
   public void testDistributedCache() throws Exception {
     CommunicationService comunicationService = (CommunicationService) PortalContainer.getInstance()
                                                                                      .getComponentInstanceOfType(CommunicationService.class);
+  }
+  
+  public void testLoggingListener() throws Exception {
+    ExoCache cache = service_.getCacheInstance("TestLogCache");
+    
+    int count = 100;
+    while (count-- > 0) {
+      cache.put("key"+count, "anything");
+    }
+    Log log = LogFactory.getLog("kernel.cache.log");
+    
+    assertTrue("logger is not MockTestLogger, you needto pass -Dorg.apache.commons.logging.Log=org.exoplatform.services.cache.test.MockTestLogger", (log instanceof MockTestLogger));
+    
+    MockTestLogger logger = (MockTestLogger) log;
+    assertEquals("Number of warnings ", 5,logger.getWarnCount());
   }
 
   private static class ExoCacheComparator implements Comparator {

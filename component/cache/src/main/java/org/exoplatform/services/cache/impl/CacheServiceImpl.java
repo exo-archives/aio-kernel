@@ -42,6 +42,8 @@ public class CacheServiceImpl implements CacheService {
   private ExoCacheConfig                  defaultConfig_;
 
   private DistributedCacheListener        distrbutedListener_;
+  
+  private LoggingCacheListener            loggingListener_;
 
   public CacheServiceImpl(InitParams params) throws Exception {
     List configs = params.getObjectParamValues(ExoCacheConfig.class);
@@ -50,6 +52,7 @@ public class CacheServiceImpl implements CacheService {
       configs_.put(config.getName(), config);
     }
     defaultConfig_ = configs_.get("default");
+    loggingListener_ = new LoggingCacheListener();
   }
 
   public void addExoCacheConfig(ComponentPlugin plugin) {
@@ -105,6 +108,10 @@ public class CacheServiceImpl implements CacheService {
     if (simple.isDistributed()) {
       simple.addCacheListener(distrbutedListener_);
     }
+    simple.setLogEnabled(config.isLogEnabled());
+    if (simple.isLogEnabled()) {
+      simple.addCacheListener(loggingListener_);
+    }
     return simple;
   }
 
@@ -123,4 +130,6 @@ public class CacheServiceImpl implements CacheService {
       cache.localPut(key, value);
     }
   }
+  
+
 }

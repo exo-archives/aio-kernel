@@ -73,4 +73,8 @@ public interface ExoCache {
   public boolean isReplicated();
 
   public void setReplicated(boolean b);
+  
+  public boolean isLogEnabled();
+
+  public void setLogEnabled(boolean b);
 }

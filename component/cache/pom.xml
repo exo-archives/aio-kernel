@@ -25,7 +25,11 @@
       <artifactId>exo.kernel.component.remote</artifactId>
       <version>${org.exoplatform.kernel.version}</version>
     </dependency>
-
+    <dependency>
+      <groupId>org.exoplatform.kernel</groupId>
+      <artifactId>exo.kernel.component.common</artifactId>
+      <version>trunk</version>
+    </dependency>
     <dependency>
       <groupId>javagroups</groupId>
       <artifactId>jgroups-all</artifactId>
@@ -34,4 +38,21 @@
     </dependency>
 
   </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <systemProperties>
+            <!-- Needed to test logEnabled property -->
+            <property>
+              <name>org.apache.commons.logging.Log</name>
+              <value>org.exoplatform.services.cache.test.MockTestLogger</value>
+            </property>
+          </systemProperties>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>

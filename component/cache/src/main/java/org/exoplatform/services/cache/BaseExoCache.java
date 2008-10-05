@@ -45,6 +45,8 @@ abstract public class BaseExoCache extends LinkedHashMap implements ExoCache {
   private boolean                  distributed_     = false;
 
   private boolean                  replicated_      = false;
+  
+  private boolean                  logEnabled_      = false;
 
   private ArrayList<CacheListener> listeners_;
 
@@ -307,6 +309,15 @@ abstract public class BaseExoCache extends LinkedHashMap implements ExoCache {
     for (CacheListener listener : listeners_)
       listener.onClearCache(this);
   }
+  
+  public boolean isLogEnabled() {
+    return logEnabled_;
+  }
+
+  public void setLogEnabled(boolean b) {
+    this.logEnabled_ = b;
+  } 
+  
 
   abstract protected ObjectCacheInfo createObjectCacheInfo(long expTime, Object objToCache);
 }
