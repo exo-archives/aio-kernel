@@ -33,8 +33,11 @@ import org.exoplatform.services.scheduler.QueueTasks;
 import org.exoplatform.services.scheduler.Task;
 import org.picocontainer.Startable;
 import org.quartz.CronTrigger;
+import org.quartz.InterruptableJob;
+import org.quartz.Job;
 import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
+import org.quartz.JobExecutionContext;
 import org.quartz.JobListener;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
@@ -335,6 +338,14 @@ public class JobSchedulerServiceImpl implements JobSchedulerService, Startable {
 	
 	public void stop() {  
     try {
+      List jobs = getAllExcutingJobs();
+      for (Object object : jobs) {
+        JobExecutionContext ctx = (JobExecutionContext)object;
+        Job job = ctx.getJobInstance();
+        if (job instanceof InterruptableJob ) {
+          ((InterruptableJob)job).interrupt();
+        }
+      }
       scheduler_.shutdown(true) ;
     } catch (Exception ex) {
       ex.printStackTrace() ;
