@@ -22,6 +22,9 @@ package org.exoplatform.container.monitor.jvm;
  * @version $Id: J2EEServerInfo.java 5799 2006-05-28 17:55:42Z geaz $
  */
 public class J2EEServerInfo {
+  
+  public static final String EXO_CONF_PARAM = "exo.conf.dir";
+  
   private String   serverName_;
 
   private String   serverHome_;
@@ -33,6 +36,7 @@ public class J2EEServerInfo {
   protected String appDeployDirecotry_;
 
   public J2EEServerInfo() {
+    
     String jonasHome = System.getProperty("jonas.base");
     String jbossHome = System.getProperty("jboss.home.dir");
     String jettyHome = System.getProperty("jetty.home");
@@ -76,6 +80,14 @@ public class J2EEServerInfo {
       serverHome_ = System.getProperty("user.dir");
       exoConfDir_ = serverHome_ + "/exo-conf";
     }
+    
+    String exoConfHome = System.getProperty(EXO_CONF_PARAM);
+    if (exoConfHome != null && exoConfHome.length() > 0) {
+      System.out.println("[INFO] Override exo-conf directory '" + exoConfDir_ + "' with location '"
+                         + exoConfHome + "'");
+      exoConfDir_ = exoConfHome;
+    }
+    
     serverHome_ = serverHome_.replace('\\', '/');
     exoConfDir_ = exoConfDir_.replace('\\', '/');
   }
