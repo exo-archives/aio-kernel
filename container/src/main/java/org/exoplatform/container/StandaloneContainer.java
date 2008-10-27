@@ -116,6 +116,7 @@ public class StandaloneContainer extends ExoContainer implements SessionManagerC
   public static StandaloneContainer getInstance(ClassLoader configClassLoader, Object[][] components) throws Exception {
     if (container == null) {
       container = new StandaloneContainer(configClassLoader);
+      ExoContainerContext.setTopContainer(container);
       if (useDefault)
         container.initDefaultConf();
       // initialize configurationURL
@@ -124,7 +125,6 @@ public class StandaloneContainer extends ExoContainer implements SessionManagerC
       if (components != null)
         container.registerArray(components);
       container.start();
-      ExoContainerContext.setTopContainer(container);
       System.setProperty("exo.standalone-container", StandaloneContainer.class.getName());
       System.out.println("StandaloneContainer initialized using:  " + configurationURL);
     }
