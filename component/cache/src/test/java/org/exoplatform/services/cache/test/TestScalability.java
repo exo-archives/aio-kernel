@@ -29,7 +29,6 @@ import java.io.Serializable;
 
 import org.exoplatform.services.cache.ExoCache;
 import org.exoplatform.services.cache.FIFOExoCache;
-import org.exoplatform.services.cache.SimpleExoCache;
 import org.exoplatform.services.cache.CacheListener;
 import org.exoplatform.services.cache.concurrent.ConcurrentFIFOExoCache;
 
@@ -40,7 +39,7 @@ import org.exoplatform.services.cache.concurrent.ConcurrentFIFOExoCache;
 public class TestScalability extends TestCase {
 
 
-  private static void doTest(String name, int cacheSize, Config config) {
+  private static void doTest(String name, List<CacheProvider> providers, int cacheSize, Config config) {
 
     System.out.println("-----------------------------------------");
     System.out.println("Test " + name +
@@ -49,73 +48,92 @@ public class TestScalability extends TestCase {
       " getSize=" + config.getSize +
       " putSize=" + config.putSize +
       " configSize=" + config.removalSize);
-
-    List<Test> tests = Arrays.asList(
-      createFIFOCacheTest(cacheSize, config),
-      createSimpleCacheTest(cacheSize, config), 
-      createFIFOCacheWithListenerTest(cacheSize, config),
-      createConcurrentFIFOCacheTest(cacheSize, config),
-      createConcurrentFIFOCacheWithListenerTest(cacheSize, config));
-
-    for (Test test : tests) {
+    for (CacheProvider provider : providers) {
+      Test test = new Test(provider.createCache(cacheSize), config);
       long time = test.perform();
-      System.out.println("Cache " + test.name + ": " + time + "ms");
+      System.out.println("Cache " + provider.name + ": " + time + "ms");
     }
     System.out.println("");
 
   }
 
+  List<CacheProvider> providers = Arrays.asList(fifo, concurrentFIFO);
+  List<CacheProvider> providers2 = Arrays.asList(fifo, concurrentFIFO, fifoWithListener, concurrentFIFOWithListener);
+
   public void testReadMostly1() {
-    doTest("Read mostly 1", 50, new Config(4, 100, 100000, 1000, 1000));
-    doTest("Read mostly 1", 50, new Config(8, 100, 100000, 1000, 1000));
-    doTest("Read mostly 1", 50, new Config(16, 100, 100000, 1000, 1000));
-    doTest("Read mostly 1", 50, new Config(32, 100, 100000, 1000, 1000));
+    doTest("Read mostly 1", providers, 50, new Config(4, 100, 100000, 1000, 1000));
+    doTest("Read mostly 1", providers, 50, new Config(8, 100, 100000, 1000, 1000));
+    doTest("Read mostly 1", providers, 50, new Config(16, 100, 100000, 1000, 1000));
+    doTest("Read mostly 1", providers, 50, new Config(32, 100, 100000, 1000, 1000));
   }
 
   public void testReadMostly2() {
-    doTest("Read mostly 2", 500, new Config(4, 100, 100000, 1000, 1000));
-    doTest("Read mostly 2", 500, new Config(8, 100, 100000, 1000, 1000));
-    doTest("Read mostly 2", 500, new Config(16, 100, 100000, 1000, 1000));
-    doTest("Read mostly 2", 500, new Config(32, 100, 100000, 1000, 1000));
+    doTest("Read mostly 2", providers, 500, new Config(4, 100, 100000, 1000, 1000));
+    doTest("Read mostly 2", providers, 500, new Config(8, 100, 100000, 1000, 1000));
+    doTest("Read mostly 2", providers, 500, new Config(16, 100, 100000, 1000, 1000));
+    doTest("Read mostly 2", providers, 500, new Config(32, 100, 100000, 1000, 1000));
   }
 
   public void testWrite1() {
-    doTest("Write only 1", 50, new Config(4, 100, 0, 10000, 10000));
-    doTest("Write only 1", 50, new Config(8, 100, 0, 10000, 10000));
-    doTest("Write only 1", 50, new Config(16, 100, 0, 10000, 10000));
-    doTest("Write only 1", 50, new Config(32, 100, 0, 10000, 10000));
+    doTest("Write only 1", providers, 50, new Config(4, 100, 0, 10000, 10000));
+    doTest("Write only 1", providers, 50, new Config(8, 100, 0, 10000, 10000));
+    doTest("Write only 1", providers, 50, new Config(16, 100, 0, 10000, 10000));
+    doTest("Write only 1", providers, 50, new Config(32, 100, 0, 10000, 10000));
   }
 
   public void testWrite2() {
-    doTest("Write only 2", 500, new Config(4, 100, 0, 10000, 10000));
-    doTest("Write only 2", 500, new Config(8, 100, 0, 10000, 10000));
-    doTest("Write only 2", 500, new Config(16, 100, 0, 10000, 10000));
-    doTest("Write only 2", 500, new Config(32, 100, 0, 10000, 10000));
+    doTest("Write only 2", providers, 500, new Config(4, 100, 0, 10000, 10000));
+    doTest("Write only 2", providers, 500, new Config(8, 100, 0, 10000, 10000));
+    doTest("Write only 2", providers, 500, new Config(16, 100, 0, 10000, 10000));
+    doTest("Write only 2", providers, 500, new Config(32, 100, 0, 10000, 10000));
   }
 
-  private static Test createConcurrentFIFOCacheTest(int cacheSize, Config config) {
-    return new Test("Concurrent FIFO cache", new ConcurrentFIFOExoCache(cacheSize), config);
+  public void testContention() {
+    doTest("Contention", providers2, 500, new Config(4, 100, 100000, 1000, 1000));
+    doTest("Contention", providers2, 500, new Config(8, 100, 100000, 500, 500));
+    doTest("Contention", providers2, 500, new Config(16, 100, 100000, 250, 250));
+    doTest("Contention", providers2, 500, new Config(32, 100, 100000, 125, 125));
   }
 
-  private static Test createFIFOCacheTest(int cacheSize, Config config) {
-    return new Test("FIFO cache", new FIFOExoCache(cacheSize), config);
+  private abstract static class CacheProvider {
+
+    String name;
+
+    private CacheProvider(String name) {
+      this.name = name;
+    }
+
+    abstract ExoCache createCache(int cacheSize);
+
   }
 
-  private static Test createSimpleCacheTest(int cacheSize, Config config) {
-    return new Test("Simple cache", new SimpleExoCache(cacheSize), config);
-  }
+  private static CacheProvider concurrentFIFO = new CacheProvider("Concurrent FIFO cache") {
+    public ExoCache createCache(int cacheSize) {
+      return new ConcurrentFIFOExoCache(cacheSize);
+    }
+  };
 
-  private static Test createFIFOCacheWithListenerTest(int cacheSize, Config config) {
-    FIFOExoCache cache = new FIFOExoCache(cacheSize);
-    cache.addCacheListener(new SimpleCacheListener());
-    return new Test("FIFO cache with listener", cache, config);
-  }
+  private static CacheProvider fifo = new CacheProvider("FIFO cache") {
+    public ExoCache createCache(int cacheSize) {
+      return new FIFOExoCache(cacheSize);
+    }
+  };
 
-  private static Test createConcurrentFIFOCacheWithListenerTest(int cacheSize, Config config) {
-    ConcurrentFIFOExoCache cache = new ConcurrentFIFOExoCache(cacheSize);
-    cache.addCacheListener(new SimpleCacheListener());
-    return new Test("Concurrent FIFO cache with listener", cache, config);
-  }
+  private static CacheProvider concurrentFIFOWithListener = new CacheProvider("Concurrent FIFO cache with listener") {
+    public ExoCache createCache(int cacheSize) {
+      ConcurrentFIFOExoCache cache = new ConcurrentFIFOExoCache(cacheSize);
+      cache.addCacheListener(new SimpleCacheListener());
+      return cache;
+    }
+  };
+
+  private static CacheProvider fifoWithListener = new CacheProvider("FIFO cache with listener") {
+    public ExoCache createCache(int cacheSize) {
+      FIFOExoCache cache = new FIFOExoCache(cacheSize);
+      cache.addCacheListener(new SimpleCacheListener());
+      return cache;
+    }
+  };
 
   private static class Config {
 
@@ -136,15 +154,13 @@ public class TestScalability extends TestCase {
 
   private static class Test {
 
-    private final String name;
     private final Config config;
     private final ExecutorService executor;
     private final ExecutorCompletionService<Worker> completionService;
     private final Worker[] workers;
     private final ExoCache cache;
 
-    private Test(String name, ExoCache cache, Config config) {
-      this.name = name;
+    private Test(ExoCache cache, Config config) {
       this.config = config;
       this.executor = Executors.newFixedThreadPool(config.threadSize);
       this.completionService = new ExecutorCompletionService<Worker>(executor);
@@ -245,11 +261,7 @@ public class TestScalability extends TestCase {
       doWait();
     }
     private void doWait() throws Exception {
-      String s1 = "abcdefgh";
-      String s2 = s1 + s1;
-      String s3 = s2 + s2;
-      String s4 = s3 + s3;
-      String s5 = s4 + s4;
+      Thread.sleep(1);
     }
   }
 
