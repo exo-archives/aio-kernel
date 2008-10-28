@@ -128,7 +128,7 @@
 	        </object>
 	      </object-param>
 	      
-	      <object-param>	      
+	      <object-param>
 	        <name>TestLogEnabledCachePlugin</name>
 	        <description>The log enabled cache configuration for tests</description>
 	        <object type="org.exoplatform.services.cache.ExoCacheConfig">
