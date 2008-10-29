@@ -182,7 +182,7 @@ public class ConcurrentFIFOExoCache implements ExoCache {
   }
 
   public int getCacheSize() {
-    return state.queueSize;
+    return state.queue.size();
   }
 
   public int getCacheHit() {
