@@ -19,12 +19,12 @@ package org.exoplatform.services.cache.concurrent;
 import org.exoplatform.services.cache.ExoCache;
 import org.exoplatform.services.cache.CachedObjectSelector;
 import org.exoplatform.services.cache.CacheListener;
+import org.apache.commons.logging.Log;
 
 import java.io.Serializable;
 import java.util.Map;
 import java.util.List;
 import java.util.LinkedList;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * An {@link org.exoplatform.services.cache.ExoCache} implementation based on {@link java.util.concurrent.ConcurrentHashMap}
@@ -37,12 +37,13 @@ public class ConcurrentFIFOExoCache implements ExoCache {
 
   private static int DEFAULT_MAX_SIZE = 50;
 
-  private volatile long liveTimeMillis = -1;
+  private final Log log;
+  private volatile long liveTimeMillis;
   volatile int maxSize;
   private CacheListener[] listeners;
   private CacheState state;
-  final AtomicInteger hits = new AtomicInteger(0);
-  final AtomicInteger misses = new AtomicInteger(0);
+  volatile int hits = 0;
+  volatile int misses = 0;
   private String label;
   private String name;
   private boolean distributed = false;
@@ -53,14 +54,32 @@ public class ConcurrentFIFOExoCache implements ExoCache {
     this(DEFAULT_MAX_SIZE);
   }
 
+  public ConcurrentFIFOExoCache(Log log) {
+    this(DEFAULT_MAX_SIZE, log);
+  }
+
   public ConcurrentFIFOExoCache(int maxSize) {
     this(null, maxSize);
   }
 
+  public ConcurrentFIFOExoCache(int maxSize, Log log) {
+    this(null, maxSize, log);
+  }
+
   public ConcurrentFIFOExoCache(String name, int maxSize) {
+    this(name, maxSize, null);
+  }
+
+  public ConcurrentFIFOExoCache(String name, int maxSize, Log log) {
     this.maxSize = maxSize;
     this.name = name;
-    this.state = new CacheState(this);
+    this.state = new CacheState(this, log);
+    this.liveTimeMillis = -1;
+    this.log = log;
+  }
+
+  public void assertConsistent() {
+    state.assertConsistency();
   }
 
   public String getName() {
@@ -149,7 +168,7 @@ public class ConcurrentFIFOExoCache implements ExoCache {
   }
 
   public void clearCache() throws Exception {
-    state = new CacheState(this);
+    state = new CacheState(this, log);
   }
 
   public void select(CachedObjectSelector selector) throws Exception {
@@ -167,11 +186,11 @@ public class ConcurrentFIFOExoCache implements ExoCache {
   }
 
   public int getCacheHit() {
-    return hits.get();
+    return hits;
   }
 
   public int getCacheMiss() {
-    return misses.get();
+    return misses;
   }
 
   public synchronized void addCacheListener(CacheListener listener) {

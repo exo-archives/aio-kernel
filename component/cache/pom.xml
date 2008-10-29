@@ -46,9 +46,9 @@
         <configuration>
           <!-- To use in conjonctin with
           export MAVEN_OPTS="-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000"
-          -->
           <forkMode>never</forkMode>
           <argLine>-enableassertions</argLine>
+          -->
           <systemProperties>
             <!-- Needed to test logEnabled property -->
             <property>

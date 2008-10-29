@@ -16,14 +16,33 @@
  */
 package org.exoplatform.services.cache.concurrent;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 /**
  * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
  * @version $Revision$
  */
 public class Item {
 
+  private static final AtomicLong generator = new AtomicLong(0);
+
+  final long serial = generator.incrementAndGet();
+  final int hashCode = (int)(serial % Integer.MAX_VALUE);
   Item previous;
   Item next;
 
+  /**
+   * This is final on purpose, we rely on object equality in the concurrent has
+   */
+  public final boolean equals(Object obj) {
+    return ((Item)obj).serial == serial;
+  }
+
+  /**
+   * This is final on purpose, we rely on object equality in the concurrent has
+   */
+  public final int hashCode() {
+    return hashCode;
+  }
 }
 

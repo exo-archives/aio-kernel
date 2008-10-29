@@ -40,20 +40,6 @@ abstract class ObjectRef extends Item implements ObjectCacheInfo {
 
   public abstract Object getObject();
 
-  /**
-   * This is final on purpose, we rely on object equality in the concurrent has
-   */
-  public final boolean equals(Object obj) {
-    return super.equals(obj);
-  }
-
-  /**
-   * This is final on purpose, we rely on object equality in the concurrent has
-   */
-  public final int hashCode() {
-    return super.hashCode();
-  }
-
   // ObjectCacheInfo impl
 
   public long getExpireTime() {

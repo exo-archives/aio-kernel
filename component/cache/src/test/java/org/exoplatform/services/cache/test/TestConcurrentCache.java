@@ -23,6 +23,9 @@ import org.exoplatform.services.cache.concurrent.ConcurrentFIFOExoCache;
 
 import java.io.Serializable;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 
 /**
  * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
@@ -42,6 +45,17 @@ public class TestConcurrentCache extends BasicTestCase {
     cache.assertPut("Foo", v1).assertEmpty();
     assertEquals(v1, cache.get("Foo"));
     cache.assertGet("Foo", v1).assertEmpty();
+  }
+
+  public void testCacheSize() {
+    CacheHelper cache = new CacheHelper();
+    assertEquals(0, cache.getCacheSize());
+    cache.put("Foo", v1);
+    assertEquals(1, cache.getCacheSize());
+    cache.put("Bar", v2);
+    assertEquals(2, cache.getCacheSize());
+    cache.put("Juu", v3);
+    assertEquals(2, cache.getCacheSize());
   }
 
   public void testOverCapacity() {
@@ -115,6 +129,19 @@ public class TestConcurrentCache extends BasicTestCase {
     waitFor(5);
     assertEquals(null, cache.remove("Foo"));
     cache.assertExpire("Foo", v1).assertEmpty();
+  }
+
+  public void testGetCachedObjects() {
+    CacheHelper cache = new CacheHelper(4);
+    cache.put("Foo", v1);
+    cache.put("Bar", v2);
+    cache.put("Juu", v3);
+    Set cachedSet = new HashSet(cache.getCachedObjects());
+    Set expectedSet = new HashSet();
+    expectedSet.add(v1);
+    expectedSet.add(v2);
+    expectedSet.add(v3);
+    assertEquals(expectedSet, cachedSet);
   }
 
   private void waitFor(long millis) {

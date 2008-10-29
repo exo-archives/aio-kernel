@@ -31,6 +31,7 @@ import org.exoplatform.services.cache.ExoCache;
 import org.exoplatform.services.cache.FIFOExoCache;
 import org.exoplatform.services.cache.CacheListener;
 import org.exoplatform.services.cache.concurrent.ConcurrentFIFOExoCache;
+import org.apache.commons.logging.Log;
 
 /**
  * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
@@ -45,9 +46,10 @@ public class TestScalability extends TestCase {
     System.out.println("Test " + name +
       " cacheSize=" + cacheSize +
       " threadSize=" + config.threadSize +
+      " objectSize=" + config.objectSize +
       " getSize=" + config.getSize +
       " putSize=" + config.putSize +
-      " configSize=" + config.removalSize);
+      " removalSize=" + config.removalSize);
     for (CacheProvider provider : providers) {
       Test test = new Test(provider.createCache(cacheSize), config);
       long time = test.perform();
@@ -57,42 +59,44 @@ public class TestScalability extends TestCase {
 
   }
 
+  private int multiplier = 10;
+
   List<CacheProvider> providers = Arrays.asList(fifo, concurrentFIFO);
   List<CacheProvider> providers2 = Arrays.asList(fifo, concurrentFIFO, fifoWithListener, concurrentFIFOWithListener);
 
   public void testReadMostly1() {
-    doTest("Read mostly 1", providers, 50, new Config(4, 100, 100000, 1000, 1000));
-    doTest("Read mostly 1", providers, 50, new Config(8, 100, 100000, 1000, 1000));
-    doTest("Read mostly 1", providers, 50, new Config(16, 100, 100000, 1000, 1000));
-    doTest("Read mostly 1", providers, 50, new Config(32, 100, 100000, 1000, 1000));
+    doTest("Read mostly 1", providers, 50, new Config(4, 100, 100000 * multiplier, 1000 * multiplier, 1000 * multiplier));
+    doTest("Read mostly 1", providers, 50, new Config(8, 100, 100000 * multiplier, 1000 * multiplier, 1000 * multiplier));
+    doTest("Read mostly 1", providers, 50, new Config(16, 100, 100000 * multiplier, 1000 * multiplier, 1000 * multiplier));
+    doTest("Read mostly 1", providers, 50, new Config(32, 100, 100000 * multiplier, 1000 * multiplier, 1000 * multiplier));
   }
 
   public void testReadMostly2() {
-    doTest("Read mostly 2", providers, 500, new Config(4, 100, 100000, 1000, 1000));
-    doTest("Read mostly 2", providers, 500, new Config(8, 100, 100000, 1000, 1000));
-    doTest("Read mostly 2", providers, 500, new Config(16, 100, 100000, 1000, 1000));
-    doTest("Read mostly 2", providers, 500, new Config(32, 100, 100000, 1000, 1000));
+    doTest("Read mostly 2", providers, 500, new Config(4, 100, 100000 * multiplier, 1000 * multiplier, 1000 * multiplier));
+    doTest("Read mostly 2", providers, 500, new Config(8, 100, 100000 * multiplier, 1000 * multiplier, 1000 * multiplier));
+    doTest("Read mostly 2", providers, 500, new Config(16, 100, 100000 * multiplier, 1000 * multiplier, 1000 * multiplier));
+    doTest("Read mostly 2", providers, 500, new Config(32, 100, 100000 * multiplier, 1000 * multiplier, 1000 * multiplier));
   }
 
   public void testWrite1() {
-    doTest("Write only 1", providers, 50, new Config(4, 100, 0, 10000, 10000));
-    doTest("Write only 1", providers, 50, new Config(8, 100, 0, 10000, 10000));
-    doTest("Write only 1", providers, 50, new Config(16, 100, 0, 10000, 10000));
-    doTest("Write only 1", providers, 50, new Config(32, 100, 0, 10000, 10000));
+    doTest("Write only 1", providers, 50, new Config(4, 100, 0, 1000 * multiplier, 1000 * multiplier));
+    doTest("Write only 1", providers, 50, new Config(8, 100, 0, 1000 * multiplier, 1000 * multiplier));
+    doTest("Write only 1", providers, 50, new Config(16, 100, 0, 1000 * multiplier, 1000 * multiplier));
+    doTest("Write only 1", providers, 50, new Config(32, 100, 0, 1000 * multiplier, 1000 * multiplier));
   }
 
   public void testWrite2() {
-    doTest("Write only 2", providers, 500, new Config(4, 100, 0, 10000, 10000));
-    doTest("Write only 2", providers, 500, new Config(8, 100, 0, 10000, 10000));
-    doTest("Write only 2", providers, 500, new Config(16, 100, 0, 10000, 10000));
-    doTest("Write only 2", providers, 500, new Config(32, 100, 0, 10000, 10000));
+    doTest("Write only 2", providers, 500, new Config(4, 100, 0, 1000 * multiplier, 1000 * multiplier));
+    doTest("Write only 2", providers, 500, new Config(8, 100, 0, 1000 * multiplier, 1000 * multiplier));
+    doTest("Write only 2", providers, 500, new Config(16, 100, 0, 1000 * multiplier, 1000 * multiplier));
+    doTest("Write only 2", providers, 500, new Config(32, 100, 0, 1000 * multiplier, 1000 * multiplier));
   }
 
   public void testContention() {
-    doTest("Contention", providers2, 500, new Config(4, 100, 100000, 1000, 1000));
-    doTest("Contention", providers2, 500, new Config(8, 100, 100000, 500, 500));
-    doTest("Contention", providers2, 500, new Config(16, 100, 100000, 250, 250));
-    doTest("Contention", providers2, 500, new Config(32, 100, 100000, 125, 125));
+    doTest("Contention", providers2, 500, new Config(4, 100, 100000 * multiplier, 1000 * multiplier, 1000 * multiplier));
+    doTest("Contention", providers2, 500, new Config(8, 100, 100000 * multiplier, 500 * multiplier, 500 * multiplier));
+    doTest("Contention", providers2, 500, new Config(16, 100, 100000 * multiplier, 250 * multiplier, 250 * multiplier));
+    doTest("Contention", providers2, 500, new Config(32, 100, 100000 * multiplier, 125 * multiplier, 125 * multiplier));
   }
 
   private abstract static class CacheProvider {
@@ -107,9 +111,18 @@ public class TestScalability extends TestCase {
 
   }
 
+  private static Log createLog() {
+/*
+    SimpleLog log = new SimpleLog("test");
+    log.setLevel(SimpleLog.LOG_LEVEL_ALL);
+    return log;
+*/
+    return null;
+  }
+
   private static CacheProvider concurrentFIFO = new CacheProvider("Concurrent FIFO cache") {
     public ExoCache createCache(int cacheSize) {
-      return new ConcurrentFIFOExoCache(cacheSize);
+      return new ConcurrentFIFOExoCache(cacheSize, createLog());
     }
   };
 
@@ -121,7 +134,7 @@ public class TestScalability extends TestCase {
 
   private static CacheProvider concurrentFIFOWithListener = new CacheProvider("Concurrent FIFO cache with listener") {
     public ExoCache createCache(int cacheSize) {
-      ConcurrentFIFOExoCache cache = new ConcurrentFIFOExoCache(cacheSize);
+      ConcurrentFIFOExoCache cache = new ConcurrentFIFOExoCache(cacheSize, createLog());
       cache.addCacheListener(new SimpleCacheListener());
       return cache;
     }
@@ -196,6 +209,13 @@ public class TestScalability extends TestCase {
       long time = -System.currentTimeMillis();
       start();
       stop();
+
+      //
+      if (cache instanceof ConcurrentFIFOExoCache) {
+        ((ConcurrentFIFOExoCache)cache).assertConsistent();
+      }
+
+      //
       time += System.currentTimeMillis();
       return time;
     }
@@ -224,14 +244,16 @@ public class TestScalability extends TestCase {
         while (gets > 0 || puts > 0 || removals > 0) {
           int entry = Math.abs(random.nextInt()) % objects.length;
           int decision = Math.abs(random.nextInt()) % (gets + puts + removals);
+          Serializable key = keys[entry];
           if (decision < gets) {
-            cache.get(keys[entry]);
+            cache.get(key);
             gets--;
           } else if (decision >= gets && decision < (gets + puts)) {
-            cache.put(keys[entry], objects[entry]);
+            Object object = objects[entry];
+            cache.put(key, object);
             puts--;
           } else {
-            cache.remove(keys[entry]);
+            cache.remove(key);
             removals--;
           }
         }
