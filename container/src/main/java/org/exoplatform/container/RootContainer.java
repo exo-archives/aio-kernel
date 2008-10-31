@@ -24,7 +24,9 @@ import org.exoplatform.test.mocks.servlet.MockServletContext;
  * tuan08@users.sourceforge.net Date: Jul 21, 2004 Time: 12:15:28 AM
  */
 public class RootContainer extends ExoContainer {
-  private static RootContainer singleton_;
+
+  /** The field is volatile to properly implement the double checked locking pattern. */
+  private static volatile RootContainer singleton_;
 
   private MBeanServer          mbeanServer_;
 
@@ -144,35 +146,56 @@ public class RootContainer extends ExoContainer {
     return getInstance().getComponentInstanceOfType(key);
   }
 
+  /**
+   * Builds a root container and returns it.
+   *
+   * @return a root container
+   * @throws Error if the root container initialization failed
+   */
+  private static RootContainer buildRootContainer() {
+    try {
+      RootContainer rootContainer = new RootContainer();
+      ConfigurationManagerImpl service = new ConfigurationManagerImpl();
+      service.addConfiguration(ContainerUtil.getConfigurationURL("conf/configuration.xml"));
+      if (System.getProperty("maven.exoplatform.dir") != null) {
+        service.addConfiguration(ContainerUtil.getConfigurationURL("conf/test-configuration.xml"));
+      }
+      String confDir = rootContainer.getServerEnvironment().getExoConfigurationDirectory();
+      String overrideConf = confDir + "/configuration.xml";
+      File file = new File(overrideConf);
+      if (file.exists()) {
+        service.addConfiguration("file:" + overrideConf);
+      }
+      service.processRemoveConfiguration();
+      rootContainer.registerComponentInstance(ConfigurationManager.class, service);
+      rootContainer.initContainer();
+      rootContainer.start();
+      return rootContainer;
+    }
+    catch (Exception e) {
+      throw new Error("Could not build top container", e);
+    }
+  }
+
+  /**
+   * Get the unique instance of the root container per VM. The implementation relies on the double
+   * checked locking pattern to guarantee that only one instance will be initialized. See
+   *
+   * @return the root container singleton
+   */
   public static RootContainer getInstance() {
-    if (singleton_ == null) {
+    RootContainer result = singleton_;
+    if (result == null) {
       synchronized (RootContainer.class) {
-        if (singleton_ == null) {
-          try {
-            singleton_ = new RootContainer();
-            ConfigurationManagerImpl service = new ConfigurationManagerImpl();
-            service.addConfiguration(ContainerUtil.getConfigurationURL("conf/configuration.xml"));
-            if (System.getProperty("maven.exoplatform.dir") != null) {
-              service.addConfiguration(ContainerUtil.getConfigurationURL("conf/test-configuration.xml"));
-            }
-            String confDir = singleton_.getServerEnvironment().getExoConfigurationDirectory();
-            String overrideConf = confDir + "/configuration.xml";
-            File file = new File(overrideConf);
-            if (file.exists()) {
-              service.addConfiguration("file:" + overrideConf);
-            }
-            service.processRemoveConfiguration();
-            singleton_.registerComponentInstance(ConfigurationManager.class, service);
-            singleton_.initContainer();
-            singleton_.start();
-            ExoContainerContext.setTopContainer(singleton_);
-          } catch (Throwable ex) {
-            ex.printStackTrace();
-          }
+        result = singleton_;
+        if (result == null) {
+          result = buildRootContainer();
+          ExoContainerContext.setTopContainer(result);
+          singleton_ = result;
         }
       }
     }
-    return singleton_;
+    return result;
   }
 
   static public void setInstance(RootContainer rcontainer) {

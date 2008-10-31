@@ -29,7 +29,7 @@ public final class ExoContainerContext implements java.io.Serializable {
 
   private static ThreadLocal<ExoContainer> currentContainer = new ThreadLocal<ExoContainer>();
 
-  private static ExoContainer              topContainer;
+  private static volatile ExoContainer     topContainer;
 
   private HashMap<String, Object>          attributes       = new HashMap<String, Object>();
 
