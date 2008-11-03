@@ -13,6 +13,11 @@
   <version>trunk</version>
   <packaging>pom</packaging>
 
+  <scm>
+    <connection>scm:svn:http://svn.exoplatform.org/svnroot/exoplatform/projects/kernel/trunk</connection>
+    <developerConnection>scm:svn:http://svn.exoplatform.org/svnroot/exoplatform/projects/kernel/trunk</developerConnection>
+  </scm>
+
   <modules>
     <module>container</module>
     <module>commons</module>
@@ -178,6 +183,13 @@
           </dependency>
         </dependencies>
       </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+        <version>2.0-beta-8</version>
+      </plugin>
+
     </plugins>
   </build>
   <reporting>
