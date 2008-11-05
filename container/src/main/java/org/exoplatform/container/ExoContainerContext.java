@@ -16,6 +16,9 @@
  */
 package org.exoplatform.container;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.util.HashMap;
 import java.util.Set;
 
@@ -36,6 +39,8 @@ public final class ExoContainerContext implements java.io.Serializable {
   private ExoContainer                     container;
 
   private String                           name;
+
+  private static final Log log = LogFactory.getLog(ExoContainerContext.class);
 
   public ExoContainerContext(ExoContainer container) {
     this.container = container;
@@ -61,7 +66,8 @@ public final class ExoContainerContext implements java.io.Serializable {
 
   static void setTopContainer(ExoContainer cont) {
     if (topContainer != null && cont != null)
-      throw new RuntimeException("Two top level containers created, but must be only one.");
+      throw new IllegalStateException("Two top level containers created, but must be only one.");
+    log.info("Set the top container in its context");
     topContainer = cont;
   }
 
@@ -84,7 +90,9 @@ public final class ExoContainerContext implements java.io.Serializable {
   }
 
   public static ExoContainer getContainerByName(String name) {
-    if (topContainer.getContext().getName().equals(name))
+    ExoContainerContext containerContext = topContainer.getContext();
+    String name1 = containerContext.getName();
+    if (name1.equals(name))
       return topContainer;
     return (ExoContainer) topContainer.getComponentInstance(name);
   }

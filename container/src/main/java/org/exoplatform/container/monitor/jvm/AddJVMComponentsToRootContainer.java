@@ -20,6 +20,8 @@ import java.lang.management.ManagementFactory;
 
 import org.exoplatform.container.BaseContainerLifecyclePlugin;
 import org.exoplatform.container.ExoContainer;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * @author Tuan Nguyen (tuan08@users.sourceforge.net)
@@ -29,19 +31,38 @@ import org.exoplatform.container.ExoContainer;
  */
 public class AddJVMComponentsToRootContainer extends BaseContainerLifecyclePlugin {
 
-  public void initContainer(ExoContainer container) {
-    container.registerComponentInstance(ManagementFactory.getOperatingSystemMXBean());
-    container.registerComponentInstance(ManagementFactory.getRuntimeMXBean());
-    container.registerComponentInstance(ManagementFactory.getThreadMXBean());
-    container.registerComponentInstance(ManagementFactory.getClassLoadingMXBean());
-    container.registerComponentInstance(ManagementFactory.getCompilationMXBean());
+  private static final Log log = LogFactory.getLog(AddJVMComponentsToRootContainer.class);
 
-    container.registerComponentInstance(new MemoryInfo());
-    container.registerComponentInstance(JVMRuntimeInfo.MEMORY_MANAGER_MXBEANS,
+  public void initContainer(ExoContainer container) {
+    attemptToRegisterMXComponent(container, ManagementFactory.getOperatingSystemMXBean());
+    attemptToRegisterMXComponent(container, ManagementFactory.getRuntimeMXBean());
+    attemptToRegisterMXComponent(container, ManagementFactory.getThreadMXBean());
+    attemptToRegisterMXComponent(container, ManagementFactory.getClassLoadingMXBean());
+    attemptToRegisterMXComponent(container, ManagementFactory.getCompilationMXBean());
+
+    attemptToRegisterMXComponent(container, new MemoryInfo());
+    attemptToRegisterMXComponent(container, JVMRuntimeInfo.MEMORY_MANAGER_MXBEANS,
                                         ManagementFactory.getMemoryManagerMXBeans());
-    container.registerComponentInstance(JVMRuntimeInfo.MEMORY_POOL_MXBEANS,
+    attemptToRegisterMXComponent(container, JVMRuntimeInfo.MEMORY_POOL_MXBEANS,
                                         ManagementFactory.getMemoryPoolMXBeans());
-    container.registerComponentInstance(JVMRuntimeInfo.GARBAGE_COLLECTOR_MXBEANS,
+    attemptToRegisterMXComponent(container, JVMRuntimeInfo.GARBAGE_COLLECTOR_MXBEANS,
                                         ManagementFactory.getGarbageCollectorMXBeans());
   }
+
+  private void attemptToRegisterMXComponent(ExoContainer container, Object mxComponent) {
+    if (mxComponent != null) {
+      log.debug("Attempt to register mx component " + mxComponent);
+      container.registerComponentInstance(mxComponent);
+      log.debug("Mx component " + mxComponent + " registered");
+    }
+  }
+
+  private void attemptToRegisterMXComponent(ExoContainer container, Object mxKey, Object mxComponent) {
+    if (mxComponent != null) {
+      log.debug("Attempt to register mx component " + mxComponent + " with key " + mxKey);
+      container.registerComponentInstance(mxKey, mxComponent);
+      log.debug("Mx component " + mxComponent + " registered");
+    }
+  }
+
 }

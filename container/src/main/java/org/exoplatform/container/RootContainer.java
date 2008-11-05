@@ -18,6 +18,8 @@ import org.exoplatform.container.monitor.jvm.J2EEServerInfo;
 import org.exoplatform.container.monitor.jvm.OperatingSystemInfo;
 import org.exoplatform.container.util.ContainerUtil;
 import org.exoplatform.test.mocks.servlet.MockServletContext;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Created by The eXo Platform SAS Author : Tuan Nguyen
@@ -33,6 +35,10 @@ public class RootContainer extends ExoContainer {
   private OperatingSystemInfo  osenv_;
 
   private J2EEServerInfo       serverenv_;
+
+  private static final Log log = LogFactory.getLog(RootContainer.class);
+
+  private static volatile boolean booting = false;
 
   public RootContainer() {
     super(new MX4JComponentAdapterFactory(), null);
@@ -173,7 +179,8 @@ public class RootContainer extends ExoContainer {
       return rootContainer;
     }
     catch (Exception e) {
-      throw new Error("Could not build top container", e);
+      log.error("Could not build root container", e);
+      return null;
     }
   }
 
@@ -189,9 +196,24 @@ public class RootContainer extends ExoContainer {
       synchronized (RootContainer.class) {
         result = singleton_;
         if (result == null) {
-          result = buildRootContainer();
-          ExoContainerContext.setTopContainer(result);
-          singleton_ = result;
+          if (booting) {
+            throw new IllegalStateException("Already booting by the same thread");
+          } else {
+            booting = true;
+            log.error("Booting root container with id " + RootContainer.class.hashCode() + "");
+            log.info("Building root container");
+            long time = - System.currentTimeMillis();
+            result = buildRootContainer();
+            if (result != null) {
+              time += System.currentTimeMillis();
+              log.info("Root container is built (build time " + time + "ms)");
+              ExoContainerContext.setTopContainer(result);
+              singleton_ = result;
+              log.info("Root container booted");
+            } else {
+              log.error("Failed to boot root container");
+            }
+          }
         }
       }
     }
