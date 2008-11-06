@@ -49,6 +49,7 @@ import org.exoplatform.services.remote.group.ResultHandler;
  * @since Feb 21, 2005
  * @version $Id: CommunicationServiceImpl.java 5799 2006-05-28 17:55:42Z geaz $
  */
+@Deprecated
 public class CommunicationServiceImpl implements CommunicationService {
   private String                       properties_;
 

@@ -25,6 +25,7 @@ import java.util.List;
  * @version $Id: CommunicationServiceMonitor.java 5799 2006-05-28 17:55:42Z geaz
  *          $
  */
+@Deprecated
 public class CommunicationServiceMonitor implements Serializable {
   private MemberInfo info_;
 
