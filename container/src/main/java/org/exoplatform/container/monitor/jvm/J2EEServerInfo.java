@@ -16,6 +16,9 @@
  */
 package org.exoplatform.container.monitor.jvm;
 
+import java.io.File;
+import java.net.URL;
+
 /**
  * @author Tuan Nguyen (tuan08@users.sourceforge.net)
  * @since Nov 8, 2004
@@ -52,7 +55,19 @@ public class J2EEServerInfo {
     } else if (jbossHome != null) {
       serverName_ = "jboss";
       serverHome_ = jbossHome;
-      exoConfDir_ = serverHome_ + "/exo-conf";
+      
+      // try find and use jboss.server.config.url
+      // based on http://www.jboss.org/community/docs/DOC-10730
+      String jbossConfigUrl = System.getProperty("jboss.server.config.url");
+      if (jbossConfigUrl != null) {
+        try {
+          exoConfDir_ = new File(new URL(jbossConfigUrl).getFile() + "/exo-conf").getAbsolutePath();
+        } catch(Throwable e) {
+          // don't care about it
+          exoConfDir_ = serverHome_ + "/exo-conf";
+        }
+      } else
+        exoConfDir_ = serverHome_ + "/exo-conf";
     } else if (jettyHome != null) {
       serverName_ = "jetty";
       serverHome_ = jettyHome;
