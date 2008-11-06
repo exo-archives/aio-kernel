@@ -4,7 +4,7 @@
     <type>org.exoplatform.services.scheduler.impl.QuartzSheduler</type>
   </component>
 
-    <!--Valid value: FATAL, ERROR, WARN, INFO, DEBUG, TRACE-->
+  <!--Valid value: FATAL, ERROR, WARN, INFO, DEBUG, TRACE-->
 
   <component>
     <key>org.exoplatform.services.log.LogService</key>
@@ -43,6 +43,7 @@
 
     </init-params>
   </component>
+  
   <!-- component>
     <key>org.exoplatform.services.naming.InitialContextInitializer</key>
     <type>org.exoplatform.services.naming.InitialContextInitializer</type>
