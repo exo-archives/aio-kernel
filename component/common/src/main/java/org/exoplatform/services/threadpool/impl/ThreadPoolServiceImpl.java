@@ -37,6 +37,7 @@ import org.apache.commons.logging.Log;
 import org.exoplatform.services.log.LogService;
 import org.exoplatform.services.threadpool.ThreadPoolService;
 
+@Deprecated
 public class ThreadPoolServiceImpl implements ThreadPoolService {
 
   /**
