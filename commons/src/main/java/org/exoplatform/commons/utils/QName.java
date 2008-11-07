@@ -78,7 +78,7 @@ public class QName {
     if (!(o instanceof QName))
       return false;
 
-    return hashCode == o.hashCode();
+    return hashCode == o.hashCode() && getAsString().equals(((QName) o).getAsString());
   }
 
   @Override
