@@ -28,7 +28,7 @@
     <dependency>
       <groupId>org.exoplatform.kernel</groupId>
       <artifactId>exo.kernel.component.common</artifactId>
-      <version>trunk</version>
+      <version>${org.exoplatform.kernel.version}</version>
     </dependency>
     <dependency>
       <groupId>javagroups</groupId>
