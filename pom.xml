@@ -216,7 +216,7 @@
       <properties>
         <exo.platform.version>trunk</exo.platform.version>
         <org.exoplatform.tool.version>trunk</org.exoplatform.tool.version>
-        <org.exoplatform.kernel.version>trunk</org.exoplatform.kernel.version>
+        <org.exoplatform.kernel.version>2.0.4</org.exoplatform.kernel.version>
       </properties>
     </profile>
   </profiles>
