@@ -71,6 +71,8 @@ public class Constants {
 
   public static final String PORTLET_ENCODER           = "_portlet_";
 
+  public static final String PORTLET_APP_ENCODER       = "_portlet_app_";
+
   public static final String VALIDATOR_ENCODER         = "_validator_";
 
   public static final String FILTER_ENCODER            = "_filter_";
