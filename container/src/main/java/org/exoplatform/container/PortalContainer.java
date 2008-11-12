@@ -24,6 +24,11 @@ import org.exoplatform.container.xml.PortalContainerInfo;
  */
 public class PortalContainer extends ExoContainer implements SessionManagerContainer {
 
+  /**
+   * The default name of the portal container
+   */
+  private static final String DEFAULT_PORTAL_CONTAINER_NAME = "portal";
+  
   private static ThreadLocal  currentContainer_ = new ThreadLocal();
 
   private MBeanServer         mbeanServer;
@@ -79,7 +84,7 @@ public class PortalContainer extends ExoContainer implements SessionManagerConta
   public static PortalContainer getInstance() {
     PortalContainer container = (PortalContainer) currentContainer_.get();
     if (container == null) {
-      container = RootContainer.getInstance().getPortalContainer("default");
+      container = RootContainer.getInstance().getPortalContainer(DEFAULT_PORTAL_CONTAINER_NAME);
       currentContainer_.set(container);
     }
     return container;
