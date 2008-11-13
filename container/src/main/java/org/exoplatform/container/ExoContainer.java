@@ -39,7 +39,7 @@ import org.exoplatform.container.xml.InitParams;
  * Created by The eXo Platform SAS Author : Tuan Nguyen
  * tuan08@users.sourceforge.net Date: Jul 18, 2004 Time: 12:15:28 AM
  */
-public class ExoContainer extends DefaultPicoContainer {
+public class ExoContainer extends CachingContainer {
 
   Log                                           log                       = LogFactory.getLog(ExoContainer.class);
 
