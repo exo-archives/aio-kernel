@@ -24,6 +24,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * if the property exo.product.developing is set to the false string. The cache usage is read once during the static
  * initialization of the cache and it can be programmatically triggered by calling the {@link #refresh()} method.
  *
+ * @todo add security privileged blocks used when eXo is executed under a security manager
+ *
  * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
  * @version $Revision$
  */
