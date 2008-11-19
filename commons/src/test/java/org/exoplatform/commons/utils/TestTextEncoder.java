@@ -52,7 +52,7 @@ public class TestTextEncoder extends TestCase {
   }
 
   private void assertOK(String s) throws IOException {
-    TextEncoder encoder = TextEncoder.getUTF8();
+    TextEncoder encoder = CharsetTextEncoder.getUTF8();
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     encoder.encode(s, 0, s.length(), baos);
     baos.flush();

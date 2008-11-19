@@ -17,19 +17,36 @@
 package org.exoplatform.commons.utils;
 
 /**
- * A char encoder that encodes chars to a suite of bytes. No assumptions must be made about the
- * statefullness nature of an encoder as some encoder may be statefull and some encoder may be stateless.
+ * A char encoder that use a table to cache the result produced by a delegate char encoder. This encoder
+ * is stateless and should only be composed with stateless char encoder otherwise an unexpected result
+ * may happen.
  *
  * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
  * @version $Revision$
  */
-public interface CharEncoder {
+public class TableCharEncoder implements CharEncoder {
+
+  private static final char MAX = (char)0x10FFFD;
+  
+  private byte[][] table;
+  private final CharEncoder charEncoder;
 
   /**
-   * Encodes a single char into an array of bytes. The returned array of bytes should not be modified.
+   * Creates a new table based char encoder.
    *
-   * @param c the char to encode
-   * @return the serie of bytes corresponding to the encoded char
+   * @param charEncoder the delegate char encoder
    */
-  byte[] encode(char c);
+  public TableCharEncoder(CharEncoder charEncoder) {
+    this.charEncoder = charEncoder;
+    this.table = new byte[MAX + 1][];
+  }
+
+  public byte[] encode(char c) {
+    byte[] bytes = table[c];
+    if (bytes == null) {
+      bytes = charEncoder.encode(c);
+      table[c] = bytes;
+    }
+    return bytes;
+  }
 }

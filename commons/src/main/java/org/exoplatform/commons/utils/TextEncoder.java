@@ -16,65 +16,21 @@
  */
 package org.exoplatform.commons.utils;
 
-import java.nio.charset.Charset;
 import java.io.OutputStream;
 import java.io.IOException;
 
 /**
+ * A text encoder that encodes text to an output stream. No assumptions must be made about the
+ * statefullness nature of an encoder as some encoder may be statefull and some encoder may be stateless.
+ *
  * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
  * @version $Revision$
  */
-public class TextEncoder {
+public interface TextEncoder {
 
-  private static final char MAX = (char)0x10FFFD;
-  private static final TextEncoder UTF8 = new TextEncoder("UTF8");
+  void encode(char c, OutputStream out) throws IOException;
 
-  public static TextEncoder getUTF8() {
-    return UTF8;
-  }
+  void encode(char[] chars, int off, int len, OutputStream out) throws IOException;
 
-  private final CharEncoder charEncoder;
-  private byte[][] table;
-
-  private TextEncoder(CharEncoder charEncoder) {
-    this.charEncoder = charEncoder;
-    this.table = new byte[MAX + 1][];
-  }
-
-  private TextEncoder(String encoding) {
-    this(new CharEncoder(Charset.forName(encoding)));
-  }
-
-  public void encode(char c, OutputStream out) throws IOException {
-    byte[] bytes = table[c];
-    if (bytes == null) {
-      bytes = charEncoder.encode(c);
-      table[c] = bytes;
-    }
-    out.write(bytes);
-  }
-
-  public void encode(char[] chars, int off, int len, OutputStream out) throws IOException {
-    for (int i = off; i < len; i++) {
-      char c = chars[i];
-      byte[] bytes = table[c];
-      if (bytes == null) {
-        bytes = charEncoder.encode(c);
-        table[c] = bytes;
-      }
-      out.write(bytes);
-    }
-  }
-
-  public void encode(String str, int off, int len, OutputStream out) throws IOException {
-    for (int i = off; i < len; i++) {
-      char c = str.charAt(i);
-      byte[] bytes = table[c];
-      if (bytes == null) {
-        bytes = charEncoder.encode(c);
-        table[c] = bytes;
-      }
-      out.write(bytes);
-    }
-  }
+  void encode(String str, int off, int len, OutputStream out) throws IOException;
 }
