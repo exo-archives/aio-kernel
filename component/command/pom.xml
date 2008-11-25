@@ -1,14 +1,14 @@
-<project>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <parent>
     <groupId>org.exoplatform.kernel</groupId>
     <artifactId>config</artifactId>
-    <version>2.0.5-SNAPSHOT</version>
+    <version>2.0.5</version>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
   <artifactId>exo.kernel.component.command</artifactId>
   <packaging>jar</packaging>
-  <version>2.0.5-SNAPSHOT</version>
+  <version>2.0.5</version>
   <name>Command service impl</name>
   <description>exoplatform command services implementation</description>
 
@@ -17,7 +17,7 @@
     <dependency>
       <groupId>org.exoplatform.kernel</groupId>
       <artifactId>exo.kernel.component.common</artifactId>
-      <version>2.0.5-SNAPSHOT</version>
+      <version>2.0.5</version>
       <scope>compile</scope>
     </dependency>
 
