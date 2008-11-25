@@ -8,7 +8,7 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>exo.kernel.component.common</artifactId>
   <packaging>jar</packaging>
-  <version>2.0.5-SNAPSHOT</version>
+  <version>${org.exoplatform.kernel.version}</version>
   <name>Common service</name>
   <description>exoplatform common services implementation</description>
 
@@ -16,7 +16,7 @@
     <dependency>
       <groupId>org.exoplatform.kernel</groupId>
       <artifactId>exo.kernel.container</artifactId>
-      <version>2.0.5-SNAPSHOT</version>
+      <version>${org.exoplatform.kernel.version}</version>
       <scope>compile</scope>
     </dependency>
 

@@ -7,7 +7,7 @@
   
   <modelVersion>4.0.0</modelVersion>
   <artifactId>exo.kernel.container</artifactId>
-  <version>2.0.5-SNAPSHOT</version>
+  <version>${org.exoplatform.kernel.version}</version>
   <packaging>jar</packaging>
   <name>eXo Container</name>
   <url>http://www.exoplatform.org</url>
@@ -17,7 +17,7 @@
     <dependency>
       <groupId>org.exoplatform.kernel</groupId>
       <artifactId>exo.kernel.commons</artifactId>
-      <version>2.0.5-SNAPSHOT</version>
+      <version>${org.exoplatform.kernel.version}</version>
     </dependency>
     
     <dependency>
