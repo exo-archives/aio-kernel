@@ -31,6 +31,8 @@ public class ComponentPlugin {
   String     description;
 
   InitParams initParams;
+  
+  String priority;
 
   public String getName() {
     return name;
@@ -70,5 +72,13 @@ public class ComponentPlugin {
 
   public void setInitParams(InitParams ips) {
     this.initParams = ips;
+  }
+  
+  public String getPriority() {
+    return priority;    
+  }
+
+  public void setPriority(String priority) {
+    this.priority = priority;    
   }
 }

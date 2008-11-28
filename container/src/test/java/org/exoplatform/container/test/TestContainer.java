@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.RootContainer;
+import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.mocks.MockService;
+import org.exoplatform.mocks.PriorityService;
 import org.exoplatform.test.BasicTestCase;
 
 /**
@@ -87,6 +89,20 @@ public class TestContainer extends BasicTestCase {
     assertNotNull(c);
     System.out.println("Third instance DefaultComponent:  " + c.hash());
     System.out.println("-------------------------------------------------------------------------");
+  }
+  
+  public void testPriorityPlugins() {
+    RootContainer rootContainer = RootContainer.getInstance();
+    PortalContainer pcontainer = (PortalContainer) rootContainer.getComponentInstance("portal");
+    assertNotNull(pcontainer);
+    PriorityService ps = (PriorityService) pcontainer.getComponentInstanceOfType(PriorityService.class);
+    assertNotNull(ps);
+    List<ComponentPlugin> l = ps.getPlugins();
+    assertNotNull(l);
+    assertEquals(3, l.size());
+    assertEquals("PluginPriority1", l.get(0).getName());
+    assertEquals("PluginPriority2", l.get(1).getName());
+    assertEquals("PluginPriority3", l.get(2).getName());
   }
 
   // public void testClientType() throws Exception {

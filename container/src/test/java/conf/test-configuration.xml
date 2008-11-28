@@ -64,6 +64,34 @@
     </init-params>
   </component>
 
+  <component>
+    <type>org.exoplatform.mocks.PriorityService</type>
+  </component>
+  <external-component-plugins>
+    <target-component>org.exoplatform.mocks.PriorityService</target-component>
+    <component-plugin>
+      <name>PluginPriority1</name>
+      <set-method>addPlugin</set-method>
+      <type>org.exoplatform.mocks.PluginPriority1</type>
+      <description>PluginPriority1 description</description>
+      <priority>1</priority>
+    </component-plugin>
+    <component-plugin>
+      <name>PluginPriority2</name>
+      <set-method>addPlugin</set-method>
+      <type>org.exoplatform.mocks.PluginPriority2</type>
+      <description>PluginPriority2 description</description>
+      <priority>2</priority>
+    </component-plugin>
+    <component-plugin>
+      <name>PluginPriority3</name>
+      <set-method>addPlugin</set-method>
+      <type>org.exoplatform.mocks.PluginPriority3</type>
+      <description>PluginPriority3 description</description>
+<!--      <priority>3</priority>-->
+    </component-plugin>
+  </external-component-plugins>
+
   <external-component-plugins>
     <target-component>MockService</target-component>
     <component-plugin>
@@ -71,6 +99,7 @@
       <set-method>addPlugin</set-method>
       <type>org.exoplatform.mocks.MockServicePlugin</type>
       <description>test external plugin</description>
+      <priority>1</priority>
       <init-params>
         <value-param>
           <name>name</name>
