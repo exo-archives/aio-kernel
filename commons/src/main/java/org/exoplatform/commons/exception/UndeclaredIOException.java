@@ -14,42 +14,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.commons.utils;
-
-import java.io.Writer;
-import java.io.IOException;
+package org.exoplatform.commons.exception;
 
 /**
+ * Denotes an i/o exception that should not be handled as such but should be handled in a different way
+ * by the control flow of the system.
+ *
  * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
  * @version $Revision$
  */
-public abstract class Printer extends Writer {
+public class UndeclaredIOException extends RuntimeException {
 
-  public Printer() {
+  public UndeclaredIOException() {
   }
 
-  public void println(Object o) {
-    print(o);
-    println();
+  public UndeclaredIOException(String message) {
+    super(message);
   }
 
-  public void println() {
-    try {
-      write('\n');
-    }
-    catch (IOException ignore) {
-    }
+  public UndeclaredIOException(String message, Throwable cause) {
+    super(message, cause);
   }
 
-  public void print(Object o) {
-    try {
-      if (o instanceof Text) {
-        ((Text)o).writeTo(this);
-      } else {
-        write(String.valueOf(o));
-      }
-    }
-    catch (IOException ignore) {
-    }
+  public UndeclaredIOException(Throwable cause) {
+    super(cause);
   }
 }

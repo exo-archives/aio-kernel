@@ -16,40 +16,28 @@
  */
 package org.exoplatform.commons.utils;
 
-import java.io.Writer;
-import java.io.IOException;
-
 /**
+ * Enumerates the behavior that a joinpoint can have uppon an i/o exception instead of just letting
+ * the exception happen.
+ *
  * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
  * @version $Revision$
  */
-public abstract class Printer extends Writer {
+public enum IOFailureFlow {
 
-  public Printer() {
-  }
+  /**
+   * Rethrows the exception.
+   */
+  RETHROW,
 
-  public void println(Object o) {
-    print(o);
-    println();
-  }
+  /**
+   * Ignores the exception.
+   */
+  IGNORE,
 
-  public void println() {
-    try {
-      write('\n');
-    }
-    catch (IOException ignore) {
-    }
-  }
+  /**
+   * Wraps and rethrows the exception with an instance of {@link org.exoplatform.commons.exception.UndeclaredIOException}. 
+   */
+  THROW_UNDECLARED
 
-  public void print(Object o) {
-    try {
-      if (o instanceof Text) {
-        ((Text)o).writeTo(this);
-      } else {
-        write(String.valueOf(o));
-      }
-    }
-    catch (IOException ignore) {
-    }
-  }
 }
