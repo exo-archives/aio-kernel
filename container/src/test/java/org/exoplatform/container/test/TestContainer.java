@@ -100,9 +100,9 @@ public class TestContainer extends BasicTestCase {
     List<ComponentPlugin> l = ps.getPlugins();
     assertNotNull(l);
     assertEquals(3, l.size());
-    assertEquals("PluginPriority1", l.get(0).getName());
-    assertEquals("PluginPriority2", l.get(1).getName());
-    assertEquals("PluginPriority3", l.get(2).getName());
+    assertEquals("PluginPriority3", l.get(0).getName());
+    assertEquals("PluginPriority1", l.get(1).getName());
+    assertEquals("PluginPriority2", l.get(2).getName());
   }
 
   // public void testClientType() throws Exception {

@@ -99,7 +99,8 @@ public class MX4JComponentAdapter extends AbstractComponentAdapter {
     }
     
     private int getPriority(org.exoplatform.container.xml.ComponentPlugin p) {
-      return p.getPriority() == null ? Integer.MAX_VALUE : Integer.parseInt(p.getPriority());
+//      return p.getPriority() == null ? Integer.MAX_VALUE : Integer.parseInt(p.getPriority());
+      return p.getPriority() == null ? 0 : Integer.parseInt(p.getPriority());
     }
     
   };
