@@ -16,7 +16,7 @@
     <dependency>
       <groupId>org.exoplatform.kernel</groupId>
       <artifactId>exo.kernel.container</artifactId>
-      <version>${org.exoplatform.kernel.version}</version>
+      <version>2.0.6-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
 

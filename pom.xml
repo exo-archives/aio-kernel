@@ -221,7 +221,6 @@
       </activation>
       <properties>
         <org.exoplatform.tool.version>trunk</org.exoplatform.tool.version>
-        <org.exoplatform.kernel.version>2.0.6-SNAPSHOT</org.exoplatform.kernel.version>
       </properties>
     </profile>
   </profiles>
