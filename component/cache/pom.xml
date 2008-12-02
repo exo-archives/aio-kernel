@@ -49,6 +49,9 @@
           <forkMode>never</forkMode>
           <argLine>-enableassertions</argLine>
           -->
+          <excludes>
+            <exclude>**/TestScalability.java</exclude>
+          </excludes>
           <systemProperties>
             <!-- Needed to test logEnabled property -->
             <property>
