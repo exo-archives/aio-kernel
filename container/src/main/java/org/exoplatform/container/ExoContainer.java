@@ -25,7 +25,6 @@ import javax.management.ObjectName;
 
 import org.picocontainer.PicoContainer;
 import org.picocontainer.defaults.ComponentAdapterFactory;
-import org.picocontainer.defaults.DefaultPicoContainer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

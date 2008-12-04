@@ -22,7 +22,6 @@ import java.net.URL;
 import java.util.List;
 
 import javax.management.MBeanServer;
-import javax.management.MBeanServerFactory;
 
 import org.exoplatform.container.configuration.ConfigurationException;
 import org.exoplatform.container.configuration.ConfigurationManager;
@@ -61,14 +60,14 @@ public class StandaloneContainer extends ExoContainer implements SessionManagerC
 
   private SessionManager             smanager_;
 
-  private ConfigurationManagerImpl   configurationManager;
+  private final ConfigurationManagerImpl configurationManager;
 
-  private MBeanServer                mbeanServer;
+  private final MBeanServer              mbeanServer;
 
   private StandaloneContainer(ClassLoader configClassLoader) {
     super(new MX4JComponentAdapterFactory(), null);
-    configurationManager = new ConfigurationManagerImpl(configClassLoader);
-    this.mbeanServer = MBeanServerFactory.createMBeanServer("exomx");
+    this.configurationManager = new ConfigurationManagerImpl(configClassLoader);
+    this.mbeanServer = createMBeanServer("exomx");
     this.registerComponentInstance(ConfigurationManager.class, configurationManager);
     registerComponentImplementation(SessionManagerImpl.class);
   }
