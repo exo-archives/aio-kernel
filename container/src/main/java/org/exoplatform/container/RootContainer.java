@@ -7,7 +7,6 @@ package org.exoplatform.container;
 import java.io.File;
 
 import javax.management.MBeanServer;
-import javax.management.MBeanServerFactory;
 import javax.servlet.ServletContext;
 
 import org.exoplatform.container.configuration.ConfigurationManager;
@@ -30,11 +29,11 @@ public class RootContainer extends ExoContainer {
   /** The field is volatile to properly implement the double checked locking pattern. */
   private static volatile RootContainer singleton_;
 
-  private MBeanServer          mbeanServer_;
+  private final MBeanServer          mbeanServer_;
 
   private OperatingSystemInfo  osenv_;
 
-  private J2EEServerInfo       serverenv_;
+  private final J2EEServerInfo       serverenv_;
 
   private static final Log log = LogFactory.getLog(RootContainer.class);
 
@@ -42,7 +41,7 @@ public class RootContainer extends ExoContainer {
 
   public RootContainer() {
     super(new MX4JComponentAdapterFactory(), null);
-    mbeanServer_ = MBeanServerFactory.createMBeanServer("exomx");
+    mbeanServer_ = createMBeanServer("exomx");
     Runtime.getRuntime().addShutdownHook(new ShutdownThread(this));
     serverenv_ = new J2EEServerInfo();
     this.registerComponentInstance(J2EEServerInfo.class, serverenv_);

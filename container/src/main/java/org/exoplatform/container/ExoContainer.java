@@ -4,6 +4,7 @@
  **/
 package org.exoplatform.container;
 
+import java.lang.management.ManagementFactory;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,6 +19,7 @@ import javax.management.MBeanInfo;
 import javax.management.MBeanOperationInfo;
 import javax.management.MBeanParameterInfo;
 import javax.management.MBeanServer;
+import javax.management.MBeanServerFactory;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 
@@ -41,13 +43,51 @@ import org.exoplatform.container.xml.InitParams;
  */
 public class ExoContainer extends CachingContainer {
 
-  Log                                           log                       = LogFactory.getLog(ExoContainer.class);
+  /**
+   * Logger
+   */
+  private static final Log                      LOG                             = LogFactory.getLog(ExoContainer.class);
+  
+  /**
+   * Default domain name
+   */
+  private static final String                   DEFAULT_DOMAIN                  = "component";
+  
+  /**
+   * Default domain name prefix
+   */
+  private static final String                   DEFAULT_DOMAIN_PREFIX           = "eXo.";
+  
+  /**
+   * Use existing MBean server parameter name 
+   */
+  private static final String                   USE_EXISTING_SERVER_PARAM       = "exo.jmx.useExistingServer";
+  
+  /**
+   * Find existing MBean server parameter name
+   */
+  private static final String                   FIND_EXISTING_SERVER_PARAM           = "exo.jmx.findExistingServer";
 
-  private Map<String, ComponentLifecyclePlugin> componentLifecylePlugin_  = new HashMap<String, ComponentLifecyclePlugin>();
+  /**
+   * Find existing MBean server from default domain parameter name
+   */
+  private static final String                   FIND_EXISTING_SERVER_FROM_DEFAULT_DOMAIN_PARAM     = "exo.jmx.findExistingServerFromDefaultDomain";
+  
+  /**
+   * Indicates either a local MBean server has to be used or not
+   */
+  private final static boolean                  USE_EXISTING_SERVER        = System.getProperty(USE_EXISTING_SERVER_PARAM) != null;
+  
+  /**
+   * The local MBean server
+   */
+  private static volatile MBeanServer           EXISTING_MBEAN_SERVER;
+  
+  private final Map<String, ComponentLifecyclePlugin> componentLifecylePlugin_  = new HashMap<String, ComponentLifecyclePlugin>();
 
-  private List<ContainerLifecyclePlugin>        containerLifecyclePlugin_ = new ArrayList<ContainerLifecyclePlugin>();
+  private final List<ContainerLifecyclePlugin>        containerLifecyclePlugin_ = new ArrayList<ContainerLifecyclePlugin>();
 
-  protected ExoContainerContext                 context;
+  protected final ExoContainerContext                 context;
 
   public ExoContainer(PicoContainer parent) {
     super(parent);
@@ -99,6 +139,70 @@ public class ExoContainer extends CachingContainer {
     throw new UnsupportedOperationException("This container do not support jmx management");
   }
 
+  private MBeanServer getExistingServer() {
+    String agentId = System.getProperty(FIND_EXISTING_SERVER_PARAM);
+    if (agentId != null) {      
+      if (agentId.length() == 0) {
+        if (LOG.isInfoEnabled()) LOG.info("No agent id has been given to retrieve the local MBean server.");
+        agentId = null;
+      } else if (LOG.isInfoEnabled()) {
+        LOG.info("Trying to retrieve the local MBean server with agent id '" + agentId + "'.");
+      }
+      final ArrayList<MBeanServer> servers = MBeanServerFactory.findMBeanServer(agentId);
+      if (servers != null && servers.size() > 0) {
+        final String domain = System.getProperty(FIND_EXISTING_SERVER_FROM_DEFAULT_DOMAIN_PARAM);
+        if (domain == null) {
+          if (servers.size() > 1) {
+            if (LOG.isWarnEnabled()) LOG.warn("More than one MBean server has been found" + (agentId != null ? " (Agent Id: " + agentId + ")" : "") + ", the first MBean server will be used.");
+            for (MBeanServer server : servers) {
+              if (LOG.isInfoEnabled()) LOG.info("Local MBean server default domain name '" + server.getDefaultDomain() + "'.");
+            }
+          }
+          if (LOG.isInfoEnabled()) LOG.info("The default domain name of the selected MBean server is '" + servers.get(0).getDefaultDomain() + "'.");
+          return servers.get(0);          
+        } else {
+          if (LOG.isInfoEnabled()) LOG.info("Trying to retrieve the local MBean server with default domain name '" + domain + "'.");          
+          for (MBeanServer server : servers) {
+            if (domain.equals(server.getDefaultDomain())) {
+              return server;
+            }
+          }
+        }
+      } 
+      if (LOG.isWarnEnabled()) LOG.warn("No MBean server has been found with the given criteria, the platform MBean server will be used");
+    }
+    return ManagementFactory.getPlatformMBeanServer();
+  }
+  
+  protected MBeanServer createMBeanServer(String domain)  {
+    if (USE_EXISTING_SERVER) {
+      return null;
+    } else {
+      return MBeanServerFactory.createMBeanServer(domain);
+    }
+  }
+  
+  private MBeanServer getCurrentMBeanServer() {
+    if (USE_EXISTING_SERVER) {
+      MBeanServer server = EXISTING_MBEAN_SERVER;
+      if (server == null) {
+        synchronized (ExoContainer.class) {
+          server = EXISTING_MBEAN_SERVER;
+          if (server == null) {
+            if (LOG.isInfoEnabled()) LOG.info("An existing MBean server will be used.");
+            EXISTING_MBEAN_SERVER = getExistingServer();            
+          }
+        }
+      }
+      return EXISTING_MBEAN_SERVER;
+    }
+    return getMBeanServer();
+  }
+  
+  public String getMBeanContext() {
+    return null;
+  }
+  
   public void addComponentLifecylePlugin(ComponentLifecyclePlugin plugin) {
     List<String> list = plugin.getManageableComponents();
     for (String component : list)
@@ -114,8 +218,8 @@ public class ExoContainer extends CachingContainer {
   }
 
   public <T> T createComponent(Class<T> clazz, InitParams params) throws Exception {
-    if (log.isDebugEnabled())
-      log.debug(clazz.getName() + " " + ((params != null) ? params : "") + " added to "
+    if (LOG.isDebugEnabled())
+      LOG.debug(clazz.getName() + " " + ((params != null) ? params : "") + " added to "
           + getContext().getName());
     Constructor<?>[] constructors = ContainerUtil.getSortedConstructors(clazz);
     Class<?> unknownParameter = null;
@@ -145,21 +249,25 @@ public class ExoContainer extends CachingContainer {
 
   public void manageMBean(Component component, String componentKey, Object bean) {
     ObjectName name = null;
-    MBeanServer mbeanServer = getMBeanServer();
+    MBeanServer mbeanServer = getCurrentMBeanServer();
 
-    Object mbean = null;
+    ExoContainerMBean mbean = null;
 
     synchronized (mbeanServer) {
       try {
         name = asObjectName(component, componentKey);
         mbean = new ExoContainerMBean(bean);
+        // Discard all the unnecessary MBeans 
+        if (mbean.canBeMonitored()) {
         mbeanServer.registerMBean(mbean, name);
+        } else if (LOG.isDebugEnabled()) {
+          LOG.debug("The MBean '" + name + "' cannot be monitored since there is nothing to monitor.");
+        }
       } catch (InstanceAlreadyExistsException e) {
+        if (LOG.isWarnEnabled()) LOG.warn("The MBean '" + name + "' has already been registered.", e);
         try {
-
           mbeanServer.unregisterMBean(name);
           mbeanServer.registerMBean(mbean, name);
-
         } catch (Exception e1) {
           throw new RuntimeException("Failed to register MBean '" + name + " due to "
               + e.getMessage(), e);
@@ -178,20 +286,33 @@ public class ExoContainer extends CachingContainer {
    * @param componentKey
    * @return an ObjectName based on the given componentKey
    */
-  private static ObjectName asObjectName(Component component, String componentKey) throws MalformedObjectNameException {
+  private ObjectName asObjectName(Component component, String componentKey) throws MalformedObjectNameException {
     String name = null;
-    if (component != null && component.getJMXName() != null) {
+    if (component != null) {
       name = component.getJMXName();
     }
-    // Fix, so it works under WebSphere ver. 5
-    if (name == null || name.indexOf(':') == -1) {
-      name = "component:type=" + componentKey;
+    String mbeanContext, domainPrefix;
+    if (USE_EXISTING_SERVER) {
+      mbeanContext = getMBeanContext();
+      domainPrefix = DEFAULT_DOMAIN_PREFIX;
+    } else {
+      mbeanContext = "";
+      domainPrefix = "";
     }
-    return new ObjectName(name);
+    if (mbeanContext == null) {
+      mbeanContext = "";
+    } else if (mbeanContext.length() > 0) {
+      mbeanContext = "," + mbeanContext;      
+    }
+    // Fix, so it works under WebSphere ver. 5
+    if (name == null || name.indexOf('=') == -1 || name.indexOf(':') == -1) {
+      name = DEFAULT_DOMAIN + ":type=" + componentKey;
+    }
+    return new ObjectName(domainPrefix + name + mbeanContext);
   }
 
   public void printMBeanServer() {
-    MBeanServer server = getMBeanServer();
+    MBeanServer server = getCurrentMBeanServer();
     final Set names = server.queryNames(null, null);
     for (final Iterator i = names.iterator(); i.hasNext();) {
       ObjectName name = (ObjectName) i.next();

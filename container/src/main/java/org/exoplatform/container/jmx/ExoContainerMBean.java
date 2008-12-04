@@ -48,4 +48,20 @@ public class ExoContainerMBean extends AbstractDynamicMBean {
     }
     return cToReturn.toArray(new MBeanOperationInfo[cToReturn.size()]);
   }
+  
+  /**
+   * Indicates either this MBean can be monitored or not. At least one attribute or one operation is available
+   */
+  public boolean canBeMonitored() {
+    int total = 0;
+    final MBeanAttributeInfo[] attributes = createMBeanAttributeInfo();
+    if (attributes != null) {
+      total += attributes.length;
+    }
+    final MBeanOperationInfo[] operations = createMBeanOperationInfo();
+    if (operations != null) {
+      total += operations.length;
+    }
+    return total > 0;
+  }
 }

@@ -7,7 +7,6 @@ package org.exoplatform.container;
 import java.util.List;
 
 import javax.management.MBeanServer;
-import javax.management.MBeanServerFactory;
 import javax.servlet.ServletContext;
 
 import org.picocontainer.ComponentAdapter;
@@ -29,23 +28,26 @@ public class PortalContainer extends ExoContainer implements SessionManagerConta
    */
   private static final String DEFAULT_PORTAL_CONTAINER_NAME = "portal";
   
-  private static ThreadLocal  currentContainer_ = new ThreadLocal();
+  private static final ThreadLocal<PortalContainer>  currentContainer_ = new ThreadLocal<PortalContainer>();
 
-  private MBeanServer         mbeanServer;
+  private final MBeanServer         mbeanServer;
 
   private boolean             started_          = false;
 
-  private PortalContainerInfo pinfo_;
+  private final PortalContainerInfo pinfo_;
 
   private SessionManager      smanager_;
 
+  private final String              mbeanContext_;
+  
   public PortalContainer(PicoContainer parent, ServletContext portalContext) {
     super(new MX4JComponentAdapterFactory(), parent);
-    mbeanServer = MBeanServerFactory.createMBeanServer("portalmx");
+    mbeanServer = createMBeanServer("portalmx");
     registerComponentInstance(ServletContext.class, portalContext);
     context.setName(portalContext.getServletContextName());
     pinfo_ = new PortalContainerInfo(portalContext);
     registerComponentInstance(PortalContainerInfo.class, pinfo_);
+    mbeanContext_ = "portal=" + context.getName();
   }
 
   public SessionContainer createSessionContainer(String id, String owner) {
@@ -77,12 +79,16 @@ public class PortalContainer extends ExoContainer implements SessionManagerConta
     return mbeanServer;
   }
 
+  public String getMBeanContext() {
+    return mbeanContext_;
+  }
+
   public PortalContainerInfo getPortalContainerInfo() {
     return pinfo_;
   }
 
   public static PortalContainer getInstance() {
-    PortalContainer container = (PortalContainer) currentContainer_.get();
+    PortalContainer container = currentContainer_.get();
     if (container == null) {
       container = RootContainer.getInstance().getPortalContainer(DEFAULT_PORTAL_CONTAINER_NAME);
       currentContainer_.set(container);
@@ -130,7 +136,7 @@ public class PortalContainer extends ExoContainer implements SessionManagerConta
   }
 
   public static Object getComponent(Class key) {
-    PortalContainer pcontainer = (PortalContainer) currentContainer_.get();
+    PortalContainer pcontainer = currentContainer_.get();
     return pcontainer.getComponentInstanceOfType(key);
   }
 }
