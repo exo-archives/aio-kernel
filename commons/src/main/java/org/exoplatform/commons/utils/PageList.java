@@ -18,16 +18,21 @@ package org.exoplatform.commons.utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Collections;
 
 import org.exoplatform.commons.exception.ExoMessageException;
 
 /**
+ * Subclasses of this object should be replaced by the {@link org.exoplatform.commons.utils.LazyList subclass} and
+ * an implementation of the {@link org.exoplatform.commons.utils.ListAccess} interface.
+ *
+ * @deprecated
  * @author Tuan Nguyen (tuan08@users.sourceforge.net)
  * @since Oct 21, 2004
  * @version $Id: PageList.java,v 1.2 2004/10/25 03:36:58 tuan08 Exp $
  */
-abstract public class PageList {
-  final static public PageList EMPTY_LIST     = new ObjectPageList(new ArrayList(), 10);
+abstract public class PageList<E> {
+  final static public PageList EMPTY_LIST     = new ObjectPageList(Collections.emptyList(), 10);
 
   private int                  pageSize_;
 
@@ -37,34 +42,61 @@ abstract public class PageList {
 
   protected int                currentPage_   = -1;
 
-  protected List               currentListPage_;
+  protected List<E>               currentListPage_;
 
   public PageList(int pageSize) {
     pageSize_ = pageSize;
   }
 
+  /**
+   * Returns the page size.
+   *
+   * @return the page size
+   */
   public int getPageSize() {
     return pageSize_;
   }
 
+  /**
+   * Updates the page size.
+   *
+   * @param pageSize the new page size value
+   */
   public void setPageSize(int pageSize) {
     pageSize_ = pageSize;
+
+    // A bit ugly but it force to refresh the state
     setAvailablePage(available_);
   }
 
+  /**
+   * Returns the current page index.
+   *
+   * @return the current page
+   */
   public int getCurrentPage() {
     return currentPage_;
   }
 
+  /**
+   * Returns the number of available elements.
+   *
+   * @return the available elements
+   */
   public int getAvailable() {
     return available_;
   }
 
+  /**
+   * Returns the number of available pages.
+   *
+   * @return the available pages
+   */
   public int getAvailablePage() {
     return availablePage_;
   }
 
-  public List currentPage() throws Exception {
+  public List<E> currentPage() throws Exception {
     if (currentListPage_ == null) {
       populateCurrentPage(currentPage_);
     }
@@ -73,13 +105,20 @@ abstract public class PageList {
 
   abstract protected void populateCurrentPage(int page) throws Exception;
 
-  public List getPage(int page) throws Exception {
+  /**
+   * Updates the current page index and retrieves the element from that page.
+   *
+   * @param page the page index
+   * @return the list of element of the page
+   * @throws Exception an exception
+   */
+  public List<E> getPage(int page) throws Exception {
     checkAndSetPage(page);
     populateCurrentPage(page);
     return currentListPage_;
   }
 
-  abstract public List getAll() throws Exception;
+  abstract public List<E> getAll() throws Exception;
 
   protected void checkAndSetPage(int page) throws Exception {
     if (page < 1 || page > availablePage_) {
@@ -103,10 +142,20 @@ abstract public class PageList {
     }
   }
 
+  /**
+   * Returns the from index.
+   * 
+   * @return the from index
+   */
   public int getFrom() {
     return (currentPage_ - 1) * pageSize_;
   }
 
+  /**
+   * Returns the to index.
+   *
+   * @return the to index
+   */
   public int getTo() {
     int to = currentPage_ * pageSize_;
     if (to > available_)

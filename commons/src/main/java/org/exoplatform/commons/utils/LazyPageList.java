@@ -19,29 +19,30 @@ package org.exoplatform.commons.utils;
 import java.util.List;
 
 /**
- * This object breaks the concepts of paging at its usage leads to load all the objects. It should not
- * be used and will be probably removed.
- *
- * @deprecated
- * @author Tuan Nguyen (tuan08@users.sourceforge.net)
- * @since Oct 21, 2004
- * @version $Id: ObjectPageList.java,v 1.1 2004/10/22 14:18:46 tuan08 Exp $
+ * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
+ * @version $Revision$
  */
-public class ObjectPageList<E> extends PageList<E> {
+public class LazyPageList<E> extends PageList<E> {
 
-  private List<E> objects_;
+  private final LazyList<E> list;
 
-  public ObjectPageList(List<E> list, int pageSize) {
+  public LazyPageList(ListAccess<E> listAccess, int pageSize) {
     super(pageSize);
-    objects_ = list;
+
+    //
+    this.list = new LazyList<E>(listAccess, pageSize);
+
+    // This results from bad design
     setAvailablePage(list.size());
   }
 
   protected void populateCurrentPage(int page) throws Exception {
-    currentListPage_ = objects_.subList(getFrom(), getTo());
+    int from = getFrom();
+    int to = getTo();
+    currentListPage_ = list.subList(from, to);
   }
 
   public List<E> getAll() throws Exception {
-    return objects_;
+    return list;
   }
 }
