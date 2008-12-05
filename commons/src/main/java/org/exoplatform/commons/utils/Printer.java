@@ -46,7 +46,8 @@ public abstract class Printer extends Writer {
       if (o instanceof Text) {
         ((Text)o).writeTo(this);
       } else {
-        write(String.valueOf(o));
+        String s = String.valueOf(o);
+        write(s);
       }
     }
     catch (IOException ignore) {
