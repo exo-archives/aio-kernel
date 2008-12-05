@@ -60,17 +60,17 @@ public class ExoContainer extends CachingContainer {
   /**
    * Use existing MBean server parameter name 
    */
-  private static final String                   USE_EXISTING_SERVER_PARAM       = "exo.jmx.useExistingServer";
+  private static final String                   USE_EXISTING_SERVER_PARAM       = "org.exoplatform.container.jmx.useExistingServer";
   
   /**
    * Find existing MBean server parameter name
    */
-  private static final String                   FIND_EXISTING_SERVER_PARAM           = "exo.jmx.findExistingServer";
+  private static final String                   FIND_EXISTING_SERVER_PARAM           = "org.exoplatform.container.jmx.findExistingServer";
 
   /**
    * Find existing MBean server from default domain parameter name
    */
-  private static final String                   FIND_EXISTING_SERVER_FROM_DEFAULT_DOMAIN_PARAM     = "exo.jmx.findExistingServerFromDefaultDomain";
+  private static final String                   FIND_EXISTING_SERVER_FROM_DEFAULT_DOMAIN_PARAM     = "org.exoplatform.container.jmx.findExistingServerFromDefaultDomain";
   
   /**
    * Indicates either a local MBean server has to be used or not
