@@ -107,7 +107,10 @@ abstract public class BaseExoCache extends LinkedHashMap implements ExoCache {
     liveTime_ = period * 1000;
   }
 
-  synchronized public Object get(Serializable name) throws Exception {
+  synchronized public Object get(Serializable name) {
+    if (name == null) {
+      return null;
+    }
     ObjectCacheInfo info = (ObjectCacheInfo) super.get(name);
     if (info != null) {
       if (isExpire(info)) {
@@ -124,7 +127,7 @@ abstract public class BaseExoCache extends LinkedHashMap implements ExoCache {
     return null;
   }
 
-  synchronized public Object remove(Serializable name) throws Exception {
+  synchronized public Object remove(Serializable name) {
     ObjectCacheInfo ref = (ObjectCacheInfo) super.remove(name);
     if (ref == null)
       return null;
@@ -137,6 +140,9 @@ abstract public class BaseExoCache extends LinkedHashMap implements ExoCache {
   }
 
   synchronized public void select(CachedObjectSelector selector) throws Exception {
+    if (selector == null) {
+      throw new IllegalArgumentException("No null selector");
+    }
     Iterator i = super.entrySet().iterator();
     List<Map.Entry> listEntry = new ArrayList<Map.Entry>();
     while (i.hasNext()) {
@@ -153,7 +159,7 @@ abstract public class BaseExoCache extends LinkedHashMap implements ExoCache {
     }
   }
 
-  synchronized public void put(Serializable name, Object obj) throws Exception {
+  synchronized public void put(Serializable name, Object obj) {
     if (liveTime_ == 0)
       return;
     long expireTime = -1;
@@ -167,7 +173,7 @@ abstract public class BaseExoCache extends LinkedHashMap implements ExoCache {
   /**
    * For whole put of items set
    */
-  synchronized public void putMap(Map<Serializable, Object> objs) throws Exception {
+  synchronized public void putMap(Map<Serializable, Object> objs) {
     if (liveTime_ == 0)
       return;
     long expireTime = -1;
@@ -183,7 +189,7 @@ abstract public class BaseExoCache extends LinkedHashMap implements ExoCache {
     }
   }
 
-  synchronized public void clearCache() throws Exception {
+  synchronized public void clearCache() {
     onClearCache();
     super.clear();
   }
@@ -275,39 +281,60 @@ abstract public class BaseExoCache extends LinkedHashMap implements ExoCache {
     super.clear();
   }
 
-  private void onExpire(Serializable key, Object obj) throws Exception {
+  private void onExpire(Serializable key, Object obj) {
     if (listeners_ == null)
       return;
     for (CacheListener listener : listeners_)
-      listener.onExpire(this, key, obj);
+      try {
+        listener.onExpire(this, key, obj);
+      }
+      catch (Exception e) {
+        
+      }
   }
 
-  private void onRemove(Serializable key, Object obj) throws Exception {
+  private void onRemove(Serializable key, Object obj) {
     if (listeners_ == null)
       return;
     for (CacheListener listener : listeners_)
-      listener.onRemove(this, key, obj);
+      try {
+        listener.onRemove(this, key, obj);
+      }
+      catch (Exception ignore) {
+      }
   }
 
-  private void onPut(Serializable key, Object obj) throws Exception {
+  private void onPut(Serializable key, Object obj) {
     if (listeners_ == null)
       return;
     for (CacheListener listener : listeners_)
-      listener.onPut(this, key, obj);
+      try {
+        listener.onPut(this, key, obj);
+      }
+      catch (Exception ignore) {
+      }
   }
 
-  private void onGet(Serializable key, Object obj) throws Exception {
+  private void onGet(Serializable key, Object obj) {
     if (listeners_ == null)
       return;
     for (CacheListener listener : listeners_)
-      listener.onGet(this, key, obj);
+      try {
+        listener.onGet(this, key, obj);
+      }
+      catch (Exception ignore) {
+      }
   }
 
-  private void onClearCache() throws Exception {
+  private void onClearCache() {
     if (listeners_ == null)
       return;
     for (CacheListener listener : listeners_)
-      listener.onClearCache(this);
+      try {
+        listener.onClearCache(this);
+      }
+      catch (Exception ignore) {
+      }
   }
   
   public boolean isLogEnabled() {

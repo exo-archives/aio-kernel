@@ -26,6 +26,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.HashMap;
 
 /**
  * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
@@ -38,6 +40,47 @@ public class TestConcurrentCache extends BasicTestCase {
   private final Object v3 = new Object();
   private final Object v4 = new Object();
   private final Object v5 = new Object();
+
+  public void testNullKey() {
+    CacheHelper cache = new CacheHelper();
+    cache.put("a", "a");
+    assertNull(cache.get(null));
+    try {
+      cache.put(null, new Object());
+      fail();
+    }
+    catch (IllegalArgumentException ignore) {
+      assertEquals(1, cache.getCacheSize());
+      assertEquals("a", cache.get("a"));
+    }
+    try {
+      cache.remove(null);
+      fail();
+    }
+    catch (IllegalArgumentException ignore) {
+      assertEquals(1, cache.getCacheSize());
+      assertEquals("a", cache.get("a"));
+    }
+    try {
+      cache.putMap(null);
+      fail();
+    }
+    catch (IllegalArgumentException ignore) {
+      assertEquals(1, cache.getCacheSize());
+      assertEquals("a", cache.get("a"));
+    }
+    try {
+      Map tmp = new HashMap();
+      tmp.put("a", "a");
+      tmp.put(null, "a");
+      cache.putMap(tmp);
+      fail();
+    }
+    catch (IllegalArgumentException ignore) {
+      assertEquals(1, cache.getCacheSize());
+      assertEquals("a", cache.get("a"));
+    }
+  }
 
   public void testPut() {
     CacheHelper cache = new CacheHelper();

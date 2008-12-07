@@ -131,22 +131,39 @@ public class ConcurrentFIFOExoCache implements ExoCache {
   }
 
   public Object get(Serializable name) {
+    if (name == null) {
+      return null;
+    }
     return state.get(name);
   }
 
   public void put(Serializable name, Object obj) {
+    if (name == null) {
+      throw new IllegalArgumentException("No null cache key accepted");
+    }
     long expirationTime = liveTimeMillis > 0 ? System.currentTimeMillis() + liveTimeMillis : Long.MAX_VALUE;
     state.put(expirationTime, name, obj);
   }
 
   public void putMap(Map<Serializable, Object> objs) {
+    if (objs == null) {
+      throw new IllegalArgumentException("No null map accepted");
+    }
     long expirationTime = liveTimeMillis > 0 ? System.currentTimeMillis() + liveTimeMillis : Long.MAX_VALUE;
+    for (Serializable name : objs.keySet()) {
+      if (name == null) {
+        throw new IllegalArgumentException("No null cache key accepted");
+      }
+    }
     for (Map.Entry<Serializable, Object> entry : objs.entrySet()) {
       state.put(expirationTime, entry.getKey(), entry.getValue());
     }
   }
 
   public Object remove(Serializable name) {
+    if (name == null) {
+      throw new IllegalArgumentException("No null cache key accepted");
+    }
     return state.remove(name);
   }
 
@@ -167,11 +184,14 @@ public class ConcurrentFIFOExoCache implements ExoCache {
     return list;
   }
 
-  public void clearCache() throws Exception {
+  public void clearCache() {
     state = new CacheState(this, log);
   }
 
   public void select(CachedObjectSelector selector) throws Exception {
+    if (selector == null) {
+      throw new IllegalArgumentException("No null selector");
+    }
     for (Map.Entry<Serializable, ObjectRef> entry : state.map.entrySet()) {
       Serializable key = entry.getKey();
       ObjectRef info = entry.getValue();
@@ -240,7 +260,7 @@ public class ConcurrentFIFOExoCache implements ExoCache {
       try {
         listener.onExpire(this, key, obj);
       }
-      catch (Exception e) {
+      catch (Exception ignore) {
       }
   }
 
@@ -251,7 +271,7 @@ public class ConcurrentFIFOExoCache implements ExoCache {
       try {
         listener.onRemove(this, key, obj);
       }
-      catch (Exception e) {
+      catch (Exception ignore) {
       }
   }
 
@@ -262,7 +282,7 @@ public class ConcurrentFIFOExoCache implements ExoCache {
       try {
         listener.onPut(this, key, obj);
       }
-      catch (Exception e) {
+      catch (Exception ignore) {
       }
   }
 
@@ -273,7 +293,7 @@ public class ConcurrentFIFOExoCache implements ExoCache {
       try {
         listener.onGet(this, key, obj);
       }
-      catch (Exception e) {
+      catch (Exception ignore) {
       }
   }
 
@@ -284,7 +304,7 @@ public class ConcurrentFIFOExoCache implements ExoCache {
       try {
         listener.onClearCache(this);
       }
-      catch (Exception e) {
+      catch (Exception ignore) {
       }
   }
 }

@@ -21,6 +21,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * An abstraction for a cache. It does not handle null keys (considered as programmation error from
+ * the perspective of the cache client).
+ *
  * Created by The eXo Platform SAS. Author : Tuan Nguyen
  * tuan08@users.sourceforge.net Date: Jun 14, 2003 Time: 1:12:22 PM
  */
@@ -35,52 +38,50 @@ public interface ExoCache {
   public void setLabel(String s);
 
   /**
-   * Performs a lookup operation.
+   * Performs a lookup operation. If the key is null the value will be ignored and null is returned.
    *
    * @param name the cache key
    * @return the cached value which may be evaluated to null
-   * @throws Exception any exception
    */
-  public Object get(Serializable name) throws Exception;
+  public Object get(Serializable name);
 
   /**
    * Removes an entry from the cache.
    *
    * @param name the cache key
    * @return the previously cached value or null if no entry existed or that entry value was evaluated to null
-   * @throws Exception any exception
+   * @throws IllegalArgumentException if the key is null
    */
-  public Object remove(Serializable name) throws Exception;
+  public Object remove(Serializable name) throws IllegalArgumentException;
 
   /**
    * Performs a put in the cache.
    *
    * @param name the cache key
    * @param obj the cached value
-   * @throws Exception any exception
+   * @throws IllegalArgumentException if the key is null
    */
-  public void put(Serializable name, Object obj) throws Exception;
+  public void put(Serializable name, Object obj) throws IllegalArgumentException;
 
   /**
    * Performs a put of all the entries provided by the map argument.
    *
    * @param objs the objects to put
-   * @throws Exception any exception
+   * @throws IllegalArgumentException if they map is null or contains a null key
    */
-  public void putMap(Map<Serializable, Object> objs) throws Exception;
+  public void putMap(Map<Serializable, Object> objs) throws IllegalArgumentException;
 
   /**
    * Clears the cache.
-   *
-   * @throws Exception any exception
    */
-  public void clearCache() throws Exception;
+  public void clearCache();
 
   /**
    * Selects a subset of the cache.
    *
    * @param selector the selector
-   * @throws Exception any exception
+   * @throws IllegalArgumentException if they key is null
+   * @throws Exception an exception thrown by the selector
    */
   public void select(CachedObjectSelector selector) throws Exception;
 
