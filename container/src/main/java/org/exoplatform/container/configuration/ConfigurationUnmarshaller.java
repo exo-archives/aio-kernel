@@ -81,50 +81,41 @@ public class ConfigurationUnmarshaller {
 
   public Configuration unmarshall(URL url) throws Exception {
     //
-    String document = null;
     SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
     URL schemaURL = getClass().getResource("kernel-configuration_1_0.xsd");
     if (schemaURL != null) {
       Schema schema = factory.newSchema(schemaURL);
-
-      InputSource source = new InputSource(url.openStream());
       Validator validator = schema.newValidator();
       validator.setErrorHandler(new Reporter(url));
 
       // Validate the document
       validator.validate(new StreamSource(url.openStream()));
-
-      // The buffer
-      StringWriter buffer = new StringWriter();
-
-      // Create a sax transformer result that will serialize the output
-      SAXTransformerFactory tf = (SAXTransformerFactory)SAXTransformerFactory.newInstance();
-      final TransformerHandler hd = tf.newTransformerHandler();
-      hd.setResult(new StreamResult(buffer));
-      Transformer serializer = tf.newTransformer();
-      serializer.setOutputProperty(OutputKeys.ENCODING,"UTF8");
-      serializer.setOutputProperty(OutputKeys.INDENT,"yes");
-
-      // Perform 
-      SAXParserFactory spf = SAXParserFactory.newInstance();
-      spf.setSchema(schema);
-      SAXParser saxParser = spf.newSAXParser();
-      saxParser.parse(source, new NoKernelNamespaceSAXFilter(hd));
-
-      // Reuse the parsed document
-      document = buffer.toString();
     }
+
+    // The buffer
+    StringWriter buffer = new StringWriter();
+
+    // Create a sax transformer result that will serialize the output
+    SAXTransformerFactory tf = (SAXTransformerFactory)SAXTransformerFactory.newInstance();
+    final TransformerHandler hd = tf.newTransformerHandler();
+    hd.setResult(new StreamResult(buffer));
+    Transformer serializer = tf.newTransformer();
+    serializer.setOutputProperty(OutputKeys.ENCODING,"UTF8");
+    serializer.setOutputProperty(OutputKeys.INDENT,"yes");
+
+    // Perform
+    InputSource source = new InputSource(url.openStream());
+    SAXParserFactory spf = SAXParserFactory.newInstance();
+    SAXParser saxParser = spf.newSAXParser();
+    saxParser.parse(source, new NoKernelNamespaceSAXFilter(hd));
+
+    // Reuse the parsed document
+    String document = buffer.toString();
 
     //
     IBindingFactory bfact = BindingDirectory.getFactory(Configuration.class);
     IUnmarshallingContext uctx = bfact.createUnmarshallingContext();
-    Configuration conf;
-    if (document != null) {
-      conf = (Configuration) uctx.unmarshalDocument(new StringReader(document), null);
-    } else {
-      conf = (Configuration) uctx.unmarshalDocument(url.openStream(), null);
-    }
-    return conf;
+    return (Configuration) uctx.unmarshalDocument(new StringReader(document), null);
   }
 
 }
