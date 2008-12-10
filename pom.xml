@@ -20,6 +20,7 @@
 
   <modules>
     <module>container</module>
+    <module>container/jmx</module>
     <module>commons</module>
     <module>component/common</module>
     <module>component/remote</module>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <component>
+  	<key>org.exoplatform.container.jmx.MBeanServerProvider</key>
+  	<type>org.exoplatform.container.jmx.MBeanServerProvider</type>
+    <init-params>
+      <value-param>
+        <name>protocol</name>
+        <description>protocol is a short string that represent the protocol such as "rmi", "iiop", "jmxmp" or "soap"</description>
+        <value>rmi:///jndi/rmi</value>
+      </value-param>
+      <value-param>
+        <name>host</name>
+        <description>optional hostname</description>
+        <value>localhost</value>
+      </value-param>
+      <value-param>
+        <name>port</name>
+        <description>optional port</description>
+        <value>9999</value>
+      </value-param>
+      <value-param>
+        <name>path-prefix</name>
+        <description>optional path prefix</description>
+        <value>eXo/</value>
+      </value-param>
+      <value-param>
+        <name>name-separator</name>
+        <description>the separator used between the container names</description>
+        <value>/</value>
+      </value-param>      
+      <properties-param>
+        <name>environment</name>
+        <description>a set of attributes to control the new connector server's behaviour</description>
+        <property name="jmx.remote.jndi.rebind" value="true"/>
+      </properties-param>      
+    </init-params>  	
+  </component>	
+</configuration>
