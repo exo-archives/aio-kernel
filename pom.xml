@@ -44,6 +44,7 @@
           <include>**/*.properties</include>
           <include>**/*.xml</include>
           <include>**/*.drl</include>
+          <include>**/*.xsd</include>
         </includes>
       </resource>
     </resources>
@@ -54,6 +55,7 @@
           <include>**/*.properties</include>
           <include>**/*.xml</include>
           <include>**/*.drl</include>
+          <include>**/*.xsd</include>
         </includes>
       </testResource>
     </testResources>

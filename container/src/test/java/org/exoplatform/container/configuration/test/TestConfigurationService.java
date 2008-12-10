@@ -16,17 +16,17 @@
  */
 package org.exoplatform.container.configuration.test;
 
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.File;
 
 import org.jibx.runtime.BindingDirectory;
 import org.jibx.runtime.IBindingFactory;
 import org.jibx.runtime.IMarshallingContext;
-import org.jibx.runtime.IUnmarshallingContext;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.RootContainer;
 import org.exoplatform.container.configuration.ConfigurationManager;
+import org.exoplatform.container.configuration.ConfigurationUnmarshaller;
 import org.exoplatform.container.monitor.jvm.JVMRuntimeInfo;
 import org.exoplatform.container.xml.Configuration;
 import org.exoplatform.container.xml.InitParams;
@@ -54,12 +54,15 @@ public class TestConfigurationService extends BasicTestCase {
 
   public void testMarshallAndUnmarshall() throws Exception {
     String basedir = System.getProperty("basedir");
-    IBindingFactory bfact = BindingDirectory.getFactory(Configuration.class);
-    IUnmarshallingContext uctx = bfact.createUnmarshallingContext();
-    Object obj = uctx.unmarshalDocument(new FileInputStream(basedir
-        + "/src/main/resources/configuration.xml"), null);
+
+    ConfigurationUnmarshaller unmarshaller = new ConfigurationUnmarshaller();
+
+    File f = new File(basedir + "/src/main/resources/configuration.xml");
+
+    Object obj = unmarshaller.unmarshall(f.toURI().toURL());
     System.out.print(obj);
 
+    IBindingFactory bfact = BindingDirectory.getFactory(Configuration.class);
     IMarshallingContext mctx = bfact.createMarshallingContext();
     mctx.setIndent(2);
     mctx.marshalDocument(obj, "UTF-8", null, new FileOutputStream(basedir

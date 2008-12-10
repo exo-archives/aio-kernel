@@ -26,10 +26,6 @@ import java.util.List;
 
 import javax.servlet.ServletContext;
 
-import org.jibx.runtime.BindingDirectory;
-import org.jibx.runtime.IBindingFactory;
-import org.jibx.runtime.IUnmarshallingContext;
-
 import org.exoplatform.container.xml.Component;
 import org.exoplatform.container.xml.Configuration;
 
@@ -55,6 +51,8 @@ public class ConfigurationManagerImpl implements ConfigurationManager {
   private ClassLoader         scontextClassLoader_;
 
   private String              contextPath        = null;
+
+  private boolean             validateSchema = true;
 
   public ConfigurationManagerImpl() {
   }
@@ -86,6 +84,7 @@ public class ConfigurationManagerImpl implements ConfigurationManager {
   }
 
   public void addConfiguration(URL url) throws Exception {
+
     if (LOG_DEBUG)
       System.out.println("Add configuration " + url);
     if (url == null)
@@ -96,10 +95,12 @@ public class ConfigurationManagerImpl implements ConfigurationManager {
     } catch (Exception e) {
       contextPath = null;
     }
+
+    //
     try {
-      IBindingFactory bfact = BindingDirectory.getFactory(Configuration.class);
-      IUnmarshallingContext uctx = bfact.createUnmarshallingContext();
-      Configuration conf = (Configuration) uctx.unmarshalDocument(url.openStream(), null);
+      ConfigurationUnmarshaller unmarshaller = new ConfigurationUnmarshaller();
+      Configuration conf = unmarshaller.unmarshall(url);
+
       if (configurations_ == null)
         configurations_ = conf;
       else
@@ -110,8 +111,7 @@ public class ConfigurationManagerImpl implements ConfigurationManager {
           String uri = (String) urls.get(i);
           URL urlObject = getURL(uri);
           if (urlObject != null) {
-            InputStream is = urlObject.openStream();
-            conf = (Configuration) uctx.unmarshalDocument(is, null);
+            conf = unmarshaller.unmarshall(urlObject);
             configurations_.mergeConfiguration(conf);
             if (LOG_DEBUG)
               System.out.println("\timport " + urlObject);
@@ -152,6 +152,14 @@ public class ConfigurationManagerImpl implements ConfigurationManager {
     if (configurations_ == null)
       return null;
     return configurations_.getComponents();
+  }
+
+  public boolean isValidateSchema() {
+    return validateSchema;
+  }
+
+  public void setValidateSchema(boolean validateSchema) {
+    this.validateSchema = validateSchema;
   }
 
   public URL getResource(String url, String defaultURL) throws Exception {

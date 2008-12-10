@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<configuration>
+<configuration
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
+    xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
+
   <container-lifecycle-plugin>
     <type>component.type</type>
     <init-params>
@@ -10,7 +14,7 @@
       </value-param>
     </init-params>
   </container-lifecycle-plugin>
-  
+    
   <component-lifecycle-plugin>
     <type>component.type</type>
     <manageable-components>
