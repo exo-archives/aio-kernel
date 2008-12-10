@@ -62,7 +62,9 @@ class NoKernelNamespaceSAXFilter extends DefaultHandler {
   public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
     HashSet<Integer> removals = null;
     for (int i = 0;i < atts.getLength();i++) {
-      if (atts.getLocalName(i).startsWith("xmlns") && atts.getValue(i).endsWith("http://www.exoplaform.org/xml/ns/kernel_1_0.xsd")) {
+      String attsValue = atts.getValue(i);
+      String attsQName = atts.getQName(i);
+      if (attsQName.startsWith("xmlns") && attsValue.endsWith("http://www.exoplaform.org/xml/ns/kernel_1_0.xsd")) {
         if (removals == null) {
           removals = new HashSet<Integer>();
         }
