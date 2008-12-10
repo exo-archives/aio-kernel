@@ -59,8 +59,13 @@ public class ConfigurationUnmarshaller {
       this.url = url;
     }
 
+    private void log(String prefix, SAXParseException e) {
+      System.out.println(prefix + " in document " + url + "  at (" + e.getLineNumber()
+        + "," + e.getColumnNumber() + ") :" + e.getMessage());
+    }
+
     public void warning(SAXParseException exception) throws SAXException {
-      System.out.println("Warning in document " + url + " : " + exception.getMessage());
+      log("Warning", exception);
     }
 
     public void error(SAXParseException exception) throws SAXException {
@@ -72,12 +77,12 @@ public class ConfigurationUnmarshaller {
         "   xsi:schemaLocation=\"http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd\"\n" +
         "   xmlns=\"http://www.exoplaform.org/xml/ns/kernel_1_0.xsd\">");
       } else {
-        System.out.println("Error in document " + url + " : " + exception.getMessage());
+        log("Error", exception);
       }
     }
 
     public void fatalError(SAXParseException exception) throws SAXException {
-      System.out.println("Fatal error in document " + url + " : " + exception.getMessage());
+      log("Fatal error", exception);
     }
   }
 
