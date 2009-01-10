@@ -41,6 +41,8 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import java.io.StringWriter;
 import java.io.StringReader;
+import java.io.InputStream;
+import java.io.ByteArrayOutputStream;
 import java.net.URL;
 
 /**
@@ -87,6 +89,18 @@ public class ConfigurationUnmarshaller {
   }
 
   public Configuration unmarshall(URL url) throws Exception {
+
+/*
+    byte[] bytes = new byte[256];
+    InputStream in = url.openStream();
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    for (int s = in.read(bytes);s != -1;s = in.read(bytes)) {
+      out.write(bytes, 0, s);
+    }
+    String s = out.toString();
+    System.out.println("s = " + s);
+*/
+
     //
     SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
     URL schemaURL = getClass().getResource("kernel-configuration_1_0.xsd");

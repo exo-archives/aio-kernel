@@ -18,6 +18,7 @@ package org.exoplatform.container.configuration.test;
 
 import java.io.FileOutputStream;
 import java.io.File;
+import java.net.URL;
 
 import org.jibx.runtime.BindingDirectory;
 import org.jibx.runtime.IBindingFactory;
@@ -50,6 +51,29 @@ public class TestConfigurationService extends BasicTestCase {
   public void setUp() throws Exception {
     PortalContainer manager = PortalContainer.getInstance();
     service_ = (ConfigurationManager) manager.getComponentInstanceOfType(ConfigurationManager.class);
+  }
+
+  public void testXSDBadSchema() throws Exception {
+    String basedir = System.getProperty("basedir");
+    File f = new File(basedir + "/src/main/resources/configuration-bad-schema.xml");
+    ConfigurationUnmarshaller unmarshaller = new ConfigurationUnmarshaller();
+    URL url = f.toURI().toURL();
+    try {
+      unmarshaller.unmarshall(url);
+      fail("JIBX should have failed");
+    }
+    catch (org.jibx.runtime.JiBXException ignore) {
+      // JIBX error is normal
+    }
+  }
+
+  public void testXSDNoSchema() throws Exception {
+    String basedir = System.getProperty("basedir");
+    File f = new File(basedir + "/src/main/resources/configuration-no-schema.xml");
+    ConfigurationUnmarshaller unmarshaller = new ConfigurationUnmarshaller();
+    URL url = f.toURI().toURL();
+    Configuration conf = unmarshaller.unmarshall(url);
+    assertNotNull(conf);
   }
 
   public void testMarshallAndUnmarshall() throws Exception {
