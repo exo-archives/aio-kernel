@@ -24,8 +24,6 @@ import org.xml.sax.SAXException;
 import org.jibx.runtime.IBindingFactory;
 import org.jibx.runtime.BindingDirectory;
 import org.jibx.runtime.IUnmarshallingContext;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Schema;
@@ -41,8 +39,7 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import java.io.StringWriter;
 import java.io.StringReader;
-import java.io.InputStream;
-import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.net.URL;
 
 /**
@@ -57,12 +54,15 @@ public class ConfigurationUnmarshaller {
 
     private final URL url;
 
+    private boolean valid;
+
     private Reporter(URL url) {
       this.url = url;
+      this.valid = true;
     }
 
     private void log(String prefix, SAXParseException e) {
-      System.out.println(prefix + " in document " + url + "  at (" + e.getLineNumber()
+      System.err.println(prefix + " in document " + url + "  at (" + e.getLineNumber()
         + "," + e.getColumnNumber() + ") :" + e.getMessage());
     }
 
@@ -81,10 +81,36 @@ public class ConfigurationUnmarshaller {
       } else {
         log("Error", exception);
       }
+      valid = false;
     }
 
     public void fatalError(SAXParseException exception) throws SAXException {
       log("Fatal error", exception);
+      valid = false;
+    }
+  }
+
+  public boolean isValid(URL url) throws IOException {
+    SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+    URL schemaURL = getClass().getResource("kernel-configuration_1_0.xsd");
+    if (schemaURL != null) {
+      try {
+        Schema schema = factory.newSchema(schemaURL);
+        Validator validator = schema.newValidator();
+        Reporter reporter = new Reporter(url);
+        validator.setErrorHandler(reporter);
+
+        // Validate the document
+        validator.validate(new StreamSource(url.openStream()));
+        return reporter.valid;
+      }
+      catch (SAXException e) {
+        System.err.print("Got a sax exception when doing XSD validation");
+        e.printStackTrace(System.err);
+        return false;
+      }
+    } else {
+      return true;
     }
   }
 
@@ -102,15 +128,9 @@ public class ConfigurationUnmarshaller {
 */
 
     //
-    SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-    URL schemaURL = getClass().getResource("kernel-configuration_1_0.xsd");
-    if (schemaURL != null) {
-      Schema schema = factory.newSchema(schemaURL);
-      Validator validator = schema.newValidator();
-      validator.setErrorHandler(new Reporter(url));
-
-      // Validate the document
-      validator.validate(new StreamSource(url.openStream()));
+    boolean valid = isValid(url);
+    if (!valid) {
+      System.out.println("The configuration file " + url + " was not found valid according to its XSD");
     }
 
     // The buffer
