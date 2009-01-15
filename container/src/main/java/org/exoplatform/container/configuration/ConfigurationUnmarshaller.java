@@ -90,7 +90,16 @@ public class ConfigurationUnmarshaller {
     }
   }
 
-  public boolean isValid(URL url) throws IOException {
+  /**
+   * Returns true if the configuration file is valid according to its schema declaration. If the file
+   * does not have any schema declaration, the file will be reported as valid.
+   *
+   * @param url the url of the configuration to validate
+   * @return true if the configuration file is valid
+   * @throws IOException any IOException thrown by using the provided URL
+   * @throws NullPointerException if the provided URL is null
+   */
+  public boolean isValid(URL url) throws NullPointerException, IOException {
     SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
     URL schemaURL = getClass().getResource("kernel-configuration_1_0.xsd");
     if (schemaURL != null) {
