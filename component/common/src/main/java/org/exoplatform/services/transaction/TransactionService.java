@@ -20,7 +20,6 @@ import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
 import javax.transaction.TransactionManager;
 import javax.transaction.UserTransaction;
-import javax.transaction.xa.XAResource;
 import javax.transaction.xa.Xid;
 
 /**
@@ -63,7 +62,7 @@ public interface TransactionService {
    * @throws RollbackException
    * @throws SystemException
    */
-  void enlistResource(XAResource xares) throws RollbackException, SystemException;
+  void enlistResource(ExoResource xares) throws RollbackException, SystemException;
 
   /**
    * delists XA resource from transaction manager
@@ -72,7 +71,7 @@ public interface TransactionService {
    * @throws RollbackException
    * @throws SystemException
    */
-  void delistResource(XAResource xares) throws RollbackException, SystemException;
+  void delistResource(ExoResource xares) throws RollbackException, SystemException;
 
   /**
    * creates unique XA transaction identifier

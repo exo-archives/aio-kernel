@@ -5,6 +5,7 @@
 package org.exoplatform.container;
 
 import java.io.File;
+import java.util.Collection;
 
 import javax.management.MBeanServer;
 import javax.management.MBeanServerFactory;
@@ -69,6 +70,16 @@ public class RootContainer extends ExoContainer {
           pcontainer = new PortalContainer(this, scontext);
           ConfigurationManagerImpl cService = new MockConfigurationManagerImpl(scontext);
           cService.addConfiguration(ContainerUtil.getConfigurationURL("conf/portal/configuration.xml"));
+
+          // Add configuration that depends on the environment
+          Collection envConf;
+          if (Environnment.isJBoss()) {
+            envConf = ContainerUtil.getConfigurationURL("conf/portal/jboss/jboss-configuration.xml");
+          } else {
+            envConf = ContainerUtil.getConfigurationURL("conf/portal/jboss/generic-configuration.xml");
+          }
+          cService.addConfiguration(envConf);
+
           cService.addConfiguration(ContainerUtil.getConfigurationURL("conf/portal/test-configuration.xml"));
           cService.processRemoveConfiguration();
           pcontainer.registerComponentInstance(ConfigurationManager.class, cService);

@@ -18,6 +18,7 @@ package org.exoplatform.services.transaction.impl.jotm;
 
 import java.rmi.RemoteException;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
@@ -39,6 +40,7 @@ import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.naming.InitialContextInitializer;
 import org.exoplatform.services.transaction.TransactionService;
+import org.exoplatform.services.transaction.ExoResource;
 
 /**
  * Created by The eXo Platform SAS.<br/> JOTM based implementation of
@@ -54,6 +56,8 @@ public class TransactionServiceJotmImpl implements TransactionService {
   protected static Log log = ExoLogger.getLogger("transaction.TransactionServiceJotmImpl");
 
   private Current      current;
+
+  private final ConcurrentHashMap<ExoResource, ResourceEntry> map = new ConcurrentHashMap<ExoResource, ResourceEntry>();
 
   public TransactionServiceJotmImpl(InitialContextInitializer initializer, InitParams params) throws RemoteException {
     current = Current.getCurrent();
@@ -97,12 +101,19 @@ public class TransactionServiceJotmImpl implements TransactionService {
    * org.exoplatform.services.transaction.TransactionService#enlistResource(
    * javax.transaction.xa.XAResource)
    */
-  public void enlistResource(XAResource xares) throws RollbackException, SystemException {
+  public void enlistResource(ExoResource exores) throws RollbackException, SystemException {
+    XAResource xares = exores.getXAResource();
     Transaction tx = getTransactionManager().getTransaction();
     if (tx != null)
       current.getTransaction().enlistResource(xares);
     else
       current.connectionOpened((ResourceManagerEvent) xares);
+
+    //
+    ResourceEntry entry = new ResourceEntry(exores);
+    entry.jotmResourceList = popThreadLocalRMEventList();
+    pushThreadLocalRMEventList(entry.jotmResourceList);
+    map.put(exores, entry);
   }
 
   /*
@@ -111,12 +122,19 @@ public class TransactionServiceJotmImpl implements TransactionService {
    * org.exoplatform.services.transaction.TransactionService#delistResource(
    * javax.transaction.xa.XAResource)
    */
-  public void delistResource(XAResource xares) throws RollbackException, SystemException {
+  public void delistResource(ExoResource exores) throws RollbackException, SystemException {
+    XAResource xares = exores.getXAResource();
     Transaction tx = getTransactionManager().getTransaction();
     if (tx != null)
       current.getTransaction().delistResource(xares, XAResource.TMNOFLAGS);
     else
       current.connectionClosed((ResourceManagerEvent) xares);
+
+    //
+    ResourceEntry entry = map.remove(exores);
+    if (entry.jotmResourceList != null) {
+      entry.jotmResourceList.remove(xares);
+    }
   }
 
   /*
