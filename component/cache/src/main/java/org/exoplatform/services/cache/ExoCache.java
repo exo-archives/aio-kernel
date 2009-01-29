@@ -16,6 +16,12 @@
  */
 package org.exoplatform.services.cache;
 
+import org.exoplatform.management.annotations.ManagedBy;
+import org.exoplatform.management.annotations.Managed;
+import org.exoplatform.management.annotations.ManagedName;
+import org.exoplatform.management.annotations.ManagedDescription;
+import org.exoplatform.management.jmx.annotations.NameTemplate;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -24,8 +30,14 @@ import java.util.Map;
  * Created by The eXo Platform SAS. Author : Tuan Nguyen
  * tuan08@users.sourceforge.net Date: Jun 14, 2003 Time: 1:12:22 PM
  */
+@Managed
+@NameTemplate("exo:service=cache,name={Name}")
+@ManagedDescription("Exo Cache")
 public interface ExoCache {
 
+  @Managed
+  @ManagedName("Name")
+  @ManagedDescription("The cache name")
   public String getName();
 
   public void setName(String name);
@@ -74,6 +86,8 @@ public interface ExoCache {
    *
    * @throws Exception any exception
    */
+  @Managed
+  @ManagedDescription("Evict all entries of the cache")
   public void clearCache() throws Exception;
 
   /**
@@ -84,18 +98,35 @@ public interface ExoCache {
    */
   public void select(CachedObjectSelector selector) throws Exception;
 
+  @Managed
+  @ManagedName("Size")
+  @ManagedDescription("The cache size")
   public int getCacheSize();
 
+  @Managed
+  @ManagedName("Capacity")
+  @ManagedDescription("The maximum capacity")
   public int getMaxSize();
 
+  @Managed
   public void setMaxSize(int max);
 
+  @Managed
+  @ManagedName("TimeToLive")
+  @ManagedDescription("The maximum life time of an entry")
   public long getLiveTime();
 
+  @Managed
   public void setLiveTime(long period);
 
+  @Managed
+  @ManagedName("HitCount")
+  @ManagedDescription("The count of cache hits")
   public int getCacheHit();
 
+  @Managed
+  @ManagedName("MissCount")
+  @ManagedDescription("The count of cache misses")
   public int getCacheMiss();
 
   /**

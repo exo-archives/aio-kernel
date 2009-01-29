@@ -17,11 +17,16 @@ import org.picocontainer.defaults.DuplicateComponentKeyRegistrationException;
 
 import org.exoplatform.container.jmx.MX4JComponentAdapterFactory;
 import org.exoplatform.container.xml.PortalContainerInfo;
+import org.exoplatform.management.annotations.Managed;
+import org.exoplatform.management.annotations.ManagedDescription;
+import org.exoplatform.management.jmx.annotations.NameTemplate;
 
 /**
  * Created by The eXo Platform SAS Author : Mestrallet Benjamin
  * benjmestrallet@users.sourceforge.net Date: Jul 31, 2003 Time: 12:15:28 AM
  */
+@Managed
+@NameTemplate("exo:container=portal,name={Name}")
 public class PortalContainer extends ExoContainer implements SessionManagerContainer {
 
   /**
@@ -39,6 +44,8 @@ public class PortalContainer extends ExoContainer implements SessionManagerConta
 
   private SessionManager      smanager_;
 
+  private final String name;
+  
   public PortalContainer(PicoContainer parent, ServletContext portalContext) {
     super(new MX4JComponentAdapterFactory(), parent);
     mbeanServer = MBeanServerFactory.createMBeanServer("portalmx");
@@ -46,6 +53,13 @@ public class PortalContainer extends ExoContainer implements SessionManagerConta
     context.setName(portalContext.getServletContextName());
     pinfo_ = new PortalContainerInfo(portalContext);
     registerComponentInstance(PortalContainerInfo.class, pinfo_);
+    this.name = portalContext.getServletContextName();
+  }
+
+  @Managed
+  @ManagedDescription("The portal container name")
+  public String getName() {
+    return name;
   }
 
   public SessionContainer createSessionContainer(String id, String owner) {
@@ -90,6 +104,7 @@ public class PortalContainer extends ExoContainer implements SessionManagerConta
     return container;
   }
 
+  @Managed
   public boolean isStarted() {
     return started_;
   }

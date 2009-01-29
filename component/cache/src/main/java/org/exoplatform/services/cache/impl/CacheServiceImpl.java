@@ -29,11 +29,13 @@ import org.exoplatform.services.cache.ExoCache;
 import org.exoplatform.services.cache.ExoCacheConfig;
 import org.exoplatform.services.cache.ExoCacheConfigPlugin;
 import org.exoplatform.services.cache.SimpleExoCache;
+import org.exoplatform.management.annotations.ManagedBy;
 
 /**
  * Created by The eXo Platform SAS. Author : Tuan Nguyen
  * tuan08@users.sourceforge.net Sat, Sep 13, 2003 @ Time: 1:12:22 PM
  */
+@ManagedBy(CacheServiceManaged.class)
 public class CacheServiceImpl implements CacheService {
   private HashMap<String, ExoCacheConfig> configs_  = new HashMap<String, ExoCacheConfig>();
 
@@ -44,6 +46,8 @@ public class CacheServiceImpl implements CacheService {
   private DistributedCacheListener        distrbutedListener_;
   
   private LoggingCacheListener            loggingListener_;
+
+  CacheServiceManaged managed;
 
   public CacheServiceImpl(InitParams params) throws Exception {
     List configs = params.getObjectParamValues(ExoCacheConfig.class);
@@ -112,6 +116,13 @@ public class CacheServiceImpl implements CacheService {
     if (simple.isLogEnabled()) {
       simple.addCacheListener(loggingListener_);
     }
+
+    //
+    if (managed != null) {
+      managed.registerCache(simple);
+    }
+
+    //
     return simple;
   }
 

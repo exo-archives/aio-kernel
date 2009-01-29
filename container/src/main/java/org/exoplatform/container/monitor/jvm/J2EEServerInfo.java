@@ -16,8 +16,11 @@
  */
 package org.exoplatform.container.monitor.jvm;
 
+import javax.management.MBeanServer;
 import java.io.File;
 import java.net.URL;
+import java.lang.reflect.Method;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * @author Tuan Nguyen (tuan08@users.sourceforge.net)
@@ -37,6 +40,8 @@ public class J2EEServerInfo {
   protected String sharedLibDirecotry_;
 
   protected String appDeployDirecotry_;
+
+  protected MBeanServer mbeanServer;
 
   public J2EEServerInfo() {
     
@@ -68,6 +73,16 @@ public class J2EEServerInfo {
         }
       } else
         exoConfDir_ = serverHome_ + "/exo-conf";
+
+      //
+      try {
+        Class clazz = Thread.currentThread().getContextClassLoader().loadClass("org.jboss.mx.util.MBeanServerLocator");
+        Method m = clazz.getMethod("locateJBoss");
+        mbeanServer = (MBeanServer)m.invoke(null);
+      }
+      catch (Exception ignore) {
+        ignore.printStackTrace();
+      }
     } else if (jettyHome != null) {
       serverName_ = "jetty";
       serverHome_ = jettyHome;
@@ -105,6 +120,16 @@ public class J2EEServerInfo {
     
     serverHome_ = serverHome_.replace('\\', '/');
     exoConfDir_ = exoConfDir_.replace('\\', '/');
+  }
+
+  /**
+   * Returns an mbean server setup by the application server environment or null
+   * if none cannot be located.
+   *
+   * @return an mean server
+   */
+  public MBeanServer getMBeanServer() {
+    return mbeanServer;
   }
 
   public String getServerName() {

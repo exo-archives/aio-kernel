@@ -5,6 +5,7 @@
 package org.exoplatform.container;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -20,10 +21,14 @@ import javax.management.MBeanParameterInfo;
 import javax.management.MBeanServer;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
+import javax.management.MBeanException;
+import javax.management.DynamicMBean;
+import javax.management.InstanceNotFoundException;
+import javax.management.MBeanRegistrationException;
+import javax.management.modelmbean.ModelMBeanInfo;
 
 import org.picocontainer.PicoContainer;
 import org.picocontainer.defaults.ComponentAdapterFactory;
-import org.picocontainer.defaults.DefaultPicoContainer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -31,9 +36,14 @@ import org.apache.commons.logging.LogFactory;
 import org.exoplatform.container.component.ComponentLifecyclePlugin;
 import org.exoplatform.container.configuration.ConfigurationManager;
 import org.exoplatform.container.jmx.ExoContainerMBean;
+import org.exoplatform.container.jmx.ExoMBeanInfoBuilder;
+import org.exoplatform.container.jmx.ObjectNameBuilder;
+import org.exoplatform.container.jmx.ExoModelMBean;
 import org.exoplatform.container.util.ContainerUtil;
 import org.exoplatform.container.xml.Component;
 import org.exoplatform.container.xml.InitParams;
+import org.exoplatform.management.annotations.Managed;
+import org.exoplatform.management.annotations.ManagedBy;
 
 /**
  * Created by The eXo Platform SAS Author : Tuan Nguyen
@@ -145,20 +155,105 @@ public class ExoContainer extends CachingContainer {
 
   public void manageMBean(Component component, String componentKey, Object bean) {
     ObjectName name = null;
-    MBeanServer mbeanServer = getMBeanServer();
+    Object mbean = createExoMBean(bean);
+    try {
+      attemptToRegister(asObjectName(component, componentKey, bean), mbean);
+    }
+    catch (MalformedObjectNameException e) {
+      throw new RuntimeException("Failed to register MBean '" + name + " due to "
+          + e.getMessage(), e);
+    }
+  }
 
-    Object mbean = null;
+  private DynamicMBean createExoMBean(Object bean) {
+    Object view = null;
 
-    synchronized (mbeanServer) {
+    // Apply managed by annotation
+    ManagedBy managedBy = bean.getClass().getAnnotation(ManagedBy.class);
+    if (managedBy != null) {
       try {
-        name = asObjectName(component, componentKey);
-        mbean = new ExoContainerMBean(bean);
-        mbeanServer.registerMBean(mbean, name);
+        Class managedByClass = managedBy.value();
+        Constructor<?> blah = managedByClass.getConstructor(bean.getClass());
+        view = blah.newInstance(bean);
+      }
+      catch (NoSuchMethodException e) {
+        e.printStackTrace();
+      }
+      catch (InstantiationException e) {
+        e.printStackTrace();
+      }
+      catch (IllegalAccessException e) {
+        e.printStackTrace();
+      }
+      catch (InvocationTargetException e) {
+        e.printStackTrace();
+      }
+    } else {
+      view = bean;
+    }
+
+    //
+    if (view != null) {
+      ExoMBeanInfoBuilder infoBuilder = new ExoMBeanInfoBuilder(view.getClass());
+      if (infoBuilder.isBuildable()) {
+        try {
+          ModelMBeanInfo info = infoBuilder.build();
+          ExoModelMBean mmbean = new ExoModelMBean(this, info);
+          mmbean.setManagedResource(view);
+          return mmbean;
+        }
+        catch (IllegalArgumentException e) {
+          e.printStackTrace();
+        }
+        catch (MBeanException e) {
+          e.printStackTrace();
+        }
+      }
+    }
+
+    //
+    return new ExoContainerMBean(bean);
+  }
+
+  public ObjectName manageMBean(Object bean) {
+    ObjectNameBuilder nameBuilder = new ObjectNameBuilder(bean);
+    ObjectName on = nameBuilder.build();
+    if (on != null) {
+      Object mbean = createExoMBean(bean);
+      try {
+        attemptToRegister(on, mbean);
+      }
+      catch (Exception e) {
+        e.printStackTrace();
+        return null;
+      }
+    }
+    return on;
+  }
+
+  public void unmanageMBean(ObjectName name) {
+    MBeanServer server = getMBeanServer();
+    try {
+      server.unregisterMBean(name);
+    }
+    catch (InstanceNotFoundException e) {
+      e.printStackTrace();
+    }
+    catch (MBeanRegistrationException e) {
+      e.printStackTrace();
+    }
+  }
+
+  synchronized void attemptToRegister(ObjectName name, Object mbean) {
+    MBeanServer server = getMBeanServer();
+    synchronized (server) {
+      try {
+        server.registerMBean(mbean, name);
       } catch (InstanceAlreadyExistsException e) {
         try {
 
-          mbeanServer.unregisterMBean(name);
-          mbeanServer.registerMBean(mbean, name);
+          server.unregisterMBean(name);
+          server.registerMBean(mbean, name);
 
         } catch (Exception e1) {
           throw new RuntimeException("Failed to register MBean '" + name + " due to "
@@ -168,7 +263,6 @@ public class ExoContainer extends CachingContainer {
         throw new RuntimeException("Failed to register MBean '" + name + " due to "
             + e.getMessage(), e);
       }
-
     }
   }
 
@@ -178,11 +272,26 @@ public class ExoContainer extends CachingContainer {
    * @param componentKey
    * @return an ObjectName based on the given componentKey
    */
-  private static ObjectName asObjectName(Component component, String componentKey) throws MalformedObjectNameException {
+  private static ObjectName asObjectName(Component component, String componentKey, Object bean) throws MalformedObjectNameException {
     String name = null;
     if (component != null && component.getJMXName() != null) {
       name = component.getJMXName();
     }
+
+    //
+    if (name == null) {
+      ObjectNameBuilder builder = new ObjectNameBuilder(bean);
+      try {
+        ObjectName on = builder.build();
+        if (on != null) {
+          name = on.getCanonicalName();
+        }
+      }
+      catch (IllegalArgumentException e) {
+        e.printStackTrace();
+      }
+    }
+
     // Fix, so it works under WebSphere ver. 5
     if (name == null || name.indexOf(':') == -1) {
       name = "component:type=" + componentKey;

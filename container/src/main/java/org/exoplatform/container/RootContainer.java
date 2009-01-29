@@ -21,6 +21,7 @@ import org.exoplatform.container.util.ContainerUtil;
 import org.exoplatform.test.mocks.servlet.MockServletContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.picocontainer.ComponentAdapter;
 
 /**
  * Created by The eXo Platform SAS Author : Tuan Nguyen
@@ -43,10 +44,13 @@ public class RootContainer extends ExoContainer {
 
   public RootContainer() {
     super(new MX4JComponentAdapterFactory(), null);
-    mbeanServer_ = MBeanServerFactory.createMBeanServer("exomx");
     Runtime.getRuntime().addShutdownHook(new ShutdownThread(this));
     serverenv_ = new J2EEServerInfo();
     this.registerComponentInstance(J2EEServerInfo.class, serverenv_);
+    mbeanServer_ = serverenv_.getMBeanServer();
+    if (mbeanServer_ == null) {
+      mbeanServer_ = MBeanServerFactory.createMBeanServer("exomx");
+    }
   }
 
   public OperatingSystemInfo getOSEnvironment() {
@@ -70,16 +74,6 @@ public class RootContainer extends ExoContainer {
           pcontainer = new PortalContainer(this, scontext);
           ConfigurationManagerImpl cService = new MockConfigurationManagerImpl(scontext);
           cService.addConfiguration(ContainerUtil.getConfigurationURL("conf/portal/configuration.xml"));
-
-          // Add configuration that depends on the environment
-          Collection envConf;
-          if (Environnment.isJBoss()) {
-            envConf = ContainerUtil.getConfigurationURL("conf/portal/jboss/jboss-configuration.xml");
-          } else {
-            envConf = ContainerUtil.getConfigurationURL("conf/portal/jboss/generic-configuration.xml");
-          }
-          cService.addConfiguration(envConf);
-
           cService.addConfiguration(ContainerUtil.getConfigurationURL("conf/portal/test-configuration.xml"));
           cService.processRemoveConfiguration();
           pcontainer.registerComponentInstance(ConfigurationManager.class, cService);
@@ -112,6 +106,23 @@ public class RootContainer extends ExoContainer {
         ex.printStackTrace();
       }
 
+      // Add configuration that depends on the environment
+      String uri;
+      if (Environnment.isJBoss()) {
+        uri = "conf/portal/jboss-configuration.xml";
+      } else {
+        uri = "conf/portal/generic-configuration.xml";
+      }
+      Collection envConf = ContainerUtil.getConfigurationURL(uri);
+      try {
+        cService.addConfiguration(envConf);
+      }
+      catch (Exception ex) {
+        System.err.println("ERROR: cannot add configuration " + uri + ". ServletContext: "
+            + context);
+        ex.printStackTrace();
+      }
+
       // add configs from web apps
       try {
         cService.addConfiguration("war:/conf/configuration.xml");
@@ -137,12 +148,17 @@ public class RootContainer extends ExoContainer {
       }
 
       cService.processRemoveConfiguration();
-      pcontainer.registerComponentInstance(ConfigurationManager.class, cService);
+      ComponentAdapter adapter = pcontainer.registerComponentInstance(ConfigurationManager.class, cService);
       pcontainer.initContainer();
       registerComponentInstance(context.getServletContextName(), pcontainer);
       PortalContainer.setInstance(pcontainer);
       ExoContainerContext.setCurrentContainer(pcontainer);
       pcontainer.start();
+
+      // Register the portal as an mean
+      manageMBean(pcontainer);
+
+      //
       return pcontainer;
     } catch (Exception ex) {
       System.err.println("ERROR: cannot create portal container. ServletContext: " + context);
