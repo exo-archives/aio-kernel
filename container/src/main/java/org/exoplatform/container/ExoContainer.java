@@ -268,7 +268,7 @@ public class ExoContainer extends CachingContainer {
 	MBeanServer mbeanServer = getCurrentMBeanServer();
 	synchronized (mbeanServer) {
 		try {
-			name = asObjectName((Component) null, componentKey);
+			name = asObjectName(null, componentKey);
 			mbeanServer.unregisterMBean(name);
 		} catch (Exception e) {
 	        if (LOG.isWarnEnabled()) LOG.warn("The MBean '" + name + "' could not be unregistered.", e);
