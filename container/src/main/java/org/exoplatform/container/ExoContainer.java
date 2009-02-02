@@ -23,8 +23,10 @@ import javax.management.MBeanServerFactory;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 
+import org.picocontainer.ComponentAdapter;
 import org.picocontainer.PicoContainer;
 import org.picocontainer.defaults.ComponentAdapterFactory;
+import org.picocontainer.defaults.DefaultPicoContainer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -40,7 +42,7 @@ import org.exoplatform.container.xml.InitParams;
  * Created by The eXo Platform SAS Author : Tuan Nguyen
  * tuan08@users.sourceforge.net Date: Jul 18, 2004 Time: 12:15:28 AM
  */
-public class ExoContainer extends CachingContainer {
+public class ExoContainer extends /*CachingContainer*/DefaultPicoContainer {
 
   /**
    * Logger
@@ -246,6 +248,35 @@ public class ExoContainer extends CachingContainer {
         + unknownParameter);
   }
 
+  /**
+   * Unregister the MBean when the corresponding component is unregistered 
+   */
+  public synchronized ComponentAdapter unregisterComponent(Object componentKey) {
+	unregisterMBean(componentKey);  
+	return super.unregisterComponent(componentKey);
+  }
+  
+  private void unregisterMBean(Object key) {
+	String componentKey = null;
+	if (key instanceof String) {
+		componentKey = (String) key;
+	} else if (key instanceof Class) {
+	    componentKey = ((Class) key).getName();
+	} else {
+		return;
+	}
+	ObjectName name = null;  
+	MBeanServer mbeanServer = getCurrentMBeanServer();
+	synchronized (mbeanServer) {
+		try {
+			name = asObjectName((Component) null, componentKey);
+			mbeanServer.unregisterMBean(name);
+		} catch (Exception e) {
+	        if (LOG.isWarnEnabled()) LOG.warn("The MBean '" + name + "' could not be unregistered.", e);
+		}
+	}
+  }
+  
   public void manageMBean(Component component, String componentKey, Object bean) {
     ObjectName name = null;
     MBeanServer mbeanServer = getCurrentMBeanServer();
