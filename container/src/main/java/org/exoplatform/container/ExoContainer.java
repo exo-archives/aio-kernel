@@ -26,7 +26,6 @@ import javax.management.ObjectName;
 import org.picocontainer.ComponentAdapter;
 import org.picocontainer.PicoContainer;
 import org.picocontainer.defaults.ComponentAdapterFactory;
-import org.picocontainer.defaults.DefaultPicoContainer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -42,7 +41,7 @@ import org.exoplatform.container.xml.InitParams;
  * Created by The eXo Platform SAS Author : Tuan Nguyen
  * tuan08@users.sourceforge.net Date: Jul 18, 2004 Time: 12:15:28 AM
  */
-public class ExoContainer extends /*CachingContainer*/DefaultPicoContainer {
+public class ExoContainer extends CachingContainer {
 
   /**
    * Logger
