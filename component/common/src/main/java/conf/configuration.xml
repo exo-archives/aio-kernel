@@ -4,21 +4,6 @@
     <type>org.exoplatform.services.scheduler.impl.QuartzSheduler</type>
   </component>
 
-  <!--Valid value: FATAL, ERROR, WARN, INFO, DEBUG, TRACE-->
-
-  <component>
-    <key>org.exoplatform.services.log.LogService</key>
-    <jmx-name>monitor:type=LogService</jmx-name>
-    <type>org.exoplatform.services.log.impl.LogServiceImpl</type>
-    <init-params>
-      <properties-param>
-        <name>log.level.config</name>
-        <property name="org.exoplatform.services.log" value="DEBUG"/>
-        <property name="org.exoplatform.services.templates" value="WARN"/>
-      </properties-param>
-    </init-params>
-  </component>
-
   <component>
     <key>org.exoplatform.services.log.LogConfigurationInitializer</key>
     <type>org.exoplatform.services.log.LogConfigurationInitializer</type>

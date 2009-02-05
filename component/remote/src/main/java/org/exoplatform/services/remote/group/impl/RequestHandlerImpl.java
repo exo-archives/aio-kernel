@@ -26,6 +26,7 @@ import org.jgroups.blocks.RequestHandler;
 
 import org.apache.commons.logging.Log;
 
+import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.remote.group.Message;
 import org.exoplatform.services.remote.group.MessageHandler;
 import org.exoplatform.services.remote.group.MessageHandlerMonitor;
@@ -38,10 +39,9 @@ import org.exoplatform.services.remote.group.MessageHandlerMonitor;
 public class RequestHandlerImpl implements RequestHandler {
   private Map messageHandlers_ = new HashMap();
 
-  private Log log_;
+  private static final Log LOG = ExoLogger.getLogger(RequestHandlerImpl.class.getName());
 
-  public RequestHandlerImpl(Log log) {
-    log_ = log;
+  public RequestHandlerImpl() {
   }
 
   public void registerMessageHandler(MessageHandler handler) {
@@ -59,11 +59,11 @@ public class RequestHandlerImpl implements RequestHandler {
         return handler.handle(message);
       } catch (Exception ex) {
         monitor.setLastError(ex);
-        log_.error("Error :", ex);
+        LOG.error("Error :", ex);
         return null;
       }
     }
-    log_.info("Cannot finf the message handler for the request handler: " + handlerId);
+    LOG.info("Cannot finf the message handler for the request handler: " + handlerId);
     return null;
   }
 

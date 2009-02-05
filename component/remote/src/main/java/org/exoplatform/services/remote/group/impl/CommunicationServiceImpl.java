@@ -34,7 +34,7 @@ import org.apache.commons.logging.Log;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.ValuesParam;
-import org.exoplatform.services.log.LogService;
+import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.remote.group.CommunicationService;
 import org.exoplatform.services.remote.group.CommunicationServiceMonitor;
 import org.exoplatform.services.remote.group.MemberInfo;
@@ -61,10 +61,9 @@ public class CommunicationServiceImpl implements CommunicationService {
 
   private CommunicationChannelListener channelListener_ = new CommunicationChannelListener();
 
-  private Log                          log_;
+  private Log                          LOG = ExoLogger.getLogger(CommunicationServiceImpl.class.getName());
 
-  public CommunicationServiceImpl(InitParams confParams, LogService lservice) throws Exception {
-    log_ = lservice.getLog(CommunicationService.class);
+  public CommunicationServiceImpl(InitParams confParams) throws Exception {
     ValuesParam param = confParams.getValuesParam("jgroups.channel.properties");
     List values = param.getValues();
     StringBuffer b = new StringBuffer();
@@ -80,7 +79,7 @@ public class CommunicationServiceImpl implements CommunicationService {
 
   public void configure(String props) throws Exception {
     channel_ = new JChannel(props);
-    requestHandler_ = new RequestHandlerImpl(log_);
+    requestHandler_ = new RequestHandlerImpl();
     mdispatcher_ = new MessageDispatcher(channel_, null, null, requestHandler_);
     channel_.setChannelListener(channelListener_);
     channel_.connect("Portal");
