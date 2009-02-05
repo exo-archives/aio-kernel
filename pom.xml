@@ -10,12 +10,12 @@
   <groupId>org.exoplatform.kernel</groupId>
   <artifactId>config</artifactId>
   <name>eXo Kernel</name>
-  <version>2.1</version>
+  <version>2.1.1-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <scm>
-    <connection>scm:svn:http://svn.exoplatform.org/svnroot/exoplatform/projects/kernel/tags/config-2.1</connection>
-    <developerConnection>scm:svn:http://svn.exoplatform.org/svnroot/exoplatform/projects/kernel/tags/config-2.1</developerConnection>
+    <connection>scm:svn:http://svn.exoplatform.org/svnroot/exoplatform/projects/kernel/trunk</connection>
+    <developerConnection>scm:svn:http://svn.exoplatform.org/svnroot/exoplatform/projects/kernel/trunk</developerConnection>
   </scm>
 
   <modules>
