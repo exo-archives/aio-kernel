@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.management.InstanceAlreadyExistsException;
 import javax.management.MBeanAttributeInfo;
 import javax.management.MBeanInfo;
 import javax.management.MBeanOperationInfo;
@@ -23,19 +22,17 @@ import javax.management.MBeanServerFactory;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 
-import org.picocontainer.ComponentAdapter;
-import org.picocontainer.PicoContainer;
-import org.picocontainer.defaults.ComponentAdapterFactory;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.exoplatform.container.component.ComponentLifecyclePlugin;
 import org.exoplatform.container.configuration.ConfigurationManager;
 import org.exoplatform.container.jmx.ExoContainerMBean;
 import org.exoplatform.container.util.ContainerUtil;
 import org.exoplatform.container.xml.Component;
 import org.exoplatform.container.xml.InitParams;
+import org.picocontainer.ComponentAdapter;
+import org.picocontainer.PicoContainer;
+import org.picocontainer.defaults.ComponentAdapterFactory;
 
 /**
  * Created by The eXo Platform SAS Author : Tuan Nguyen
@@ -260,7 +257,7 @@ public class ExoContainer extends CachingContainer {
 	if (key instanceof String) {
 		componentKey = (String) key;
 	} else if (key instanceof Class) {
-	    componentKey = ((Class) key).getName();
+	    componentKey = ((Class<?>) key).getName();
 	} else {
 		return;
 	}
@@ -269,7 +266,9 @@ public class ExoContainer extends CachingContainer {
 	synchronized (mbeanServer) {
 		try {
 			name = asObjectName(null, componentKey);
-			mbeanServer.unregisterMBean(name);
+			if (mbeanServer.isRegistered(name)) {
+				mbeanServer.unregisterMBean(name);				
+			}
 		} catch (Exception e) {
 	        if (LOG.isWarnEnabled()) LOG.warn("The MBean '" + name + "' could not be unregistered.", e);
 		}
@@ -288,18 +287,13 @@ public class ExoContainer extends CachingContainer {
         mbean = new ExoContainerMBean(bean);
         // Discard all the unnecessary MBeans 
         if (mbean.canBeMonitored()) {
-        mbeanServer.registerMBean(mbean, name);
+        	if (mbeanServer.isRegistered(name)) {
+                if (LOG.isWarnEnabled()) LOG.warn("The MBean '" + name + "' has already been registered.");
+                mbeanServer.unregisterMBean(name);        		
+        	}
+	        mbeanServer.registerMBean(mbean, name);
         } else if (LOG.isDebugEnabled()) {
           LOG.debug("The MBean '" + name + "' cannot be monitored since there is nothing to monitor.");
-        }
-      } catch (InstanceAlreadyExistsException e) {
-        if (LOG.isWarnEnabled()) LOG.warn("The MBean '" + name + "' has already been registered.", e);
-        try {
-          mbeanServer.unregisterMBean(name);
-          mbeanServer.registerMBean(mbean, name);
-        } catch (Exception e1) {
-          throw new RuntimeException("Failed to register MBean '" + name + " due to "
-              + e.getMessage(), e);
         }
       } catch (Exception e) {
         throw new RuntimeException("Failed to register MBean '" + name + " due to "
