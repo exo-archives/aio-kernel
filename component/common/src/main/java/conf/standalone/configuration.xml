@@ -1,79 +1,86 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <configuration>
   <component>
-    <key>org.exoplatform.services.log.LogConfigurationInitializer</key>
-    <type>org.exoplatform.services.log.LogConfigurationInitializer</type>
+    <key>org.exoplatform.services.net.NetService</key>
+    <type>org.exoplatform.services.net.impl.NetServiceImpl</type>
+  </component>
+  
+  <component>
+    <key>org.exoplatform.services.listener.ListenerService</key>
+    <type>org.exoplatform.services.listener.ListenerService</type>
+  </component>
+
+  <component>
+    <key>org.exoplatform.services.scheduler.JobSchedulerService</key>
+    <type>org.exoplatform.services.scheduler.impl.JobSchedulerServiceImpl</type>
+    <component-plugins>
+      <component-plugin>
+        <name>JobContextConfigListener</name>
+        <set-method>addGlobalJobListener</set-method>
+        <type>org.exoplatform.services.scheduler.impl.JobEnvironmentConfigListener</type>
+        <description>description</description>
+      </component-plugin>
+
+      <component-plugin>
+      <name>QueueTask</name>
+      <set-method>addPeriodJob</set-method>
+      <type>org.exoplatform.services.scheduler.PeriodJob</type>
+      <description>add QueueTaskJob to the JobSchedulerService</description>
+      <init-params>
+        <properties-param>
+          <name>job.info</name>
+          <description>Queue Task Job</description>
+          <property name="jobName" value="queueTask"/>
+          <property name="groupName" value="queueTask"/>
+          <property name="job" value="org.exoplatform.services.scheduler.impl.QueueTaskJob"/>
+
+          <property name="repeatCount" value="0"/>
+          <property name="period" value="10000"/>
+          <property name="startTime" value="+0"/>
+          <property name="endTime" value=""/>
+        </properties-param>
+      </init-params>
+    </component-plugin>
+    </component-plugins>
     <init-params>
-
-      <!-- value-param>
-        <name>logger</name>
-        <value>org.exoplatform.services.log.impl.BufferedLog4JLogger</value>
-      </value-param>
       <value-param>
-        <name>configurator</name>
-        <value>org.exoplatform.services.log.impl.Log4JConfigurator</value>
+        <name>data.version</name>
+        <description>The current data version of the plugin module</description>
+        <value>1.1</value>
       </value-param>
-      <properties-param>
-        <name>properties</name>
-        <description>Log4J properties</description>
-        <property name="log4j.rootLogger" value="DEBUG, stdout, file"/>
-        <property name="log4j.appender.stdout" value="org.apache.log4j.ConsoleAppender"/>
-
-        <property name="log4j.appender.stdout.layout" value="org.apache.log4j.PatternLayout"/>
-        <property name="log4j.appender.stdout.layout.ConversionPattern" value="%d{dd.MM.yyyy HH:mm:ss} *%-5p* [%t] %c{1}: %m (%F, line %L) %n"/>
-
-        <property name="log4j.appender.file" value="org.apache.log4j.FileAppender"/>
-        <property name="log4j.appender.file.File" value="jcr.log"/>
-
-        <property name="log4j.appender.file.layout" value="org.apache.log4j.PatternLayout"/>
-        <property name="log4j.appender.file.layout.ConversionPattern" value="%d{dd.MM.yyyy HH:mm:ss} *%-5p* [%t] %c{1}: %m (%F, line %L) %n"/>
-      </properties-param -->
-
-      <value-param>
-        <name>logger</name>
-        <value>org.exoplatform.services.log.impl.BufferedSimpleLog</value>
-      </value-param>
-      <value-param>
-        <name>configurator</name>
-        <value>org.exoplatform.services.log.impl.SimpleLogConfigurator</value>
-      </value-param>
-      <properties-param>
-        <name>properties</name>
-        <description>SimpleLog properties</description>
-        <property name="org.apache.commons.logging.simplelog.defaultlog" value="debug"/>
-        <property name="org.apache.commons.logging.simplelog.showdatetime" value="true"/>
-      </properties-param>
-
-      <!-- value-param>
-        <name>logger</name>
-        <value>org.exoplatform.services.log.impl.BufferedJdk14Logger</value>
-      </value-param>
-      <value-param>
-        <name>configurator</name>
-        <value>org.exoplatform.services.log.impl.Jdk14Configurator</value>
-      </value-param>
-      <properties-param>
-        <name>properties</name>
-        <description>jdk1.4 Logger properties</description>
-        <property name="handlers" value="java.util.logging.ConsoleHandler"/>
-        <property name=".level" value="FINE"/>
-        <property name="java.util.logging.ConsoleHandler.level" value="FINE"/>
-      </properties-param -->
-
     </init-params>
   </component>
 
   <component>
-    <key>org.exoplatform.services.transaction.TransactionService</key>
-    <type>org.exoplatform.services.transaction.impl.jotm.TransactionServiceJotmImpl</type>
-    <init-params>
-      <value-param>
-        <name>timeout</name>
-        <value>5</value>
-      </value-param>
-    </init-params>
-  </component>  
-  
+    <key>org.exoplatform.services.scheduler.QueueTasks</key>
+    <type>org.exoplatform.services.scheduler.QueueTasks</type>
+  </component>
+
+   <component>
+     <key>org.exoplatform.services.idgenerator.IDGeneratorService</key>
+     <type>org.exoplatform.services.idgenerator.impl.IDGeneratorServiceImpl</type>
+   </component>
+
+  <!-- ============================================================================= -->
+  <!--                     M A I L      S E R V I C E                                -->
+  <!-- ============================================================================= -->
+  <component>
+    <key>org.exoplatform.services.mail.MailService</key>
+    <type>org.exoplatform.services.mail.impl.MailServiceImpl</type>
+      <init-params>
+        <properties-param>
+          <name>config</name>
+          <property name="mail.smtp.host" value="PC01" />
+          <property name="mail.smtp.port" value="25" />
+          <property name="mail.transport.protocol" value="smtp" />
+
+          <property  name="mail.smtp.auth" value="false" />
+          <property  name="mail.smtp.auth.username" value="exo" />
+          <property  name="mail.smtp.auth.password" value="exo" />
+        </properties-param>
+      </init-params>
+  </component> 
+
   <component>
     <key>org.exoplatform.services.naming.InitialContextInitializer</key>
     <type>org.exoplatform.services.naming.InitialContextInitializer</type>
@@ -81,9 +88,10 @@
       <properties-param>
         <name>default-properties</name>
         <description>Default initial context properties</description>
-        <property name="java.naming.factory.initial" value="org.exoplatform.services.naming.SimpleContextFactory"/>
+        <property name="java.naming.factory.initial" 
+                  value="org.exoplatform.services.naming.SimpleContextFactory"/>
       </properties-param>
     </init-params>
-  </component>
+  </component>     
 
 </configuration>

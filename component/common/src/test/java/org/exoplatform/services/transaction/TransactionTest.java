@@ -52,7 +52,7 @@ public class TransactionTest extends TestCase {
 
     // c.getTransactionManager().
 
-    XAResourceTestImpl xares = new XAResourceTestImpl();
+    XAResourceTestImpl xares = new XAResourceTestImpl(ts);
     ts.enlistResource(xares);
 
     xares.setFlag(5);
@@ -67,7 +67,7 @@ public class TransactionTest extends TestCase {
 
   public void testUserTransactionAfterResource() throws Exception {
 
-    XAResourceTestImpl xares = new XAResourceTestImpl();
+    XAResourceTestImpl xares = new XAResourceTestImpl(ts);
     ts.enlistResource(xares);
 
     assertEquals(0, xares.getFlag());
@@ -86,7 +86,7 @@ public class TransactionTest extends TestCase {
 
   public void testUserTransactionRollback() throws Exception {
 
-    XAResourceTestImpl xares = new XAResourceTestImpl();
+    XAResourceTestImpl xares = new XAResourceTestImpl(ts);
     ts.enlistResource(xares);
 
     assertEquals(0, xares.getFlag());
@@ -108,7 +108,7 @@ public class TransactionTest extends TestCase {
     UserTransaction ut = (UserTransaction) obj;
 
     ut.begin();
-    XAResourceTestImpl xares = new XAResourceTestImpl();
+    XAResourceTestImpl xares = new XAResourceTestImpl(ts);
     ts.enlistResource(xares);
 
     assertEquals(0, xares.getFlag());
@@ -130,7 +130,7 @@ public class TransactionTest extends TestCase {
     UserTransaction ut = (UserTransaction) obj;
 
     ut.begin();
-    XAResourceTestImpl xares = new XAResourceTestImpl(); //(XAResourceTestImpl)f
+    XAResourceTestImpl xares = new XAResourceTestImpl(ts); //(XAResourceTestImpl)f
     // .createResoure();
     ts.enlistResource(xares);
 
@@ -160,7 +160,7 @@ public class TransactionTest extends TestCase {
 
   public void testSimpleGlobalTransaction() throws Exception {
     Xid id = ts.createXid();
-    XAResourceTestImpl xares = new XAResourceTestImpl();
+    XAResourceTestImpl xares = new XAResourceTestImpl(ts);
     xares.start(id, XAResource.TMNOFLAGS);
     assertEquals(0, xares.getFlag());
     xares.setFlag(1);
@@ -171,7 +171,7 @@ public class TransactionTest extends TestCase {
 
   public void test2GlobalTransactions() throws Exception {
     Xid id1 = ts.createXid();
-    XAResourceTestImpl xares = new XAResourceTestImpl();
+    XAResourceTestImpl xares = new XAResourceTestImpl(ts);
     xares.start(id1, XAResource.TMNOFLAGS);
     assertEquals(0, xares.getFlag());
     xares.setFlag(1);

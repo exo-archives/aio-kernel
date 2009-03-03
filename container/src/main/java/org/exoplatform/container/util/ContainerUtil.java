@@ -53,7 +53,7 @@ public class ContainerUtil {
     return constructors;
   }
 
-  static public Collection getConfigurationURL(String configuration) throws Exception {
+  static public Collection<URL> getConfigurationURL(String configuration) throws Exception {
     ClassLoader cl = Thread.currentThread().getContextClassLoader();
     Collection c = Collections.list(cl.getResources(configuration));
     Map<String, URL> map = new HashMap<String, URL>();
