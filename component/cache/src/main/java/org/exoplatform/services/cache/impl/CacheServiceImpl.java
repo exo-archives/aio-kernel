@@ -29,11 +29,13 @@ import org.exoplatform.services.cache.ExoCache;
 import org.exoplatform.services.cache.ExoCacheConfig;
 import org.exoplatform.services.cache.ExoCacheConfigPlugin;
 import org.exoplatform.services.cache.SimpleExoCache;
+import org.exoplatform.management.annotations.ManagedBy;
 
 /**
  * Created by The eXo Platform SAS. Author : Tuan Nguyen
  * tuan08@users.sourceforge.net Sat, Sep 13, 2003 @ Time: 1:12:22 PM
  */
+@ManagedBy(CacheServiceManaged.class)
 public class CacheServiceImpl implements CacheService {
   private HashMap<String, ExoCacheConfig> configs_  = new HashMap<String, ExoCacheConfig>();
 
@@ -44,6 +46,8 @@ public class CacheServiceImpl implements CacheService {
   private DistributedCacheListener        distrbutedListener_;
   
   private LoggingCacheListener            loggingListener_;
+
+  CacheServiceManaged managed;
 
   public CacheServiceImpl(InitParams params) throws Exception {
     List configs = params.getObjectParamValues(ExoCacheConfig.class);
@@ -70,9 +74,12 @@ public class CacheServiceImpl implements CacheService {
     distrbutedListener_ = listener;
   }
 
-  public ExoCache getCacheInstance(String region) throws Exception {
-    if (region == null || region.length() == 0) {
-      throw new Exception("region cannot be empty");
+  public ExoCache getCacheInstance(String region) {
+    if (region == null) {
+      throw new NullPointerException("region cannot be null");
+    }
+    if (region.length() == 0) {
+      throw new IllegalArgumentException("region cannot be empty");
     }
     ExoCache cache = cacheMap_.get(region);
     if (cache == null) {
@@ -80,8 +87,13 @@ public class CacheServiceImpl implements CacheService {
         ExoCacheConfig config = configs_.get(region);
         if (config == null)
           config = defaultConfig_;
-        cache = createCacheInstance(region);
-        cacheMap_.put(region, cache);
+        try {
+          cache = createCacheInstance(region);
+          cacheMap_.put(region, cache);
+        }
+        catch (Exception e) {
+          e.printStackTrace();
+        }
       }
     }
     return cache;
@@ -112,10 +124,17 @@ public class CacheServiceImpl implements CacheService {
     if (simple.isLogEnabled()) {
       simple.addCacheListener(loggingListener_);
     }
+
+    //
+    if (managed != null) {
+      managed.registerCache(simple);
+    }
+
+    //
     return simple;
   }
 
-  public Collection getAllCacheInstances() throws Exception {
+  public Collection getAllCacheInstances() {
     return cacheMap_.values();
   }
 

@@ -7,39 +7,29 @@ package org.exoplatform.container;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
-import javax.management.InstanceAlreadyExistsException;
-import javax.management.MBeanAttributeInfo;
-import javax.management.MBeanInfo;
-import javax.management.MBeanOperationInfo;
-import javax.management.MBeanParameterInfo;
-import javax.management.MBeanServer;
-import javax.management.MalformedObjectNameException;
-import javax.management.ObjectName;
 
 import org.picocontainer.PicoContainer;
+import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.defaults.ComponentAdapterFactory;
-import org.picocontainer.defaults.DefaultPicoContainer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import org.exoplatform.container.component.ComponentLifecyclePlugin;
 import org.exoplatform.container.configuration.ConfigurationManager;
-import org.exoplatform.container.jmx.ExoContainerMBean;
+import org.exoplatform.container.jmx.ManageableContainer;
+import org.exoplatform.container.jmx.ManagementContextImpl;
 import org.exoplatform.container.util.ContainerUtil;
-import org.exoplatform.container.xml.Component;
 import org.exoplatform.container.xml.InitParams;
+import org.exoplatform.management.ManagementContext;
 
 /**
  * Created by The eXo Platform SAS Author : Tuan Nguyen
  * tuan08@users.sourceforge.net Date: Jul 18, 2004 Time: 12:15:28 AM
  */
-public class ExoContainer extends CachingContainer {
+public class ExoContainer extends ManageableContainer {
 
   Log                                           log                       = LogFactory.getLog(ExoContainer.class);
 
@@ -49,11 +39,22 @@ public class ExoContainer extends CachingContainer {
 
   protected ExoContainerContext                 context;
 
+  protected PicoContainer parent;
+
+  public ExoContainer(ManagementContextImpl managementContext) {
+    super(managementContext);
+    context = new ExoContainerContext(this);
+    context.setName(this.getClass().getName());
+    registerComponentInstance(context);
+    this.parent = null;
+  }
+
   public ExoContainer(PicoContainer parent) {
     super(parent);
     context = new ExoContainerContext(this);
     context.setName(this.getClass().getName());
     registerComponentInstance(context);
+    this.parent = parent;
   }
 
   public ExoContainer(ComponentAdapterFactory factory, PicoContainer parent) {
@@ -61,6 +62,7 @@ public class ExoContainer extends CachingContainer {
     context = new ExoContainerContext(this);
     context.setName(this.getClass().getName());
     registerComponentInstance(context);
+    this.parent = parent;
   }
 
   public ExoContainerContext getContext() {
@@ -93,10 +95,6 @@ public class ExoContainer extends CachingContainer {
     for (ContainerLifecyclePlugin plugin : containerLifecyclePlugin_) {
       plugin.destroyContainer(this);
     }
-  }
-
-  public MBeanServer getMBeanServer() {
-    throw new UnsupportedOperationException("This container do not support jmx management");
   }
 
   public void addComponentLifecylePlugin(ComponentLifecyclePlugin plugin) {
@@ -141,83 +139,5 @@ public class ExoContainer extends CachingContainer {
     }
     throw new Exception("Cannot find a satisfying constructor for " + clazz + " with parameter "
         + unknownParameter);
-  }
-
-  public void manageMBean(Component component, String componentKey, Object bean) {
-    ObjectName name = null;
-    MBeanServer mbeanServer = getMBeanServer();
-
-    Object mbean = null;
-
-    synchronized (mbeanServer) {
-      try {
-        name = asObjectName(component, componentKey);
-        mbean = new ExoContainerMBean(bean);
-        mbeanServer.registerMBean(mbean, name);
-      } catch (InstanceAlreadyExistsException e) {
-        try {
-
-          mbeanServer.unregisterMBean(name);
-          mbeanServer.registerMBean(mbean, name);
-
-        } catch (Exception e1) {
-          throw new RuntimeException("Failed to register MBean '" + name + " due to "
-              + e.getMessage(), e);
-        }
-      } catch (Exception e) {
-        throw new RuntimeException("Failed to register MBean '" + name + " due to "
-            + e.getMessage(), e);
-      }
-
-    }
-  }
-
-  /**
-   * Ensures that the given componentKey is converted to a JMX ObjectName
-   * 
-   * @param componentKey
-   * @return an ObjectName based on the given componentKey
-   */
-  private static ObjectName asObjectName(Component component, String componentKey) throws MalformedObjectNameException {
-    String name = null;
-    if (component != null && component.getJMXName() != null) {
-      name = component.getJMXName();
-    }
-    // Fix, so it works under WebSphere ver. 5
-    if (name == null || name.indexOf(':') == -1) {
-      name = "component:type=" + componentKey;
-    }
-    return new ObjectName(name);
-  }
-
-  public void printMBeanServer() {
-    MBeanServer server = getMBeanServer();
-    final Set names = server.queryNames(null, null);
-    for (final Iterator i = names.iterator(); i.hasNext();) {
-      ObjectName name = (ObjectName) i.next();
-      try {
-        MBeanInfo info = server.getMBeanInfo(name);
-        MBeanAttributeInfo[] attrs = info.getAttributes();
-        if (attrs == null)
-          continue;
-        for (int j = 0; j < attrs.length; j++) {
-          if (attrs[j].isReadable()) {
-            try {
-              Object o = server.getAttribute(name, attrs[j].getName());
-            } catch (Exception x) {
-              x.printStackTrace();
-            }
-          }
-        }
-        MBeanOperationInfo[] methods = info.getOperations();
-        for (int j = 0; j < methods.length; j++) {
-          MBeanParameterInfo[] params = methods[j].getSignature();
-          for (int k = 0; k < params.length; k++) {
-          }
-        }
-      } catch (Exception x) {
-        // x.printStackTrace(System. err);
-      }
-    }
   }
 }

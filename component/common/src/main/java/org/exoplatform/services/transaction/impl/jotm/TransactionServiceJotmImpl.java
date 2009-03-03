@@ -18,7 +18,6 @@ package org.exoplatform.services.transaction.impl.jotm;
 
 import java.rmi.RemoteException;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 
 import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
@@ -32,7 +31,6 @@ import org.objectweb.jotm.Current;
 import org.objectweb.jotm.TransactionFactory;
 import org.objectweb.jotm.TransactionFactoryImpl;
 import org.objectweb.jotm.XidImpl;
-import org.objectweb.transaction.jta.ResourceManagerEvent;
 
 import org.apache.commons.logging.Log;
 
@@ -56,8 +54,6 @@ public class TransactionServiceJotmImpl implements TransactionService {
   protected static Log log = ExoLogger.getLogger("transaction.TransactionServiceJotmImpl");
 
   private Current      current;
-
-  private final ConcurrentHashMap<ExoResource, ResourceEntry> map = new ConcurrentHashMap<ExoResource, ResourceEntry>();
 
   public TransactionServiceJotmImpl(InitialContextInitializer initializer, InitParams params) throws RemoteException {
     current = Current.getCurrent();
@@ -103,17 +99,17 @@ public class TransactionServiceJotmImpl implements TransactionService {
    */
   public void enlistResource(ExoResource exores) throws RollbackException, SystemException {
     XAResource xares = exores.getXAResource();
+    ResourceEntry entry = new ResourceEntry(exores);
+    exores.setPayload(entry);
     Transaction tx = getTransactionManager().getTransaction();
     if (tx != null)
       current.getTransaction().enlistResource(xares);
     else
-      current.connectionOpened((ResourceManagerEvent) xares);
+      current.connectionOpened(entry);
 
     //
-    ResourceEntry entry = new ResourceEntry(exores);
     entry.jotmResourceList = popThreadLocalRMEventList();
     pushThreadLocalRMEventList(entry.jotmResourceList);
-    map.put(exores, entry);
   }
 
   /*
@@ -124,15 +120,16 @@ public class TransactionServiceJotmImpl implements TransactionService {
    */
   public void delistResource(ExoResource exores) throws RollbackException, SystemException {
     XAResource xares = exores.getXAResource();
+    ResourceEntry entry = (ResourceEntry)exores.getPayload();
     Transaction tx = getTransactionManager().getTransaction();
     if (tx != null)
       current.getTransaction().delistResource(xares, XAResource.TMNOFLAGS);
     else
-      current.connectionClosed((ResourceManagerEvent) xares);
+      current.connectionClosed(entry);
 
     //
-    ResourceEntry entry = map.remove(exores);
-    if (entry.jotmResourceList != null) {
+    exores.setPayload(null);
+    if (entry != null && entry.jotmResourceList != null) {
       entry.jotmResourceList.remove(xares);
     }
   }

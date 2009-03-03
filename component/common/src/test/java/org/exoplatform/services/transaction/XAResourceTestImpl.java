@@ -49,6 +49,8 @@ public class XAResourceTestImpl implements ExoResource, XAResource {
 
   private final TransactionService ts;
 
+  private Object payload;
+
   public XAResourceTestImpl(TransactionService ts) {
     this.ts = ts;
   }
@@ -138,4 +140,11 @@ public class XAResourceTestImpl implements ExoResource, XAResource {
     return oldFlag;
   }
 
+  public Object getPayload() {
+    return payload;
+  }
+
+  public void setPayload(Object payload) {
+    this.payload = payload;
+  }
 }

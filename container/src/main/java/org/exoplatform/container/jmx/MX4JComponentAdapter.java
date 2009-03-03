@@ -77,9 +77,6 @@ public class MX4JComponentAdapter extends AbstractComponentAdapter {
         addComponentPlugin(debug, instance_, ecplugins.getComponentPlugins(), exocontainer);
       }
       // check if component implement the ComponentLifecycle
-      exocontainer.manageMBean(component, componentKey, instance_);
-      if (debug)
-        log.debug("==> add " + component + " to a mbean server");
       if (instance_ instanceof ComponentLifecycle) {
         ComponentLifecycle lc = (ComponentLifecycle) instance_;
         lc.initComponent(exocontainer);

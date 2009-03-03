@@ -21,9 +21,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
-import javax.management.MBeanServer;
-import javax.management.MBeanServerFactory;
-
 import org.exoplatform.container.configuration.ConfigurationException;
 import org.exoplatform.container.configuration.ConfigurationManager;
 import org.exoplatform.container.configuration.ConfigurationManagerImpl;
@@ -63,12 +60,9 @@ public class StandaloneContainer extends ExoContainer implements SessionManagerC
 
   private ConfigurationManagerImpl   configurationManager;
 
-  private MBeanServer                mbeanServer;
-
   private StandaloneContainer(ClassLoader configClassLoader) {
     super(new MX4JComponentAdapterFactory(), null);
     configurationManager = new ConfigurationManagerImpl(configClassLoader);
-    this.mbeanServer = MBeanServerFactory.createMBeanServer("exomx");
     this.registerComponentInstance(ConfigurationManager.class, configurationManager);
     registerComponentImplementation(SessionManagerImpl.class);
   }
@@ -194,10 +188,6 @@ public class StandaloneContainer extends ExoContainer implements SessionManagerC
 
   public void removeSessionContainer(String sessionID) {
     getSessionManager().removeSessionContainer(sessionID);
-  }
-
-  public MBeanServer getMBeanServer() {
-    return mbeanServer;
   }
 
   /**

@@ -6,8 +6,6 @@ package org.exoplatform.container;
 
 import java.util.List;
 
-import javax.management.MBeanServer;
-import javax.management.MBeanServerFactory;
 import javax.servlet.ServletContext;
 
 import org.picocontainer.ComponentAdapter;
@@ -17,11 +15,19 @@ import org.picocontainer.defaults.DuplicateComponentKeyRegistrationException;
 
 import org.exoplatform.container.jmx.MX4JComponentAdapterFactory;
 import org.exoplatform.container.xml.PortalContainerInfo;
+import org.exoplatform.management.annotations.Managed;
+import org.exoplatform.management.annotations.ManagedDescription;
+import org.exoplatform.management.jmx.annotations.NamingContext;
+import org.exoplatform.management.jmx.annotations.Property;
+import org.exoplatform.management.jmx.annotations.NameTemplate;
 
 /**
  * Created by The eXo Platform SAS Author : Mestrallet Benjamin
  * benjmestrallet@users.sourceforge.net Date: Jul 31, 2003 Time: 12:15:28 AM
  */
+@Managed
+@NamingContext(@Property(key="portal", value="{Name}"))
+@NameTemplate(@Property(key="container", value="portal"))
 public class PortalContainer extends ExoContainer implements SessionManagerContainer {
 
   /**
@@ -31,21 +37,27 @@ public class PortalContainer extends ExoContainer implements SessionManagerConta
   
   private static ThreadLocal  currentContainer_ = new ThreadLocal();
 
-  private MBeanServer         mbeanServer;
-
   private boolean             started_          = false;
 
   private PortalContainerInfo pinfo_;
 
   private SessionManager      smanager_;
 
+  private final String name;
+  
   public PortalContainer(PicoContainer parent, ServletContext portalContext) {
     super(new MX4JComponentAdapterFactory(), parent);
-    mbeanServer = MBeanServerFactory.createMBeanServer("portalmx");
     registerComponentInstance(ServletContext.class, portalContext);
     context.setName(portalContext.getServletContextName());
     pinfo_ = new PortalContainerInfo(portalContext);
     registerComponentInstance(PortalContainerInfo.class, pinfo_);
+    this.name = portalContext.getServletContextName();
+  }
+
+  @Managed
+  @ManagedDescription("The portal container name")
+  public String getName() {
+    return name;
   }
 
   public SessionContainer createSessionContainer(String id, String owner) {
@@ -73,10 +85,6 @@ public class PortalContainer extends ExoContainer implements SessionManagerConta
     return smanager_;
   }
 
-  public MBeanServer getMBeanServer() {
-    return mbeanServer;
-  }
-
   public PortalContainerInfo getPortalContainerInfo() {
     return pinfo_;
   }
@@ -90,6 +98,7 @@ public class PortalContainer extends ExoContainer implements SessionManagerConta
     return container;
   }
 
+  @Managed
   public boolean isStarted() {
     return started_;
   }

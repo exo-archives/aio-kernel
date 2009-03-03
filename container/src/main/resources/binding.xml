@@ -1,11 +1,11 @@
 <binding>
   <!-- xml object mapping -->
   <mapping class="org.exoplatform.xml.object.XMLBaseObject" abstract="true" label="base-object">
-    <value name="string" usage="optional" get-method="getString" set-method="setString"/>
-    <value name="int"  usage="optional" get-method="getInt" set-method="setInt"/>
-    <value name="long"  usage="optional" get-method="getLong" set-method="setLong"/>
-    <value name="double"  usage="optional" get-method="getDouble" set-method="setDouble" />
-    <value name="boolean"  usage="optional" get-method="getBoolean" set-method="setBoolean"/>
+    <value name="string" usage="optional" get-method="getString" set-method="setString" deserializer="org.exoplatform.container.xml.Deserializer.resolveString"/>
+    <value name="int"  usage="optional" get-method="getInt" set-method="setInt" deserializer="org.exoplatform.container.xml.Deserializer.resolveInteger"/>
+    <value name="long"  usage="optional" get-method="getLong" set-method="setLong" deserializer="org.exoplatform.container.xml.Deserializer.resolveLong"/>
+    <value name="double"  usage="optional" get-method="getDouble" set-method="setDouble" deserializer="org.exoplatform.container.xml.Deserializer.resolveDouble"/>
+    <value name="boolean"  usage="optional" get-method="getBoolean" set-method="setBoolean" deserializer="org.exoplatform.container.xml.Deserializer.resolveBoolean"/>
     <value name="date"  usage="optional" get-method="getDate" set-method="setDate"/>
     <structure map-as="org.exoplatform.xml.object.XMLMap" usage="optional"
                get-method="getMap" set-method="setMap"/>
@@ -62,7 +62,7 @@
  <!-- old container configuration mapping , This configuration will be removed in version 2.0-->
   <mapping name="property" class="org.exoplatform.container.xml.Property">
     <value name="name" style="attribute" field="name" />
-    <value name="value" style="attribute" field="value" />
+    <value name="value" style="attribute" field="value" deserializer="org.exoplatform.container.xml.Deserializer.resolveString"/>
   </mapping>
 
   <mapping class="org.exoplatform.container.xml.Parameter" abstract="true">
@@ -74,7 +74,7 @@
            class="org.exoplatform.container.xml.ValueParam" 
            extends="org.exoplatform.container.xml.Parameter">
     <structure map-as="org.exoplatform.container.xml.Parameter"/>
-    <value name="value"  field="value"/>
+    <value name="value"  field="value" deserializer="org.exoplatform.container.xml.Deserializer.resolveString"/>
   </mapping>
 
   <mapping name="values-param" 

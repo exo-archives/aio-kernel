@@ -44,4 +44,18 @@ public interface ExoResource {
    */
   void delistResource() throws XAException;
 
+  /**
+   * Returns the payload attached to the resource.
+   *
+   * @return the payload
+   */
+  Object getPayload();
+
+  /**
+   * Attach a payload to the resource.
+   *
+   * @param payload the payload
+   */
+  void setPayload(Object payload);
+
 }

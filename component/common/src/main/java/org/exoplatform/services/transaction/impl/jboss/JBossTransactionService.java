@@ -31,10 +31,6 @@ import javax.naming.NamingException;
 import javax.management.MBeanServerFactory;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
-import java.util.concurrent.Future;
-import java.util.concurrent.FutureTask;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 
 /**
  * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
@@ -43,22 +39,18 @@ import java.util.concurrent.ExecutionException;
 public class JBossTransactionService implements TransactionService {
 
   /** . */
-  private final Future<TransactionManager> tm = new FutureTask<TransactionManager>(new Callable<TransactionManager>() {
-    public TransactionManager call() throws Exception {
-      return (TransactionManager)new InitialContext().lookup("java:/TransactionManager");
-    }
-  });
+  private volatile TransactionManager tm;
 
   public TransactionManager getTransactionManager() {
-    try {
-      return tm.get();
+    if (tm == null) {
+      try {
+        tm = (TransactionManager)new InitialContext().lookup("java:/TransactionManager");
+      }
+      catch (NamingException e) {
+        throw new IllegalStateException(e);
+      }
     }
-    catch (InterruptedException e) {
-      throw new IllegalStateException(e);
-    }
-    catch (ExecutionException e) {
-      throw new IllegalStateException(e);
-    }
+    return tm;
   }
 
   public UserTransaction getUserTransaction() {

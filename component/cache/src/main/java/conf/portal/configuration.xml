@@ -31,6 +31,11 @@
     </init-params>	
   </component>
 
+  <component>
+  	<key>org.exoplatform.container.PropertyManagerManaged</key>
+    <type>org.exoplatform.container.PropertyManagerManaged</type>
+  </component>
+
   <external-component-plugins>
     <target-component>org.exoplatform.services.remote.group.CommunicationService</target-component>
     <component-plugin>
