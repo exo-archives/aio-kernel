@@ -33,7 +33,7 @@ import org.exoplatform.container.xml.Configuration;
 public interface ConfigurationManager {
   public Configuration getConfiguration();
 
-  public Component getComponent(String service) throws Exception;
+  public Component getComponent(String service);
 
   public Component getComponent(Class clazz) throws Exception;
 

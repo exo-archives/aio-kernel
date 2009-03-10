@@ -27,9 +27,9 @@ public interface CacheService {
 
   public void addExoCacheConfig(ExoCacheConfigPlugin plugin);
 
-  public ExoCache getCacheInstance(String region) throws Exception;
+  public ExoCache getCacheInstance(String region);
 
-  public Collection getAllCacheInstances() throws Exception;
+  public Collection getAllCacheInstances();
 
   public void synchronize(String region, Serializable key, Object value) throws Exception;
 }

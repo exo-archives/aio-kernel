@@ -16,19 +16,28 @@
  */
 package org.exoplatform.services.cache;
 
+import org.exoplatform.management.annotations.Managed;
+import org.exoplatform.management.annotations.ManagedName;
+import org.exoplatform.management.annotations.ManagedDescription;
+import org.exoplatform.management.jmx.annotations.Property;
+import org.exoplatform.management.jmx.annotations.NameTemplate;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
 /**
- * An abstraction for a cache. It does not handle null keys (considered as programmation error from
- * the perspective of the cache client).
- *
  * Created by The eXo Platform SAS. Author : Tuan Nguyen
  * tuan08@users.sourceforge.net Date: Jun 14, 2003 Time: 1:12:22 PM
  */
+@Managed
+@NameTemplate({@Property(key="service", value="cache"), @Property(key="name", value="{Name}")})
+@ManagedDescription("Exo Cache")
 public interface ExoCache {
 
+  @Managed
+  @ManagedName("Name")
+  @ManagedDescription("The cache name")
   public String getName();
 
   public void setName(String name);
@@ -38,65 +47,86 @@ public interface ExoCache {
   public void setLabel(String s);
 
   /**
-   * Performs a lookup operation. If the key is null the value will be ignored and null is returned.
+   * Performs a lookup operation.
    *
    * @param name the cache key
    * @return the cached value which may be evaluated to null
+   * @throws Exception any exception
    */
-  public Object get(Serializable name);
+  public Object get(Serializable name) throws Exception;
 
   /**
    * Removes an entry from the cache.
    *
    * @param name the cache key
    * @return the previously cached value or null if no entry existed or that entry value was evaluated to null
-   * @throws IllegalArgumentException if the key is null
+   * @throws Exception any exception
    */
-  public Object remove(Serializable name) throws IllegalArgumentException;
+  public Object remove(Serializable name) throws Exception;
 
   /**
    * Performs a put in the cache.
    *
    * @param name the cache key
    * @param obj the cached value
-   * @throws IllegalArgumentException if the key is null
+   * @throws Exception any exception
    */
-  public void put(Serializable name, Object obj) throws IllegalArgumentException;
+  public void put(Serializable name, Object obj) throws Exception;
 
   /**
    * Performs a put of all the entries provided by the map argument.
    *
    * @param objs the objects to put
-   * @throws IllegalArgumentException if they map is null or contains a null key
+   * @throws Exception any exception
    */
-  public void putMap(Map<Serializable, Object> objs) throws IllegalArgumentException;
+  public void putMap(Map<Serializable, Object> objs) throws Exception;
 
   /**
    * Clears the cache.
+   *
+   * @throws Exception any exception
    */
-  public void clearCache();
+  @Managed
+  @ManagedDescription("Evict all entries of the cache")
+  public void clearCache() throws Exception;
 
   /**
    * Selects a subset of the cache.
    *
    * @param selector the selector
-   * @throws IllegalArgumentException if they key is null
-   * @throws Exception an exception thrown by the selector
+   * @throws Exception any exception
    */
   public void select(CachedObjectSelector selector) throws Exception;
 
+  @Managed
+  @ManagedName("Size")
+  @ManagedDescription("The cache size")
   public int getCacheSize();
 
+  @Managed
+  @ManagedName("Capacity")
+  @ManagedDescription("The maximum capacity")
   public int getMaxSize();
 
+  @Managed
   public void setMaxSize(int max);
 
+  @Managed
+  @ManagedName("TimeToLive")
+  @ManagedDescription("The maximum life time of an entry in seconds")
   public long getLiveTime();
 
+  @Managed
   public void setLiveTime(long period);
 
+  @Managed
+  @ManagedName("HitCount")
+  @ManagedDescription("The count of cache hits")
   public int getCacheHit();
 
+  @Managed
+  @ManagedName("MissCount")
+  @ManagedDescription("The count of cache misses")
   public int getCacheMiss();
 
   /**

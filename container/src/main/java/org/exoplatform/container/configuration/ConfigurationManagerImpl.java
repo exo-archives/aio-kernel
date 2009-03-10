@@ -140,7 +140,7 @@ public class ConfigurationManagerImpl implements ConfigurationManager {
     }
   }
 
-  public Component getComponent(String service) throws Exception {
+  public Component getComponent(String service) {
     return configurations_.getComponent(service);
   }
 
@@ -213,7 +213,12 @@ public class ConfigurationManagerImpl implements ConfigurationManager {
     return null;
   }
 
-  private String resolveSystemProperties(String input) {
+  /**
+   *
+   * @param input the input
+   * @return the resolved input
+   */
+  public static String resolveSystemProperties(String input) {
     final int NORMAL = 0;
     final int SEEN_DOLLAR = 1;
     final int IN_BRACKET = 2;

@@ -18,16 +18,26 @@ package org.exoplatform.services.cache.test;
 
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Set;
+import java.util.Map;
+import java.util.HashMap;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.container.RootContainer;
 import org.exoplatform.services.cache.CacheService;
 import org.exoplatform.services.cache.ExoCache;
 import org.exoplatform.services.cache.FIFOExoCache;
 import org.exoplatform.services.cache.SimpleExoCache;
 import org.exoplatform.services.remote.group.CommunicationService;
 import org.exoplatform.test.BasicTestCase;
+
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
+import javax.management.ObjectInstance;
+import javax.management.MBeanInfo;
+import javax.management.MBeanAttributeInfo;
 
 /*
  * Thu, May 15, 2003 @   
@@ -152,6 +162,26 @@ public class TestCacheService extends BasicTestCase {
     hasObjectInCollection(cache, caches, new ExoCacheComparator());
     hasObjectInCollection(simpleCachePlugin, caches, new ExoCacheComparator());
     hasObjectInCollection(fifoCachePlugin, caches, new ExoCacheComparator());
+
+    // Managed tests
+    MBeanServerLocator locator = (MBeanServerLocator)PortalContainer.getInstance().getComponentInstanceOfType(MBeanServerLocator.class);
+    MBeanServer server = locator.server;
+    assertNotNull(locator.server);
+    ObjectName name = new ObjectName("exo:service=cache,name=\"cacheLiveTime2s\"");
+    MBeanInfo info = server.getMBeanInfo(name);
+    assertNotNull(info);
+    Map<String, MBeanAttributeInfo> infoMap = new HashMap<String, MBeanAttributeInfo>();
+    for (MBeanAttributeInfo attributeInfo : info.getAttributes()) {
+      infoMap.put(attributeInfo.getName(), attributeInfo);
+    }
+    assertTrue(infoMap.containsKey("Name"));
+    assertTrue(infoMap.containsKey("Size"));
+    assertTrue(infoMap.containsKey("Capacity"));
+    assertTrue(infoMap.containsKey("TimeToLive"));
+    assertTrue(infoMap.containsKey("HitCount"));
+    assertTrue(infoMap.containsKey("MissCount"));
+    assertEquals(6, infoMap.size());
+    assertEquals(5, server.getAttribute(name, "Capacity"));
   }
 
   public void testDistributedCache() throws Exception {

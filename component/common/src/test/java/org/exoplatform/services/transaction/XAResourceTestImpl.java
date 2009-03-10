@@ -18,12 +18,10 @@ package org.exoplatform.services.transaction;
 
 import javax.transaction.RollbackException;
 import javax.transaction.Status;
-import javax.transaction.Transaction;
+import javax.transaction.SystemException;
 import javax.transaction.xa.XAException;
 import javax.transaction.xa.XAResource;
 import javax.transaction.xa.Xid;
-
-import org.objectweb.transaction.jta.ResourceManagerEvent;
 
 import org.apache.commons.logging.Log;
 
@@ -37,7 +35,7 @@ import org.exoplatform.services.log.ExoLogger;
  * @version $Id: $
  */
 
-public class XAResourceTestImpl implements XAResource, ResourceManagerEvent {
+public class XAResourceTestImpl implements ExoResource, XAResource {
 
   private static Log log     = ExoLogger.getLogger("tx.TestXAResource");
 
@@ -49,11 +47,23 @@ public class XAResourceTestImpl implements XAResource, ResourceManagerEvent {
 
   private int        flag    = oldFlag = 0;
 
+  private final TransactionService ts;
+
+  private Object payload;
+
+  public XAResourceTestImpl(TransactionService ts) {
+    this.ts = ts;
+  }
+
   // public XAResourceTestImpl(TransactionService ts)
   // throws RollbackException, SystemException {
   // this.ts = ts;
   // ts.enlistResource(this);
   // }
+
+  public XAResource getXAResource() {
+    return this;
+  }
 
   public void commit(Xid arg0, boolean arg1) throws XAException {
     oldFlag = flag;
@@ -108,26 +118,33 @@ public class XAResourceTestImpl implements XAResource, ResourceManagerEvent {
     this.flag = flag;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see
-   * org.objectweb.transaction.jta.ResourceManagerEvent#enlistConnection(javax
-   * .transaction.Transaction)
-   */
-  public void enlistConnection(Transaction transaction) throws javax.transaction.SystemException {
+  public void enlistResource() throws XAException {
     try {
-      transaction.enlistResource(this);
+      ts.enlistResource(this);
     } catch (IllegalStateException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
     } catch (RollbackException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
+    } catch (SystemException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
     }
+  }
+
+  public void delistResource() throws XAException {
   }
 
   public int getOldFlag() {
     return oldFlag;
   }
 
+  public Object getPayload() {
+    return payload;
+  }
+
+  public void setPayload(Object payload) {
+    this.payload = payload;
+  }
 }

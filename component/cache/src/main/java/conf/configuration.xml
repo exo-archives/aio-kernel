@@ -11,11 +11,9 @@
         <object type="org.exoplatform.services.cache.ExoCacheConfig">
           <field  name="name"><string>default</string></field>
           <field  name="maxSize"><int>300</int></field>
-<!--
           <field  name="liveTime"><long>300</long></field>
--->
-          <field  name="liveTime"><long>-1</long></field>
           <field  name="distributed"><boolean>false</boolean></field>
+          <field name="implementation"><string>org.exoplatform.services.cache.concurrent.ConcurrentFIFOExoCache</string></field>
         </object>
       </object-param>
     </init-params>  

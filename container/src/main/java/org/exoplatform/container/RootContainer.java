@@ -5,43 +5,59 @@
 package org.exoplatform.container;
 
 import java.io.File;
+import java.util.Collection;
+import java.util.HashMap;
+import java.lang.management.ManagementFactory;
 
-import javax.management.MBeanServer;
 import javax.servlet.ServletContext;
+import javax.management.MBeanServerFactory;
+import javax.management.MBeanServer;
 
 import org.exoplatform.container.configuration.ConfigurationManager;
 import org.exoplatform.container.configuration.ConfigurationManagerImpl;
 import org.exoplatform.container.configuration.MockConfigurationManagerImpl;
-import org.exoplatform.container.jmx.MX4JComponentAdapterFactory;
+import org.exoplatform.container.jmx.ManagementContextImpl;
 import org.exoplatform.container.monitor.jvm.J2EEServerInfo;
 import org.exoplatform.container.monitor.jvm.OperatingSystemInfo;
 import org.exoplatform.container.util.ContainerUtil;
 import org.exoplatform.test.mocks.servlet.MockServletContext;
+import org.exoplatform.management.jmx.annotations.NamingContext;
+import org.exoplatform.management.jmx.annotations.Property;
+import org.exoplatform.management.annotations.Managed;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.picocontainer.ComponentAdapter;
 
 /**
  * Created by The eXo Platform SAS Author : Tuan Nguyen
  * tuan08@users.sourceforge.net Date: Jul 21, 2004 Time: 12:15:28 AM
  */
+@Managed
+@NamingContext(@Property(key="container", value="root"))
 public class RootContainer extends ExoContainer {
+
+  private static J2EEServerInfo serverenv_ = new J2EEServerInfo();
+
+  private static MBeanServer findMBeanServer() {
+    MBeanServer server = serverenv_.getMBeanServer();
+    if (server == null) {
+      server = ManagementFactory.getPlatformMBeanServer();
+    }
+    return server;
+  }
+
 
   /** The field is volatile to properly implement the double checked locking pattern. */
   private static volatile RootContainer singleton_;
 
-  private final MBeanServer          mbeanServer_;
-
   private OperatingSystemInfo  osenv_;
-
-  private final J2EEServerInfo       serverenv_;
 
   private static final Log log = LogFactory.getLog(RootContainer.class);
 
   private static volatile boolean booting = false;
 
   public RootContainer() {
-    super(new MX4JComponentAdapterFactory(), null);
-    mbeanServer_ = createMBeanServer("exomx");
+    super(new ManagementContextImpl(findMBeanServer(), new HashMap<String, String>()));
     Runtime.getRuntime().addShutdownHook(new ShutdownThread(this));
     serverenv_ = new J2EEServerInfo();
     this.registerComponentInstance(J2EEServerInfo.class, serverenv_);
@@ -100,6 +116,23 @@ public class RootContainer extends ExoContainer {
         ex.printStackTrace();
       }
 
+      // Add configuration that depends on the environment
+      String uri;
+      if (Environnment.isJBoss()) {
+        uri = "conf/portal/jboss-configuration.xml";
+      } else {
+        uri = "conf/portal/generic-configuration.xml";
+      }
+      Collection envConf = ContainerUtil.getConfigurationURL(uri);
+      try {
+        cService.addConfiguration(envConf);
+      }
+      catch (Exception ex) {
+        System.err.println("ERROR: cannot add configuration " + uri + ". ServletContext: "
+            + context);
+        ex.printStackTrace();
+      }
+
       // add configs from web apps
       try {
         cService.addConfiguration("war:/conf/configuration.xml");
@@ -125,12 +158,17 @@ public class RootContainer extends ExoContainer {
       }
 
       cService.processRemoveConfiguration();
-      pcontainer.registerComponentInstance(ConfigurationManager.class, cService);
+      ComponentAdapter adapter = pcontainer.registerComponentInstance(ConfigurationManager.class, cService);
       pcontainer.initContainer();
       registerComponentInstance(context.getServletContextName(), pcontainer);
       PortalContainer.setInstance(pcontainer);
       ExoContainerContext.setCurrentContainer(pcontainer);
       pcontainer.start();
+
+      // Register the portal as an mbean
+      managementContext.register(pcontainer);
+
+      //
       return pcontainer;
     } catch (Exception ex) {
       System.err.println("ERROR: cannot create portal container. ServletContext: " + context);
@@ -141,10 +179,6 @@ public class RootContainer extends ExoContainer {
 
   synchronized public void removePortalContainer(ServletContext servletContext) {
     this.unregisterComponent(servletContext.getServletContextName());
-  }
-
-  public MBeanServer getMBeanServer() {
-    return mbeanServer_;
   }
 
   public static Object getComponent(Class key) {
