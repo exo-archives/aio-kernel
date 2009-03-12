@@ -24,6 +24,8 @@ import org.xml.sax.SAXException;
 import org.jibx.runtime.IBindingFactory;
 import org.jibx.runtime.BindingDirectory;
 import org.jibx.runtime.IUnmarshallingContext;
+import org.apache.commons.logging.LogFactory;
+import org.apache.commons.logging.Log;
 
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Schema;
@@ -49,6 +51,8 @@ import java.net.URL;
  * @version $Revision$
  */
 public class ConfigurationUnmarshaller {
+
+  private static final Log log = LogFactory.getLog(ConfigurationUnmarshaller.class);
 
   private class Reporter implements ErrorHandler {
 
@@ -163,9 +167,7 @@ public class ConfigurationUnmarshaller {
     String document = buffer.toString();
 
     // Debug
-//    Log log = LogFactory.getLog(ConfigurationUnmarshaller.class);
-//    log.debug("About to parse\n" + document);
-//    System.out.println("document = " + document);
+    log.debug("About to parse configuration file " + document);
 
     //
     IBindingFactory bfact = BindingDirectory.getFactory(Configuration.class);
