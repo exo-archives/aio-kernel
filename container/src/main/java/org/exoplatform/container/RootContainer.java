@@ -75,29 +75,7 @@ public class RootContainer extends ExoContainer {
   }
 
   public PortalContainer getPortalContainer(String name) {
-    PortalContainer pcontainer = (PortalContainer) this.getComponentInstance(name);
-    if (pcontainer == null) {
-      J2EEServerInfo senv = getServerEnvironment();
-      if ("standalone".equals(senv.getServerName()) || "test".equals(senv.getServerName())) {
-        try {
-          MockServletContext scontext = new MockServletContext(name);
-          pcontainer = new PortalContainer(this, scontext);
-          ConfigurationManagerImpl cService = new MockConfigurationManagerImpl(scontext);
-          cService.addConfiguration(ContainerUtil.getConfigurationURL("conf/portal/configuration.xml"));
-          cService.addConfiguration(ContainerUtil.getConfigurationURL("conf/portal/test-configuration.xml"));
-          cService.processRemoveConfiguration();
-          pcontainer.registerComponentInstance(ConfigurationManager.class, cService);
-          pcontainer.initContainer();
-          registerComponentInstance(name, pcontainer);
-          PortalContainer.setInstance(pcontainer);
-          ExoContainerContext.setCurrentContainer(pcontainer);
-          pcontainer.start();
-        } catch (Exception ex) {
-          ex.printStackTrace();
-        }
-      }
-    }
-    return pcontainer;
+    return (PortalContainer) this.getComponentInstance(name);
   }
 
   synchronized public PortalContainer createPortalContainer(ServletContext context) {
