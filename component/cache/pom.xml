@@ -31,9 +31,9 @@
       <version>2.1.1-SNAPSHOT</version>
     </dependency>
     <dependency>
-      <groupId>javagroups</groupId>
-      <artifactId>jgroups-all</artifactId>
-      <version>2.5.0</version>
+      <groupId>jgroups</groupId>
+      <artifactId>jgroups</artifactId>
+      <version>2.5.2</version>
       <scope>test</scope>
     </dependency>
 
@@ -51,6 +51,7 @@
           -->
           <excludes>
             <exclude>**/TestScalability.java</exclude>
+            <exclude>**/TestConcurrentCache.java</exclude>
           </excludes>
           <systemProperties>
             <!-- Needed to test logEnabled property -->

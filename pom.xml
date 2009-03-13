@@ -201,6 +201,7 @@
 
     </plugins>
   </build>
+
   <reporting>
     <plugins>
       <plugin>
@@ -213,6 +214,15 @@
       </plugin>
     </plugins>
   </reporting>
+
+  <repositories>
+    <repository>
+      <id>jboss.com</id>
+      <url>http://repository.jboss.com/maven2</url>
+      <layout>legacy</layout>
+    </repository>
+  </repositories>
+
   <profiles>
     <profile>
       <id>default</id>
