@@ -54,6 +54,17 @@ public class ConfigurationManagerImpl implements ConfigurationManager {
 
   private boolean             validateSchema = true;
 
+  /** The URL of the current document being unmarshalled. */
+  private static final ThreadLocal<URL> currentURL = new ThreadLocal<URL>();
+
+  /**
+   * Returns the URL of the current document being unmarshalled or null.
+   * @return the URL
+   */
+  public static URL getCurrentURL() {
+    return currentURL.get();
+  }
+
   public ConfigurationManagerImpl() {
   }
 
@@ -96,6 +107,13 @@ public class ConfigurationManagerImpl implements ConfigurationManager {
       contextPath = null;
     }
 
+    // Just to prevent some nasty bug to happen
+    if (currentURL.get() != null) {
+      throw new IllegalStateException("Would not expect that");
+    } else {
+      currentURL.set(url);
+    }
+
     //
     try {
       ConfigurationUnmarshaller unmarshaller = new ConfigurationUnmarshaller();
@@ -125,6 +143,8 @@ public class ConfigurationManagerImpl implements ConfigurationManager {
       // System .err.println("Error: " + ex.getMessage());
       System.err.println("ERROR: cannot process the configuration " + url);
       ex.printStackTrace();
+    } finally {
+      currentURL.set(null);
     }
   }
 

@@ -16,8 +16,11 @@
  */
 package org.exoplatform.container.xml;
 
+import org.exoplatform.container.configuration.ConfigurationManagerImpl;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.net.URL;
 
 /**
  * @author Tuan Nguyen (tuan08@users.sourceforge.net)
@@ -25,6 +28,9 @@ import java.util.List;
  * @version $Id: Component.java 5799 2006-05-28 17:55:42Z geaz $
  */
 public class Component {
+
+  final URL documentURL;
+
   String                     key;
 
   String                     type;
@@ -44,6 +50,14 @@ public class Component {
   boolean                    showDeployInfo = false;
 
   boolean                    multiInstance  = false;
+
+  public Component() {
+    documentURL = ConfigurationManagerImpl.getCurrentURL();
+  }
+
+  public URL getDocumentURL() {
+    return documentURL;
+  }
 
   public String getKey() {
     return key;
