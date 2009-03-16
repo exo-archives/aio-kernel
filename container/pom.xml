@@ -4,7 +4,7 @@
     <artifactId>config</artifactId>
     <version>2.0.7-SNAPSHOT</version>
   </parent>
-  
+
   <modelVersion>4.0.0</modelVersion>
   <artifactId>exo.kernel.container</artifactId>
   <version>2.0.7-SNAPSHOT</version>
@@ -12,32 +12,32 @@
   <name>eXo Container</name>
   <url>http://www.exoplatform.org</url>
   <description>eXo Kernel Container</description>
-  
+
   <dependencies>
     <dependency>
       <groupId>org.exoplatform.kernel</groupId>
       <artifactId>exo.kernel.commons</artifactId>
       <version>2.0.7-SNAPSHOT</version>
     </dependency>
-    
+
     <dependency>
       <groupId>org.exoplatform.tool</groupId>
       <artifactId>exo.tool.framework.junit</artifactId>
-      <version>${org.exoplatform.tool.version}</version>
+      <version>1.0.0</version>
     </dependency>
-    
+
     <dependency>
       <groupId>picocontainer</groupId>
       <artifactId>picocontainer</artifactId>
       <version>1.1</version>
     </dependency>
-    
+
     <dependency>
       <groupId>commons-beanutils</groupId>
       <artifactId>commons-beanutils</artifactId>
       <version>1.6</version>
     </dependency>
-    
+
     <dependency>
       <groupId>org.jibx</groupId>
       <artifactId>jibx-run</artifactId>
@@ -50,7 +50,7 @@
         </exclusion>
       </exclusions>
     </dependency>
-    
+
     <dependency>
       <groupId>org.jibx</groupId>
       <artifactId>jibx-bind</artifactId>
@@ -63,16 +63,16 @@
         </exclusion>
       </exclusions>
     </dependency>
-    
+
     <dependency>
       <groupId>org.jibx</groupId>
       <artifactId>jibx-extras</artifactId>
       <version>1.1.6a</version>
       <scope>compile</scope>
     </dependency>
-    
+
   </dependencies>
-  
+
   <build>
     <plugins>
       <plugin>
