@@ -115,7 +115,13 @@ public class ExoContainer extends ManageableContainer {
     if (log.isDebugEnabled())
       log.debug(clazz.getName() + " " + ((params != null) ? params : "") + " added to "
           + getContext().getName());
-    Constructor<?>[] constructors = ContainerUtil.getSortedConstructors(clazz);
+    Constructor<?>[] constructors = new Constructor<?>[0];
+    try {
+      constructors = ContainerUtil.getSortedConstructors(clazz);
+    }
+    catch (NoClassDefFoundError err) {
+      throw new Exception("Cannot resolve constructor for class " + clazz.getName(), err);
+    }
     Class<?> unknownParameter = null;
     for (int k = 0; k < constructors.length; k++) {
       Constructor<?> constructor = constructors[k];

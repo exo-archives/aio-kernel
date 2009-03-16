@@ -13,6 +13,7 @@ import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.net.URL;
 
 import org.picocontainer.PicoContainer;
 import org.picocontainer.defaults.AbstractComponentAdapter;
@@ -47,16 +48,20 @@ public class MX4JComponentAdapter extends AbstractComponentAdapter {
   public Object getComponentInstance(PicoContainer container) {
     if (instance_ != null)
       return instance_;
+
+    // Get the component
     ExoContainer exocontainer = (ExoContainer) container;
+    Object key = getComponentKey();
+    String componentKey;
+    if (key instanceof String)
+      componentKey = (String) key;
+    else
+      componentKey = ((Class) key).getName();
+    ConfigurationManager manager = (ConfigurationManager) exocontainer.getComponentInstanceOfType(ConfigurationManager.class);
+    Component component = manager.getComponent(componentKey);
+
+    //
     try {
-      Object key = getComponentKey();
-      String componentKey = null;
-      if (key instanceof String)
-        componentKey = (String) key;
-      else
-        componentKey = ((Class) key).getName();
-      ConfigurationManager manager = (ConfigurationManager) exocontainer.getComponentInstanceOfType(ConfigurationManager.class);
-      Component component = manager.getComponent(componentKey);
       InitParams params = null;
       boolean debug = false;
       if (component != null) {
@@ -82,7 +87,13 @@ public class MX4JComponentAdapter extends AbstractComponentAdapter {
         lc.initComponent(exocontainer);
       }
     } catch (Exception ex) {
-      throw new RuntimeException("Cannot instantiate component " + getComponentImplementation(), ex);
+      String msg = "Cannot instantiate component " + getComponentImplementation();
+      if (component != null) {
+        msg = "Cannot instantiate component key=" + component.getKey() + " type=" + component.getType() + 
+          " found at " + component.getDocumentURL();
+
+      }
+      throw new RuntimeException(msg, ex);
     }
     return instance_;
   }
