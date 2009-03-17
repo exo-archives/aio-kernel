@@ -116,7 +116,7 @@ public class TestConcurrentCache extends BasicTestCase {
     cache.setLiveTimeMillis(5);
     cache.put("Foo", v1);
     cache.assertPut("Foo", v1).assertEmpty();
-    waitFor(5);
+    waitFor(10);
     assertEquals(null, cache.get("Foo"));
     cache.assertExpire("Foo", v1).assertEmpty();
   }
@@ -126,7 +126,7 @@ public class TestConcurrentCache extends BasicTestCase {
     cache.setLiveTimeMillis(5);
     cache.put("Foo", v1);
     cache.assertPut("Foo", v1).assertEmpty();
-    waitFor(5);
+    waitFor(10);
     assertEquals(null, cache.remove("Foo"));
     cache.assertExpire("Foo", v1).assertEmpty();
   }
