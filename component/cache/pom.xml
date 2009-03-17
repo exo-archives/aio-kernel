@@ -49,10 +49,6 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
-          <excludes>
-            <exclude>**/TestScalability.java</exclude>
-            <!-- exclude>**/TestConcurrentCache.java</exclude -->
-          </excludes>
           <systemProperties>
             <property>
               <name>org.apache.commons.logging.Log</name>
