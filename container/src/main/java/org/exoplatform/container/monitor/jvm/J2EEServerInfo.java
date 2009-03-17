@@ -17,6 +17,7 @@
 package org.exoplatform.container.monitor.jvm;
 
 import javax.management.MBeanServer;
+import javax.management.MBeanServerFactory;
 import java.io.File;
 import java.net.URL;
 import java.lang.reflect.Method;
@@ -109,6 +110,7 @@ public class J2EEServerInfo {
       serverName_ = "standalone";
       serverHome_ = System.getProperty("user.dir");
       exoConfDir_ = serverHome_ + "/exo-conf";
+      mbeanServer = MBeanServerFactory.createMBeanServer();
     }
     
     String exoConfHome = System.getProperty(EXO_CONF_PARAM);
