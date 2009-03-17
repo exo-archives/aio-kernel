@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.lang.management.ManagementFactory;
 
 import javax.servlet.ServletContext;
-import javax.management.MBeanServerFactory;
 import javax.management.MBeanServer;
 
 import org.exoplatform.container.configuration.ConfigurationManager;
@@ -36,9 +35,8 @@ import org.picocontainer.ComponentAdapter;
 @NamingContext(@Property(key="container", value="root"))
 public class RootContainer extends ExoContainer {
 
-  private static J2EEServerInfo serverenv_ = new J2EEServerInfo();
-
   private static MBeanServer findMBeanServer() {
+    J2EEServerInfo serverenv_ = new J2EEServerInfo();
     MBeanServer server = serverenv_.getMBeanServer();
     if (server == null) {
       server = ManagementFactory.getPlatformMBeanServer();
@@ -56,10 +54,11 @@ public class RootContainer extends ExoContainer {
 
   private static volatile boolean booting = false;
 
+  private final J2EEServerInfo serverenv_ = new J2EEServerInfo();
+
   public RootContainer() {
     super(new ManagementContextImpl(findMBeanServer(), new HashMap<String, String>()));
     Runtime.getRuntime().addShutdownHook(new ShutdownThread(this));
-    serverenv_ = new J2EEServerInfo();
     this.registerComponentInstance(J2EEServerInfo.class, serverenv_);
   }
 
