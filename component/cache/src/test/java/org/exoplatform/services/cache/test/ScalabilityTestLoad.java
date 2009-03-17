@@ -37,7 +37,7 @@ import org.apache.commons.logging.Log;
  * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
  * @version $Revision$
  */
-public class TestScalability extends TestCase {
+public class ScalabilityTestLoad extends TestCase {
 
 
   private static void doTest(String name, List<CacheProvider> providers, int cacheSize, Config config) {
