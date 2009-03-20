@@ -16,9 +16,9 @@
      <exo.product.specification>2.0.7</exo.product.specification>
   </properties>
   <scm>
-    <connection>scm:svn:http://svn.exoplatform.org/svnroot/exoplatform/projects/kernel/branches/2.0.8</connection>
-    <developerConnection>scm:svn:http://svn.exoplatform.org/svnroot/exoplatform/projects/kernel/branches/2.0.8</developerConnection>
-    <url>http://fisheye.exoplatform.org/browse/projects/kernel/branches/2.0.8</url>
+    <connection>scm:svn:http://svn.exoplatform.org/svnroot/exoplatform/projects/kernel/branches/2.0.x</connection>
+    <developerConnection>scm:svn:http://svn.exoplatform.org/svnroot/exoplatform/projects/kernel/branches/2.0.x</developerConnection>
+    <url>http://fisheye.exoplatform.org/browse/projects/kernel/branches/2.0.x</url>
   </scm>
 
   <modules>
@@ -136,8 +136,8 @@
                 <taskdef resource="emma_ant.properties" classpathref="maven.dependency.classpath" />
                 <emma enabled="true">
                   <!-- merged file will be rewritted by last project -->
-                  <merge outfile="${exo.projects.directory.src}/kernel/branches/2.0.8/target/coverage.es">
-                    <fileset dir="${exo.projects.directory.src}/kernel/branches/2.0.8/">
+                  <merge outfile="${exo.projects.directory.src}/kernel/branches/2.0.x/target/coverage.es">
+                    <fileset dir="${exo.projects.directory.src}/kernel/branches/2.0.x/">
                       <include name="**/target/emma/*.e*" />
                       <include name="**/target/emma/*.e*" />
                     </fileset>
@@ -150,11 +150,11 @@
                         <include name="**/src/**/java" />
                       </dirset>
                     </sourcepath>
-                    <fileset dir="${exo.projects.directory.src}/kernel/branches/2.0.8/target/">
+                    <fileset dir="${exo.projects.directory.src}/kernel/branches/2.0.x/target/">
                       <include name="*.es" />
                     </fileset>
-                    <html outfile="${exo.projects.directory.src}/kernel/branches/2.0.8/target/coverage.html" />
-                    <xml outfile="${exo.projects.directory.src}/kernel/branches/2.0.8/target/coverage.xml" />
+                    <html outfile="${exo.projects.directory.src}/kernel/branches/2.0.x/target/coverage.html" />
+                    <xml outfile="${exo.projects.directory.src}/kernel/branches/2.0.x/target/coverage.xml" />
                   </report>
                 </emma>
               </tasks>
