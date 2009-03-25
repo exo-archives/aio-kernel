@@ -20,9 +20,8 @@
     </dependency>
 
     <dependency>
-      <groupId>javagroups</groupId>
-      <artifactId>jgroups-all</artifactId>
-      <version>2.5.2</version>
+      <groupId>jgroups</groupId>
+      <artifactId>jgroups</artifactId>
       <scope>compile</scope>
     </dependency>
 
