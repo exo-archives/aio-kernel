@@ -16,10 +16,11 @@
  */
 package org.exoplatform.container.jmx;
 
-import org.exoplatform.management.annotations.Managed;
-import org.exoplatform.management.annotations.ManagedName;
-import org.exoplatform.management.annotations.ManagedDescription;
-import org.exoplatform.commons.reflect.AnnotationIntrospector;
+import org.exoplatform.container.management.ManagedTypeMetaData;
+import org.exoplatform.container.management.MetaDataBuilder;
+import org.exoplatform.container.management.ManagedMethodMetaData;
+import org.exoplatform.container.management.ManagedMethodParameterMetaData;
+import org.exoplatform.container.management.ManagedPropertyMetaData;
 
 import javax.management.modelmbean.ModelMBeanOperationInfo;
 import javax.management.modelmbean.ModelMBeanInfoSupport;
@@ -31,81 +32,91 @@ import javax.management.MBeanParameterInfo;
 import javax.management.Descriptor;
 import javax.management.IntrospectionException;
 import java.lang.reflect.Method;
-import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
-import java.util.Set;
-import java.util.HashSet;
+import java.util.Collection;
+import java.util.Collections;
 
 /**
- * <p>A class that build mbean meta data suitable for:
- * <ul>
- * <li>Represent a management view of the managed class</li>
- * <li>Provide additional metadata for a model mbean</li>
- * </ul>
- * </p>
- * <p>The following rules do apply to the class from which meta data are constructed:
- * <ul>
- * <li>The class must be annotated by {@link Managed}</li>
- * <li>The class may be annoated by {@link ManagedDescription}</li>
- * <li>Any property described by its getter and/or setter getter annotated by {@link Managed} is exposed as an attribute/li>
- * <li>Any property providing an annotated getter is readable</li>
- * <li>Any property providing an annotated setter is writable</li>
- * <li>Any getter/setter annotated by {@link ManagedName} redefines the attribute name</li>
- * <li>Any getter/setter annotated by {@link ManagedDescription} defines the attribute description</li>
- * <li>When corresponding getter/setter redefines the attribute name, the value must be the same otherwhise
- * an exception is thrown at built time</li>
- * <li>Any method annotated by {@link Managed} is exposed as a management operation</li>
- * <li>Any method annotated by {@link ManagedDescription} defines the operation description</li>
- * <li>Any non setter/getter method annotated by {@link ManagedName} causes a built time exception</li>
- * <li>Any method argument annotated by {@link ManagedName} defines the management name of the corresponding operation parameter</li>
- * <li>Any method argument annotated by {@link ManagedDescription} defines the management description of the corresponding operation parameter</li>
- * </ul>
- * </p>
+ * <p>A class that build mbean meta data</p>
  *
  * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
  * @version $Revision$
  */
 public class ExoMBeanInfoBuilder {
 
-  private static enum Type {
+  private static enum Role {
     SET("setter"),
     IS("getter"),
     GET("getter"),
     OP("operation");
 
-    private final String role;
+    private final String name;
 
-    private Type(String role) {
-      this.role = role;
+    private Role(String role) {
+      this.name = role;
     }
   }
 
-  private Class clazz;
-  private boolean buildable;
+  private MetaDataBuilder metaDataBuilder;
 
   /**
    * Create a new builder.
    *
    * @param clazz the clazz
-   * @throws IllegalArgumentException if the class is null or is not annotated by {@link Managed}
+   * @throws IllegalArgumentException if the class is null or does not contain meta data
    */
   public ExoMBeanInfoBuilder(Class clazz) throws IllegalArgumentException {
-    if (clazz == null) {
-      throw new NullPointerException();
-    }
-
-    //
-    Managed mb = AnnotationIntrospector.resolveClassAnnotations(clazz, Managed.class);
-
-    //
-    this.clazz = clazz;
-    this.buildable = mb != null;
+    this.metaDataBuilder = new MetaDataBuilder(clazz);
   }
 
   public boolean isBuildable() {
-    return buildable;
+    return metaDataBuilder.isBuildable();
+  }
+
+  private ModelMBeanOperationInfo buildOperationInfo(
+    Method method,
+    String description,
+    Role role,
+    Collection<ManagedMethodParameterMetaData> parametersMD) {
+    ModelMBeanOperationInfo operationInfo = new ModelMBeanOperationInfo(description, method);
+
+    //
+    if (description == null) {
+      description = "Management operation";
+    }
+
+    //
+    MBeanParameterInfo[] parameterInfos = operationInfo.getSignature();
+    for (ManagedMethodParameterMetaData parameterMD : parametersMD) {
+      int i = parameterMD.getIndex();
+      MBeanParameterInfo parameterInfo = parameterInfos[i];
+      String parameterName = parameterInfo.getName();
+      String parameterDescription = operationInfo.getSignature()[i].getDescription();
+      if (parameterMD.getName() != null) {
+        parameterName = parameterMD.getName();
+      } else if (parameterMD.getDescription() != null) {
+        parameterDescription = parameterMD.getDescription();
+      }
+      parameterInfos[i] = new MBeanParameterInfo(
+        parameterName,
+        parameterInfo.getType(),
+        parameterDescription);
+    }
+
+    //
+    Descriptor operationDescriptor = operationInfo.getDescriptor();
+    operationDescriptor.setField("role", role.name);
+
+    //
+    return new ModelMBeanOperationInfo(
+      operationInfo.getName(),
+      description,
+      parameterInfos,
+      operationInfo.getReturnType(),
+      operationInfo.getImpact(),
+      operationDescriptor);
   }
 
   /**
@@ -115,166 +126,78 @@ public class ExoMBeanInfoBuilder {
    * @throws IllegalStateException raised by any build time issue
    */
   public ModelMBeanInfo build() throws IllegalStateException {
-    if (!buildable) {
-      throw new IllegalStateException("Class " + clazz.getName() + " does not contain management annotation");
-    }
+    ManagedTypeMetaData typeMD = metaDataBuilder.build();
 
     //
-    ManagedDescription mbeanManagedDescription = AnnotationIntrospector.resolveClassAnnotations(clazz, ManagedDescription.class);
     String mbeanDescription = "Exo model mbean";
-    if (mbeanManagedDescription != null) {
-      mbeanDescription = mbeanManagedDescription.value();
+    if (typeMD.getDescription() != null) {
+      mbeanDescription = typeMD.getDescription();
     }
 
     //
-    Map<Method, Managed> managedMethods = AnnotationIntrospector.resolveMethodAnnotations(clazz, Managed.class);
-    Map<Method, ManagedName> methodNames = AnnotationIntrospector.resolveMethodAnnotations(clazz, ManagedName.class);
-    Map<Method, ManagedDescription> methodDescriptions = AnnotationIntrospector.resolveMethodAnnotations(clazz, ManagedDescription.class);
-
-    //
-    Map<String, Method> setters = new HashMap<String, Method>();
-    Map<String, Method> getters = new HashMap<String, Method>();
     ArrayList<ModelMBeanOperationInfo> operations = new ArrayList<ModelMBeanOperationInfo>();
-    for (Map.Entry<Method, Managed> entry : managedMethods.entrySet()) {
-
-      Method method = entry.getKey();
-
-      //
-      String operationDescription = "Management operation";
-      ManagedDescription operationManagedDescription = methodDescriptions.get(method);
-      if (operationManagedDescription != null) {
-        operationDescription = operationManagedDescription.value();
-      }
-
-      //
-      String methodName = method.getName();
-      Class[] parameterTypes = method.getParameterTypes();
-
-      //
-      Type type = Type.OP;
-      Integer index = null;
-      if (method.getReturnType() == void.class) {
-        if (parameterTypes.length == 1 &&
-            methodName.startsWith("set") &&
-            methodName.length() > 4) {
-          type = Type.SET;
-          index = 3;
-        }
-      } else {
-        if (parameterTypes.length == 0) {
-          if (methodName.startsWith("get") && methodName.length() > 3) {
-            type = Type.GET;
-            index = 3;
-          } else if (methodName.startsWith("is") && methodName.length() > 2) {
-            type = Type.IS;
-            index = 2;
-          }
-        }
-      }
-
-      // Put in the correct map if it is an attribute
-      if (index != null) {
-        String attributeName = methodName.substring(index);
-
-        //
-        Map<String, Method> map = type == Type.SET ? setters : getters;
-        Method previous = map.put(attributeName, method);
-        if (previous != null) {
-          throw new IllegalArgumentException("Duplicate attribute " + type.role + " " + previous + " and " + method);
-        }
-      } else {
-        ManagedName managedName = methodNames.get(method);
-        if (managedName != null) {
-          throw new IllegalArgumentException("Managed operation " + method.getName() +
-            " cannot be annoated with @" + ManagedName.class.getName() + " with value " + managedName.value());
-        }
-      }
-
-      // Build the default mbean info
-      ModelMBeanOperationInfo operationInfo = new ModelMBeanOperationInfo(operationDescription, method);
-
-      // Overload with annotations meta data
-      Annotation[][] parameterAnnotations = method.getParameterAnnotations();
-      MBeanParameterInfo[] parameterInfos = operationInfo.getSignature();
-      for (int i = 0;i < parameterAnnotations.length;i++) {
-        MBeanParameterInfo parameterInfo = parameterInfos[i];
-        String parameterName = parameterInfo.getName();
-        String parameterDescription = operationInfo.getSignature()[i].getDescription();
-        for (Annotation parameterAnnotation : parameterAnnotations[i]) {
-          if (parameterAnnotation instanceof ManagedName) {
-            parameterName = ((ManagedName)parameterAnnotation).value();
-          } else if (parameterAnnotation instanceof ManagedDescription) {
-            parameterDescription = ((ManagedDescription)parameterAnnotation).value();
-          }
-        }
-        parameterInfos[i] = new MBeanParameterInfo(
-          parameterName,
-          parameterInfo.getType(),
-          parameterDescription);
-      }
-
-      //
-      Descriptor operationDescriptor = operationInfo.getDescriptor();
-      operationDescriptor.setField("role", type.role);
-
-      //
-      operationInfo = new ModelMBeanOperationInfo(
-        operationInfo.getName(),
-        operationDescription,
-        parameterInfos,
-        operationInfo.getReturnType(),
-        operationInfo.getImpact(),
-        operationDescriptor);
-
-      //
+    for (ManagedMethodMetaData methodMD : typeMD.getMethods()) {
+      ModelMBeanOperationInfo operationInfo = buildOperationInfo(
+        methodMD.getMethod(),
+        methodMD.getDescription(),
+        Role.OP,
+        methodMD.getParameters()
+      );
       operations.add(operationInfo);
     }
 
-    // Process attributes
+    //
     Map<String, ModelMBeanAttributeInfo> attributeInfos = new HashMap<String, ModelMBeanAttributeInfo>();
-    Set<String> attributeNames = new HashSet<String>();
-    attributeNames.addAll(getters.keySet());
-    attributeNames.addAll(setters.keySet());
-    for (String attributeName : attributeNames) {
-      Method getter = getters.get(attributeName);
-      Method setter = setters.get(attributeName);
+    for (ManagedPropertyMetaData propertyMD : typeMD.getProperties()) {
 
-      ManagedDescription managedAttributeDescription = null;
-      ManagedName getterName = null;
-      ManagedName setterName = null;
+      Method getter = propertyMD.getGetter();
       if (getter != null) {
-        getterName = methodNames.get(getter);
-        managedAttributeDescription = methodDescriptions.get(getter);
-      }
-      if (setter != null) {
-        setterName = methodNames.get(setter);
-        if (managedAttributeDescription == null) {
-          managedAttributeDescription = methodDescriptions.get(setter);
+        Role role;
+        String getterName = getter.getName();
+        if (getterName.startsWith("get") && getterName.length() > 3) {
+          role = Role.GET;
+        } else if (getterName.startsWith("is") && getterName.length() > 2) {
+           role = Role.IS;
+        } else {
+          throw new AssertionError();
         }
+        Collection<ManagedMethodParameterMetaData> blah = Collections.emptyList();
+        ModelMBeanOperationInfo operationInfo = buildOperationInfo(
+          getter,
+          propertyMD.getGetterDescription(),
+          role,
+          blah
+        );
+        operations.add(operationInfo);
       }
-
 
       //
-      if (getterName != null) {
-        if (setterName != null) {
-          if (!getterName.value().equals(setterName.value())) {
-            throw new IllegalArgumentException();
-          }
-        }
-        attributeName = getterName.value();
-      } else if (setterName != null) {
-        attributeName = setterName.value();
+      Method setter = propertyMD.getSetter();
+      if (setter != null) {
+        ManagedMethodParameterMetaData s = new ManagedMethodParameterMetaData(0);
+        s.setDescription(propertyMD.getSetterParameter().getDescription());
+        s.setName(propertyMD.getSetterParameter().getName());
+        Collection<ManagedMethodParameterMetaData> blah = Collections.singletonList(
+          s
+        );
+        ModelMBeanOperationInfo operationInfo = buildOperationInfo(
+          setter,
+          propertyMD.getSetterDescription(),
+          Role.SET,
+          blah
+        );
+        operations.add(operationInfo);
       }
 
       //
       try {
-        String attributeDescription = managedAttributeDescription != null ?
-          managedAttributeDescription.value() :
-          ("Managed attribute " + attributeName);
+        String attributeDescription = propertyMD.getDescription() != null ?
+          propertyMD.getDescription() :
+          ("Managed attribute " + propertyMD.getName());
 
         //
         ModelMBeanAttributeInfo attributeInfo = new ModelMBeanAttributeInfo(
-            attributeName,
+            propertyMD.getName(),
             attributeDescription,
             getter,
             setter);
@@ -292,7 +215,7 @@ public class ExoMBeanInfoBuilder {
         attributeInfo.setDescriptor(attributeDescriptor);
 
         //
-        ModelMBeanAttributeInfo previous = attributeInfos.put(attributeName, attributeInfo);
+        ModelMBeanAttributeInfo previous = attributeInfos.put(propertyMD.getName(), attributeInfo);
         if (previous != null) {
           throw new IllegalArgumentException();
         }
@@ -304,7 +227,7 @@ public class ExoMBeanInfoBuilder {
 
     //
     return new ModelMBeanInfoSupport(
-      clazz.getName(),
+      typeMD.getType().getName(),
       mbeanDescription,
       attributeInfos.values().toArray(new ModelMBeanAttributeInfo[attributeInfos.size()]),
       new ModelMBeanConstructorInfo[0],

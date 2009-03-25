@@ -93,6 +93,15 @@
           </execution>
         </executions>
       </plugin>
+
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>apt-maven-plugin</artifactId>
+          <configuration>
+            <factory>org.exoplatform.management.apt.ManagementAPF</factory>
+          </configuration>
+        </plugin>
+
     </plugins>
   </build>
 </project>
