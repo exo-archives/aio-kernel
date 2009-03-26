@@ -94,6 +94,7 @@
         </executions>
       </plugin>
 
+<!--
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>apt-maven-plugin</artifactId>
@@ -101,6 +102,7 @@
             <factory>org.exoplatform.management.apt.ManagementAPF</factory>
           </configuration>
         </plugin>
+-->
 
     </plugins>
   </build>
