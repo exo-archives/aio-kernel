@@ -16,18 +16,21 @@
  */
 package org.exoplatform.services.mail.impl;
 
-import java.io.IOException;
+import java.io.InputStream;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
-import javax.mail.MessagingException;
-import javax.mail.Multipart;
+import javax.activation.DataHandler;
+import javax.mail.Part;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import javax.mail.internet.MimeUtility;
+import javax.mail.util.ByteArrayDataSource;
 
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.services.mail.Attachment;
@@ -51,11 +54,9 @@ public class MailServiceImpl implements MailService {
       String username = props_.getProperty("mail.smtp.auth.username");
       String password = props_.getProperty("mail.smtp.auth.password");
       ExoAuthenticator auth = new ExoAuthenticator(username, password);
-      // S ystem.out.println("username: " + username + " , password " +
-      // password);
-      mailSession_ = Session.getDefaultInstance(props_, auth);
+      mailSession_ = Session.getInstance(props_, auth);
     } else {
-      mailSession_ = Session.getDefaultInstance(props_, null);
+      mailSession_ = Session.getInstance(props_, null);
     }
   }
 
@@ -67,8 +68,7 @@ public class MailServiceImpl implements MailService {
     return props_.getProperty("mail.smtp.host");
   }
 
-  public void sendMessage(String from, String to, String subject, String body) throws MessagingException,
-                                                                              IOException {
+  public void sendMessage(String from, String to, String subject, String body) throws Exception {
     Message message = new Message();
     message.setFrom(from);
     message.setTo(to);
@@ -77,7 +77,7 @@ public class MailServiceImpl implements MailService {
     sendMessage(message);
   }
 
-  public void sendMessage(Message message) throws MessagingException {
+  public void sendMessage(Message message) throws Exception {
     MimeMessage mimeMessage = new MimeMessage(getMailSession());
     String FROM = message.getFrom();
     String TO = message.getTo();
@@ -116,48 +116,45 @@ public class MailServiceImpl implements MailService {
     }
     // set Subject to the message
     mimeMessage.setSubject(subject);
-    // set body to the message
-    if ((attachment != null) && (attachment.size() > 0)) {
-      MimeBodyPart messageBodyPart = new MimeBodyPart();
-      if (mimeType != null && !mimeType.equals("")) {
-        messageBodyPart.setContent(body, mimeType);
-      } else
-        messageBodyPart.setContent(body, "text/plain");
-      Multipart multipart = new MimeMultipart();
-      multipart.addBodyPart(messageBodyPart);
-      // // set attachment to the message
-      // MimeBodyPart attachePart ;
-      // for (int i = 0; i < is.length; i++) {
-      // MimeBodyPart part = new MimeBodyPart() ;
-      // part.setContent(is[i], "text/plain") ;
-      // DataSource dsource = new MimePartDataSource(part) ;
-      // part.setDataHandler(new DataHandler(dsource)) ;
-      // part.setFileName("attache-" + i + ".txt") ;
-      // multipart.addBodyPart(part) ;
-      // attachePart = new MimeBodyPart(is[i]) ;
-      // DataSource source = new MimePartDataSource(attachePart) ;
-      // attachePart.setDataHandler(new DataHandler(source)) ;
-      // attachePart.setContent("daf ====================== dsfdsf"
-      // ,"text/html") ;
-      // attachePart.setFileName("attachPart 1") ;
-      // multipart.addBodyPart(attachePart,0) ;
-      // }
-      mimeMessage.setContent(multipart);
+    mimeMessage.setSubject(message.getSubject(), "UTF-8");
+    mimeMessage.setSentDate(new Date());
+
+    MimeMultipart multipPartRoot = new MimeMultipart("mixed");
+
+    MimeMultipart multipPartContent = new MimeMultipart("alternative");
+
+    if (attachment != null && attachment.size() != 0) {
+      MimeBodyPart contentPartRoot = new MimeBodyPart();
+      if (mimeType != null && mimeType.indexOf("text/plain") > -1)
+        contentPartRoot.setContent(body, "text/plain; charset=utf-8");
+      else
+        contentPartRoot.setContent(body, "text/html; charset=utf-8");
+      MimeBodyPart mimeBodyPart1 = new MimeBodyPart();
+      mimeBodyPart1.setContent(body, mimeType);
+      multipPartContent.addBodyPart(mimeBodyPart1);
+      multipPartRoot.addBodyPart(contentPartRoot);
+      for (Attachment att : attachment) {
+        InputStream is = att.getInputStream();
+        MimeBodyPart mimeBodyPart = new MimeBodyPart();
+        ByteArrayDataSource byteArrayDataSource = new ByteArrayDataSource(is, att.getMimeType());
+        mimeBodyPart.setDataHandler(new DataHandler(byteArrayDataSource));
+
+        mimeBodyPart.setDisposition(Part.ATTACHMENT);
+        if(att.getName()!= null) mimeBodyPart.setFileName(MimeUtility.encodeText(att.getName(), "utf-8", null));
+        multipPartRoot.addBodyPart(mimeBodyPart);
+      }
+      mimeMessage.setContent(multipPartRoot);
     } else {
-      if (mimeType != null && !mimeType.equals("")) {
-        mimeMessage.setContent(body, mimeType);
-      } else
-        mimeMessage.setContent(body, "text/plain");
+      if (mimeType != null && mimeType.indexOf("text/plain") > -1)
+        mimeMessage.setContent(body, "text/plain; charset=utf-8");
+      else
+        mimeMessage.setContent(body, "text/html; charset=utf-8");
     }
     sendMessage(mimeMessage);
   }
 
-  public void sendMessage(MimeMessage message) throws MessagingException {
-    try {
+  public void sendMessage(MimeMessage message) throws Exception {
       Transport.send(message);
-    } catch (MessagingException e) {
-      e.printStackTrace();
-    }
   }
 
   private String[] getArrs(String toArray) {

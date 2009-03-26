@@ -23,6 +23,7 @@ import java.io.InputStream;
  * Dec 28, 2005
  */
 public class Attachment {
+  private String name = null;
   private InputStream inputStream = null;
 
   private String      mimeType    = "";
@@ -30,7 +31,8 @@ public class Attachment {
   public InputStream getInputStream() {
     return inputStream;
   }
-
+  public String getName() { return name ; }
+  public void setName(String name_) { this.name = name_ ; }
   public void setInputStream(InputStream value) {
     inputStream = value;
   }
