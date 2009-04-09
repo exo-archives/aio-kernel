@@ -3,7 +3,8 @@
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
    xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
    xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
-  <component>
+
+  <!-- component>
     <key>org.exoplatform.services.cache.CacheService</key>
     <jmx-name>cache:type=CacheService</jmx-name>
     <type>org.exoplatform.services.cache.impl.CacheServiceImpl</type>
@@ -20,5 +21,5 @@
         </object>
       </object-param>
     </init-params>  
-  </component>
+  </component -->
 </configuration>
