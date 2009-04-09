@@ -45,6 +45,10 @@
   </component> 
 
   <component>
+    <type>org.exoplatform.services.scheduler.impl.QuartzSheduler</type>
+  </component>
+  
+  <component>
     <key>org.exoplatform.services.scheduler.JobSchedulerService</key>
     <type>org.exoplatform.services.scheduler.impl.JobSchedulerServiceImpl</type>
     <component-plugins>
