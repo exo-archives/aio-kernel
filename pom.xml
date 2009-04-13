@@ -96,15 +96,9 @@
           <includes>
             <include>**/${exo.test.includes}.java</include>
           </includes>
-          <excludes>
+          <!-- excludes>
             <exclude>**/*$*</exclude>
-            <exclude>**/SchedulerServiceTestBase.java</exclude>
-            <exclude>**/TestCompressData.java</exclude><!-- need to add test resources -->
-            <exclude>**/LogTest.java</exclude><!-- need to review test logic -->
-            <exclude>**/TestSimpleThreadPoolService.java</exclude><!-- no such service in *config*.xml -->
-            <exclude>**/TestCommunicationService.java</exclude><!--need to tune firewall-->
-            <exclude>**/TestNetService.java</exclude><!--need to tune firewall-->
-          </excludes>
+          </excludes -->
           <systemProperties>
             <property>
               <name>emma.coverage.out.file</name>

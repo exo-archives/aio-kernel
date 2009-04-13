@@ -35,32 +35,33 @@ public class TestCompressData extends BasicTestCase {
   public void testCompressData() throws Exception {
     CompressData compress = new CompressData();
     CompressData compressIS = new CompressData();
-    InputStream in = new FileInputStream("/home/exo/Desktop/ZipService.java");
-    InputStream in2 = new FileInputStream("/home/exo/Desktop/help.txt");
+    InputStream in = new FileInputStream("src/test/resources/ZipService.java");
+    InputStream in2 = new FileInputStream("src/test/resources/helper.txt");
     // ---------- TEST InputStream --------------//
     System.out.println("Test InputStream");
     compressIS.addInputStream("ZipService.java", in);
-    compressIS.addInputStream("help.txt", in2);
-    compressIS.createJarFile("/home/exo/Desktop/ZipService");
+    compressIS.addInputStream("helper.txt", in2);
+    compressIS.createJarFile("target/ZipService");
     // compress.createZipFile("/home/exo/Desktop/ZipService");
     in.close();
 
     // ----------- Test with Add File ------------------//
     System.out.println("Test File");
 
-    File file = new File("/home/exo/Desktop/ZipService.java");
-    File file2 = new File("/home/exo/Desktop/help.txt");
+    File file = new File("src/test/resources/ZipService.java");
+    File file2 = new File("src/test/resources/helper.txt");
     compress.addFile("ZipService.java", file);
-    compress.addFile("help.txt", file2);
-    compress.createZipFile("/home/exo/Desktop/testFile");
+    compress.addFile("helper.txt", file2);
+    compress.createZipFile("target/testFile");
     // compress.cleanDataInstance();
     // --------------- Test thu muc --------------------------------//
-    File folder = new File("/home/exo/setup/tailieu/chung/hcm/images");
-    File folder1 = new File("/home/exo/setup/tailieu/chung/hcm/xuly");
-    CompressData compressF = new CompressData();
-    compressF.addDir(folder);
-    compressF.addDir(folder1);
-    compressF.createZipFile("/home/exo/setup/tailieu/chung/hcm/TestZip");
+    // TODO what is t?
+//    File folder = new File("/home/exo/setup/tailieu/chung/hcm/images");
+//    File folder1 = new File("/home/exo/setup/tailieu/chung/hcm/xuly");
+//    CompressData compressF = new CompressData();
+//    compressF.addDir(folder);
+//    compressF.addDir(folder1);
+//    compressF.createZipFile("/home/exo/setup/tailieu/chung/hcm/TestZip");
     // compress.createJarFile("/home/exo/setup/tailieu/chung/hcm/TestJar");
   }
 }
