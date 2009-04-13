@@ -35,6 +35,7 @@ import java.util.zip.ZipOutputStream;
  * Created by The eXo Platform SAS Author : Chung Nguyen
  * nguyenchung136@yahoo.com Feb 8, 2006
  */
+@Deprecated
 public class ExoExpression {
   protected static final int EOF    = -1;
 

@@ -113,20 +113,20 @@ public class TestConcurrentCache extends BasicTestCase {
 
   public void testExpireOnGet() {
     CacheHelper cache = new CacheHelper();
-    cache.setLiveTimeMillis(5);
+    cache.setLiveTimeMillis(15);
     cache.put("Foo", v1);
     cache.assertPut("Foo", v1).assertEmpty();
-    waitFor(10);
+    waitFor(25);
     assertEquals(null, cache.get("Foo"));
     cache.assertExpire("Foo", v1).assertEmpty();
   }
 
   public void testExpireOnRemove() {
     CacheHelper cache = new CacheHelper();
-    cache.setLiveTimeMillis(5);
+    cache.setLiveTimeMillis(15);
     cache.put("Foo", v1);
     cache.assertPut("Foo", v1).assertEmpty();
-    waitFor(10);
+    waitFor(25);
     assertEquals(null, cache.remove("Foo"));
     cache.assertExpire("Foo", v1).assertEmpty();
   }

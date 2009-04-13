@@ -1,16 +1,39 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<configuration>
-  <component>
-    <key>org.exoplatform.services.net.NetService</key>
-    <type>org.exoplatform.services.net.impl.NetServiceImpl</type>
-  </component>
-  
+<configuration
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
+   xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
+
   <component>
     <key>org.exoplatform.services.listener.ListenerService</key>
     <type>org.exoplatform.services.listener.ListenerService</type>
   </component>
 
   <component>
+    <key>org.exoplatform.services.idgenerator.IDGeneratorService</key>
+    <type>org.exoplatform.services.idgenerator.impl.IDGeneratorServiceImpl</type>
+  </component>
+
+  <component>
+    <key>org.exoplatform.services.naming.InitialContextInitializer</key>
+    <type>org.exoplatform.services.naming.InitialContextInitializer</type>
+    <init-params>
+      <properties-param>
+        <name>default-properties</name>
+        <description>Default initial context properties</description>
+        <property name="java.naming.factory.initial" 
+                  value="org.exoplatform.services.naming.SimpleContextFactory"/>
+      </properties-param>
+    </init-params>
+  </component>     
+
+
+  <!-- component>
+    <key>org.exoplatform.services.net.NetService</key>
+    <type>org.exoplatform.services.net.impl.NetServiceImpl</type>
+  </component -->
+  
+  <!-- component>
     <key>org.exoplatform.services.scheduler.JobSchedulerService</key>
     <type>org.exoplatform.services.scheduler.impl.JobSchedulerServiceImpl</type>
     <component-plugins>
@@ -49,22 +72,17 @@
         <value>1.1</value>
       </value-param>
     </init-params>
-  </component>
+  </component -->
 
-  <component>
+  <!-- component>
     <key>org.exoplatform.services.scheduler.QueueTasks</key>
     <type>org.exoplatform.services.scheduler.QueueTasks</type>
-  </component>
-
-   <component>
-     <key>org.exoplatform.services.idgenerator.IDGeneratorService</key>
-     <type>org.exoplatform.services.idgenerator.impl.IDGeneratorServiceImpl</type>
-   </component>
+  </component -->
 
   <!-- ============================================================================= -->
   <!--                     M A I L      S E R V I C E                                -->
   <!-- ============================================================================= -->
-  <component>
+  <!-- component>
     <key>org.exoplatform.services.mail.MailService</key>
     <type>org.exoplatform.services.mail.impl.MailServiceImpl</type>
       <init-params>
@@ -79,19 +97,6 @@
           <property  name="mail.smtp.auth.password" value="exo" />
         </properties-param>
       </init-params>
-  </component> 
-
-  <component>
-    <key>org.exoplatform.services.naming.InitialContextInitializer</key>
-    <type>org.exoplatform.services.naming.InitialContextInitializer</type>
-    <init-params>
-      <properties-param>
-        <name>default-properties</name>
-        <description>Default initial context properties</description>
-        <property name="java.naming.factory.initial" 
-                  value="org.exoplatform.services.naming.SimpleContextFactory"/>
-      </properties-param>
-    </init-params>
-  </component>     
+  </component --> 
 
 </configuration>
