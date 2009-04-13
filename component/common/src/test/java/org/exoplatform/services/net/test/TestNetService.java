@@ -44,11 +44,11 @@ public class TestNetService extends BasicTestCase {
 
   public void testNetService() throws Exception {
     ping(null, 0);
-    ping("www.google.com.vn", 80);
+    ping("www.google.com", 80);
     ping("www.vnexpress.net", 80);
-    ping("www.googlevn.vn", 80);
+    ping("www.exoplatform.org", 80);
     // ----ping a host on LAN
-    ping("PC01", 25);
+    ping("localhost", 25);
   }
 
   private void ping(String host, int port) throws Exception {
