@@ -206,19 +206,4 @@
       <layout>legacy</layout>
     </repository>
   </repositories>
-
-  <profiles>
-    <profile>
-      <id>default</id>
-      <activation>
-        <property>
-          <name>default</name>
-        </property>
-        <activeByDefault>true</activeByDefault>
-      </activation>
-      <properties>
-        <org.exoplatform.tool.version>trunk</org.exoplatform.tool.version>
-      </properties>
-    </profile>
-  </profiles>
 </project>
