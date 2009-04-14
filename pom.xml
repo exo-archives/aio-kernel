@@ -10,13 +10,13 @@
   <groupId>org.exoplatform.kernel</groupId>
   <artifactId>config</artifactId>
   <name>eXo Kernel</name>
-  <version>2.1.1</version>
+  <version>2.1.2-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <scm>
-    <connection>scm:svn:http://svn.exoplatform.org/svnroot/exoplatform/projects/kernel/tags/2.1.1</connection>
-    <developerConnection>scm:svn:http://svn.exoplatform.org/svnroot/exoplatform/projects/kernel/tags/2.1.1</developerConnection>
-    <url>http://fisheye.exoplatform.org/browse/projects-kernel/tags/2.1.1</url>
+    <connection>scm:svn:http://svn.exoplatform.org/svnroot/exoplatform/projects/kernel/trunk</connection>
+    <developerConnection>scm:svn:http://svn.exoplatform.org/svnroot/exoplatform/projects/kernel/trunk</developerConnection>
+    <url>http://fisheye.exoplatform.org/browse/projects-kernel/trunk</url>
   </scm>
 
   <modules>
