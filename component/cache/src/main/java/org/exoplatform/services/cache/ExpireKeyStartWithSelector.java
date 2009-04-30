@@ -37,7 +37,7 @@ public class ExpireKeyStartWithSelector implements CachedObjectSelector {
     return false;
   }
 
-  public void onSelect(ExoCache cache, Serializable key, ObjectCacheInfo ocinfo) throws Exception {
+  public void onSelect(ExoCache cache, Serializable key, ObjectCacheInfo ocinfo) {
     cache.remove(key);
   }
 

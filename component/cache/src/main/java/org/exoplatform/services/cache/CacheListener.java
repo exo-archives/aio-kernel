@@ -19,17 +19,59 @@ package org.exoplatform.services.cache;
 import java.io.Serializable;
 
 /**
+ * The cache listener allows to be aware of various events that occurs for a cache. For performance reason
+ * a listener must perform short time lived operations or should consider to perform jobs asynchronously.
+ *
  * Created by The eXo Platform SAS Author : Tuan Nguyen
  * tuan08@users.sourceforge.net Sep 19, 2005
  */
-public interface CacheListener {
-  public void onExpire(ExoCache cache, Serializable key, Object obj) throws Exception;
+public interface CacheListener<K extends Serializable, V> {
 
-  public void onRemove(ExoCache cache, Serializable key, Object obj) throws Exception;
+  /**
+   * An entry is expired from the cache.
+   *
+   * @param context the listener context
+   * @param key the entry key
+   * @param obj the entry value
+   * @throws Exception any exception
+   */
+  public void onExpire(CacheListenerContext context, K key, V obj) throws Exception;
 
-  public void onPut(ExoCache cache, Serializable key, Object obj) throws Exception;
+  /**
+   * An entry is removed from the cache.
+   *
+   * @param context the listener context
+   * @param key the entry key
+   * @param obj the entry value
+   * @throws Exception any exception
+   */
+  public void onRemove(CacheListenerContext context, K key, V obj) throws Exception;
 
-  public void onGet(ExoCache cache, Serializable key, Object obj) throws Exception;
+  /**
+   * An entry is inserted in the cache.
+   *
+   * @param context the listener context
+   * @param key the entry key
+   * @param obj the entry value
+   * @throws Exception any exception
+   */
+  public void onPut(CacheListenerContext context, K key, V obj) throws Exception;
 
-  public void onClearCache(ExoCache cache) throws Exception;
+  /**
+   * An entry is retrieved from the cache.
+   *
+   * @param context the listener context
+   * @param key the entry key
+   * @param obj the entry value
+   * @throws Exception any exception
+   */
+  public void onGet(CacheListenerContext context, K key, V obj) throws Exception;
+
+  /**
+   * The cache is globally cleared.
+   *
+   * @param context the listener context
+   * @throws Exception any exception
+   */
+  public void onClearCache(CacheListenerContext context) throws Exception;
 }

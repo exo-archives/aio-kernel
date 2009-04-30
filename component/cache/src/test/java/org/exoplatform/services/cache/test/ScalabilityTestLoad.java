@@ -30,6 +30,7 @@ import java.io.Serializable;
 import org.exoplatform.services.cache.ExoCache;
 import org.exoplatform.services.cache.FIFOExoCache;
 import org.exoplatform.services.cache.CacheListener;
+import org.exoplatform.services.cache.CacheListenerContext;
 import org.exoplatform.services.cache.concurrent.ConcurrentFIFOExoCache;
 import org.apache.commons.logging.Log;
 
@@ -107,7 +108,7 @@ public class ScalabilityTestLoad extends TestCase {
       this.name = name;
     }
 
-    abstract ExoCache createCache(int cacheSize);
+    abstract ExoCache<Serializable, Object> createCache(int cacheSize);
 
   }
 
@@ -121,28 +122,28 @@ public class ScalabilityTestLoad extends TestCase {
   }
 
   private static CacheProvider concurrentFIFO = new CacheProvider("Concurrent FIFO cache") {
-    public ExoCache createCache(int cacheSize) {
-      return new ConcurrentFIFOExoCache(cacheSize, createLog());
+    public ExoCache<Serializable, Object> createCache(int cacheSize) {
+      return new ConcurrentFIFOExoCache<Serializable, Object>(cacheSize, createLog());
     }
   };
 
   private static CacheProvider fifo = new CacheProvider("FIFO cache") {
-    public ExoCache createCache(int cacheSize) {
-      return new FIFOExoCache(cacheSize);
+    public ExoCache<Serializable, Object> createCache(int cacheSize) {
+      return new FIFOExoCache<Serializable, Object>(cacheSize);
     }
   };
 
   private static CacheProvider concurrentFIFOWithListener = new CacheProvider("Concurrent FIFO cache with listener") {
-    public ExoCache createCache(int cacheSize) {
-      ConcurrentFIFOExoCache cache = new ConcurrentFIFOExoCache(cacheSize, createLog());
+    public ExoCache<Serializable, Object> createCache(int cacheSize) {
+      ConcurrentFIFOExoCache<Serializable, Object> cache = new ConcurrentFIFOExoCache<Serializable, Object>(cacheSize, createLog());
       cache.addCacheListener(new SimpleCacheListener());
       return cache;
     }
   };
 
   private static CacheProvider fifoWithListener = new CacheProvider("FIFO cache with listener") {
-    public ExoCache createCache(int cacheSize) {
-      FIFOExoCache cache = new FIFOExoCache(cacheSize);
+    public ExoCache<Serializable, Object> createCache(int cacheSize) {
+      FIFOExoCache<Serializable, Object> cache = new FIFOExoCache<Serializable, Object>(cacheSize);
       cache.addCacheListener(new SimpleCacheListener());
       return cache;
     }
@@ -171,9 +172,9 @@ public class ScalabilityTestLoad extends TestCase {
     private final ExecutorService executor;
     private final ExecutorCompletionService<Worker> completionService;
     private final Worker[] workers;
-    private final ExoCache cache;
+    private final ExoCache<Serializable, Object> cache;
 
-    private Test(ExoCache cache, Config config) {
+    private Test(ExoCache<Serializable, Object> cache, Config config) {
       this.config = config;
       this.executor = Executors.newFixedThreadPool(config.threadSize);
       this.completionService = new ExecutorCompletionService<Worker>(executor);
@@ -267,19 +268,19 @@ public class ScalabilityTestLoad extends TestCase {
     }
   }
 
-  private static class SimpleCacheListener implements CacheListener {
-    public void onGet(ExoCache cache, Serializable key, Object obj) throws Exception {
+  private static class SimpleCacheListener implements CacheListener<Serializable, Object> {
+    public void onGet(CacheListenerContext context, Serializable key, Object obj) throws Exception {
     }
-    public void onExpire(ExoCache cache, Serializable key, Object obj) throws Exception {
+    public void onExpire(CacheListenerContext context, Serializable key, Object obj) throws Exception {
       doWait();
     }
-    public void onRemove(ExoCache cache, Serializable key, Object obj) throws Exception {
+    public void onRemove(CacheListenerContext context, Serializable key, Object obj) throws Exception {
       doWait();
     }
-    public void onPut(ExoCache cache, Serializable key, Object obj) throws Exception {
+    public void onPut(CacheListenerContext context, Serializable key, Object obj) throws Exception {
       doWait();
     }
-    public void onClearCache(ExoCache cache) throws Exception {
+    public void onClearCache(CacheListenerContext context) throws Exception {
       doWait();
     }
     private void doWait() throws Exception {

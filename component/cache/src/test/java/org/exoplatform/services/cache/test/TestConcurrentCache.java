@@ -18,12 +18,14 @@ package org.exoplatform.services.cache.test;
 
 import org.exoplatform.test.BasicTestCase;
 import org.exoplatform.services.cache.CacheListener;
+import org.exoplatform.services.cache.CacheListenerContext;
+import org.exoplatform.services.cache.CachedObjectSelector;
+import org.exoplatform.services.cache.ObjectCacheInfo;
 import org.exoplatform.services.cache.ExoCache;
 import org.exoplatform.services.cache.concurrent.ConcurrentFIFOExoCache;
 
 import java.io.Serializable;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.Map;
@@ -42,14 +44,14 @@ public class TestConcurrentCache extends BasicTestCase {
   private final Object v5 = new Object();
 
   public void testNullKey() {
-    CacheHelper cache = new CacheHelper();
+    CacheHelper<String, Object> cache = new CacheHelper<String, Object>();
     cache.put("a", "a");
     assertNull(cache.get(null));
     try {
       cache.put(null, new Object());
       fail();
     }
-    catch (IllegalArgumentException ignore) {
+    catch (NullPointerException ignore) {
       assertEquals(1, cache.getCacheSize());
       assertEquals("a", cache.get("a"));
     }
@@ -57,7 +59,7 @@ public class TestConcurrentCache extends BasicTestCase {
       cache.remove(null);
       fail();
     }
-    catch (IllegalArgumentException ignore) {
+    catch (NullPointerException ignore) {
       assertEquals(1, cache.getCacheSize());
       assertEquals("a", cache.get("a"));
     }
@@ -65,12 +67,12 @@ public class TestConcurrentCache extends BasicTestCase {
       cache.putMap(null);
       fail();
     }
-    catch (IllegalArgumentException ignore) {
+    catch (NullPointerException ignore) {
       assertEquals(1, cache.getCacheSize());
       assertEquals("a", cache.get("a"));
     }
     try {
-      Map tmp = new HashMap();
+      Map<String, String> tmp = new HashMap<String, String>();
       tmp.put("a", "a");
       tmp.put(null, "a");
       cache.putMap(tmp);
@@ -83,7 +85,7 @@ public class TestConcurrentCache extends BasicTestCase {
   }
 
   public void testPut() {
-    CacheHelper cache = new CacheHelper();
+    CacheHelper<String, Object> cache = new CacheHelper<String, Object>();
     cache.put("Foo", v1);
     cache.assertPut("Foo", v1).assertEmpty();
     assertEquals(v1, cache.get("Foo"));
@@ -91,7 +93,7 @@ public class TestConcurrentCache extends BasicTestCase {
   }
 
   public void testCacheSize() {
-    CacheHelper cache = new CacheHelper();
+    CacheHelper<String, Object> cache = new CacheHelper<String, Object>();
     assertEquals(0, cache.getCacheSize());
     cache.put("Foo", v1);
     assertEquals(1, cache.getCacheSize());
@@ -102,7 +104,7 @@ public class TestConcurrentCache extends BasicTestCase {
   }
 
   public void testOverCapacity() {
-    CacheHelper cache = new CacheHelper();
+    CacheHelper<String, Object> cache = new CacheHelper<String, Object>();
     cache.put("Foo", v1);
     cache.assertPut("Foo", v1).assertEmpty();
     cache.put("Bar", v2);
@@ -115,7 +117,7 @@ public class TestConcurrentCache extends BasicTestCase {
   }
 
   public void testPromotion() {
-    CacheHelper cache = new CacheHelper();
+    CacheHelper<String, Object> cache = new CacheHelper<String, Object>();
     cache.put("Foo", v1);
     cache.assertPut("Foo", v1).assertEmpty();
     cache.put("Bar", v2);
@@ -130,7 +132,7 @@ public class TestConcurrentCache extends BasicTestCase {
   }
 
   public void testRemove() {
-    CacheHelper cache = new CacheHelper();
+    CacheHelper<String, Object> cache = new CacheHelper<String, Object>();
     cache.put("Foo", v1);
     cache.assertPut("Foo", v1).assertEmpty();
     assertEquals(v1, cache.remove("Foo"));
@@ -139,7 +141,7 @@ public class TestConcurrentCache extends BasicTestCase {
   }
 
   public void testExpireOnPut() {
-    CacheHelper cache = new CacheHelper();
+    CacheHelper<String, Object> cache = new CacheHelper<String, Object>();
     cache.setMaxSize(4);
     cache.put("Foo", v1);
     cache.assertPut("Foo", v1).assertEmpty();
@@ -155,7 +157,7 @@ public class TestConcurrentCache extends BasicTestCase {
   }
 
   public void testExpireOnGet() {
-    CacheHelper cache = new CacheHelper();
+    CacheHelper<String, Object> cache = new CacheHelper<String, Object>();
     cache.setLiveTimeMillis(15);
     cache.put("Foo", v1);
     cache.assertPut("Foo", v1).assertEmpty();
@@ -165,7 +167,7 @@ public class TestConcurrentCache extends BasicTestCase {
   }
 
   public void testExpireOnRemove() {
-    CacheHelper cache = new CacheHelper();
+    CacheHelper<String, Object> cache = new CacheHelper<String, Object>();
     cache.setLiveTimeMillis(15);
     cache.put("Foo", v1);
     cache.assertPut("Foo", v1).assertEmpty();
@@ -175,12 +177,12 @@ public class TestConcurrentCache extends BasicTestCase {
   }
 
   public void testGetCachedObjects() {
-    CacheHelper cache = new CacheHelper(4);
+    CacheHelper<String, Object> cache = new CacheHelper<String, Object>(4);
     cache.put("Foo", v1);
     cache.put("Bar", v2);
     cache.put("Juu", v3);
-    Set cachedSet = new HashSet(cache.getCachedObjects());
-    Set expectedSet = new HashSet();
+    Set<Object> cachedSet = new HashSet<Object>(cache.getCachedObjects());
+    Set<Object> expectedSet = new HashSet<Object>();
     expectedSet.add(v1);
     expectedSet.add(v2);
     expectedSet.add(v3);
@@ -196,7 +198,7 @@ public class TestConcurrentCache extends BasicTestCase {
     }
   }
 
-  private static class CacheHelper extends ConcurrentFIFOExoCache implements CacheListener {
+  private static class CacheHelper<K extends Serializable, V> extends ConcurrentFIFOExoCache<K, V> implements CacheListener<K, V> {
 
     private final LinkedList<Event> events;
 
@@ -257,23 +259,23 @@ public class TestConcurrentCache extends BasicTestCase {
       return this;
     }
 
-    public void onExpire(ExoCache cache, Serializable key, Object obj) throws Exception {
+    public void onExpire(CacheListenerContext context, K key, V obj) throws Exception {
       events.addLast(new EntryEvent(EntryEvent.Type.EXPIRE, key, obj));
     }
 
-    public void onRemove(ExoCache cache, Serializable key, Object obj) throws Exception {
+    public void onRemove(CacheListenerContext context, K key, V obj) throws Exception {
       events.addLast(new EntryEvent(EntryEvent.Type.REMOVE, key, obj));
     }
 
-    public void onPut(ExoCache cache, Serializable key, Object obj) throws Exception {
+    public void onPut(CacheListenerContext context, K key, V obj) throws Exception {
       events.addLast(new EntryEvent(EntryEvent.Type.PUT, key, obj));
     }
 
-    public void onGet(ExoCache cache, Serializable key, Object obj) throws Exception {
+    public void onGet(CacheListenerContext context, K key, V obj) throws Exception {
       events.addLast(new EntryEvent(EntryEvent.Type.GET, key, obj));
     }
 
-    public void onClearCache(ExoCache cache) throws Exception {
+    public void onClearCache(CacheListenerContext context) throws Exception {
       events.addLast(new ClearEvent());
     }
 

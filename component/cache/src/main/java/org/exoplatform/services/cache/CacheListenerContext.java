@@ -14,30 +14,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.services.cache.concurrent;
-
-import java.io.Serializable;
+package org.exoplatform.services.cache;
 
 /**
- * A strong reference to an object.
+ * A context for a cache listener.
  *
  * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
  * @version $Revision$
  */
-class SimpleObjectRef<K extends Serializable, V> extends ObjectRef<K, V> {
+public interface CacheListenerContext {
 
-  private final V object;
+  /**
+   * Returns cache infos.
+   *
+   * @return cache info
+   */
+  CacheInfo getCacheInfo();
 
-  SimpleObjectRef(long expirationTime, K name, V object) {
-    super(expirationTime, name);
-    this.object = object;
-  }
-
-  public boolean isValid() {
-    return System.currentTimeMillis() < expirationTime;
-  }
-
-  public V getObject() {
-    return object;
-  }
 }

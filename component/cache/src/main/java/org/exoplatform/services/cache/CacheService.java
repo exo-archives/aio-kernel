@@ -20,16 +20,36 @@ import java.io.Serializable;
 import java.util.Collection;
 
 /**
+ * The cache service.
+ *
  * Created by The eXo Platform SAS. Author : Tuan Nguyen
  * tuan08@users.sourceforge.net Date: Jun 14, 2003 Time: 1:12:22 PM
  */
 public interface CacheService {
 
+  /**
+   * Adds a cache configuration plugin.
+   *
+   * @param plugin the plugin
+   */
   public void addExoCacheConfig(ExoCacheConfigPlugin plugin);
 
-  public ExoCache getCacheInstance(String region);
+  /**
+   * Returns a specific cache instance.
+   *
+   * @param region the cache region
+   * @param <K> the key type
+   * @param <V> the value type
+   * @return the cache
+   * @throws NullPointerException if the region argument is null
+   * @throws IllegalArgumentException if the region argument length is zero
+   */
+  public <K extends Serializable, V> ExoCache<K, V> getCacheInstance(String region) throws NullPointerException, IllegalArgumentException;
 
-  public Collection getAllCacheInstances();
-
-  public void synchronize(String region, Serializable key, Object value) throws Exception;
+  /**
+   * Returns a collection of all the cache instances.
+   *
+   * @return all the caches
+   */
+  public Collection<ExoCache<? extends Serializable, ?>> getAllCacheInstances();
 }

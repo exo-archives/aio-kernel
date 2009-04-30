@@ -14,30 +14,41 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.services.cache.concurrent;
-
-import java.io.Serializable;
+package org.exoplatform.services.cache;
 
 /**
- * A strong reference to an object.
+ * Provides information about a cache.
  *
  * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
  * @version $Revision$
  */
-class SimpleObjectRef<K extends Serializable, V> extends ObjectRef<K, V> {
+public interface CacheInfo {
 
-  private final V object;
+  /**
+   * Returns the cache name.
+   *
+   * @return the cache name
+   */
+  String getName();
 
-  SimpleObjectRef(long expirationTime, K name, V object) {
-    super(expirationTime, name);
-    this.object = object;
-  }
+  /**
+   * Returns the cache max size.
+   *
+   * @return the max size
+   */
+  int getMaxSize();
 
-  public boolean isValid() {
-    return System.currentTimeMillis() < expirationTime;
-  }
+  /**
+   * Returns the cache entry life time in seconds.
+   *
+   * @return the life time
+   */
+  long getLiveTime();
 
-  public V getObject() {
-    return object;
-  }
+  /**
+   * Returns the cache size.
+   *
+   * @return the size
+   */
+  int getSize();
 }

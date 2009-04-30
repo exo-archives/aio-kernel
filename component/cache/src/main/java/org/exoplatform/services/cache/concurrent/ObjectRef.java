@@ -26,19 +26,19 @@ import java.io.Serializable;
  * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
  * @version $Revision$
  */
-abstract class ObjectRef extends Item implements ObjectCacheInfo {
+abstract class ObjectRef<K extends Serializable, V> extends Item implements ObjectCacheInfo<V> {
 
   protected final long expirationTime;
-  protected final Serializable name;
+  protected final K name;
 
-  protected ObjectRef(long expirationTime, Serializable name) {
+  protected ObjectRef(long expirationTime, K name) {
     this.name = name;
     this.expirationTime = expirationTime;
   }
 
   public abstract boolean isValid();
 
-  public abstract Object getObject();
+  public abstract V getObject();
 
   // ObjectCacheInfo impl
 
@@ -46,7 +46,7 @@ abstract class ObjectRef extends Item implements ObjectCacheInfo {
     return expirationTime;
   }
 
-  public Object get() {
+  public V get() {
     return getObject();
   }
 }

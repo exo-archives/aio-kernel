@@ -17,11 +17,25 @@
 package org.exoplatform.services.cache;
 
 /**
+ * Wraps a cache entry to provide meta information in addition of the entry value.
+ *
  * Created by The eXo Platform SAS Author : Tuan Nguyen
  * tuan08@users.sourceforge.net Sep 19, 2005
+ * @param <V> the value type
  */
-public interface ObjectCacheInfo {
+public interface ObjectCacheInfo<V> {
+
+  /**
+   * Returns the expiration time of the entry in milli seconds.
+   *
+   * @return the expiration time
+   */
   public long getExpireTime();
 
-  public Object get();
+  /**
+   * Returns the entry value which may be null.
+   *
+   * @return the entry value
+   */
+  public V get();
 }

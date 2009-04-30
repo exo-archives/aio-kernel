@@ -19,12 +19,14 @@ package org.exoplatform.services.cache.concurrent;
 import org.exoplatform.services.cache.ExoCache;
 import org.exoplatform.services.cache.CachedObjectSelector;
 import org.exoplatform.services.cache.CacheListener;
+import org.exoplatform.services.cache.ObjectCacheInfo;
 import org.apache.commons.logging.Log;
 
 import java.io.Serializable;
 import java.util.Map;
 import java.util.List;
 import java.util.LinkedList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * An {@link org.exoplatform.services.cache.ExoCache} implementation based on {@link java.util.concurrent.ConcurrentHashMap}
@@ -33,21 +35,19 @@ import java.util.LinkedList;
  * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
  * @version $Revision$
  */
-public class ConcurrentFIFOExoCache implements ExoCache {
+public class ConcurrentFIFOExoCache<K extends Serializable, V> implements ExoCache<K, V> {
 
   private static int DEFAULT_MAX_SIZE = 50;
 
   private final Log log;
   private volatile long liveTimeMillis;
   volatile int maxSize;
-  private CacheListener[] listeners;
-  private CacheState state;
+  private CopyOnWriteArrayList<ListenerContext<K, V>> listeners;
+  private CacheState<K, V> state;
   volatile int hits = 0;
   volatile int misses = 0;
   private String label;
   private String name;
-  private boolean distributed = false;
-  private boolean replicated = false;
   private boolean logEnabled = false;
 
   public ConcurrentFIFOExoCache() {
@@ -73,9 +73,10 @@ public class ConcurrentFIFOExoCache implements ExoCache {
   public ConcurrentFIFOExoCache(String name, int maxSize, Log log) {
     this.maxSize = maxSize;
     this.name = name;
-    this.state = new CacheState(this, log);
+    this.state = new CacheState<K, V>(this, log);
     this.liveTimeMillis = -1;
     this.log = log;
+    this.listeners = new CopyOnWriteArrayList<ListenerContext<K, V>>();
   }
 
   public void assertConsistent() {
@@ -107,11 +108,12 @@ public class ConcurrentFIFOExoCache implements ExoCache {
   }
 
   public long getLiveTime() {
-    return liveTimeMillis / 1000;
+    long tmp = getLiveTimeMillis();
+    return tmp == - 1 ? -1 : tmp / 1000;
   }
 
   public void setLiveTime(long period) {
-    this.liveTimeMillis = period >= 0 ? period * 1000 : -1;
+    setLiveTimeMillis(period * 1000);
   }
 
   public long getLiveTimeMillis() {
@@ -119,6 +121,9 @@ public class ConcurrentFIFOExoCache implements ExoCache {
   }
 
   public void setLiveTimeMillis(long liveTimeMillis) {
+    if (liveTimeMillis < 0) {
+      liveTimeMillis = -1;
+    }
     this.liveTimeMillis = liveTimeMillis;
   }
 
@@ -130,24 +135,26 @@ public class ConcurrentFIFOExoCache implements ExoCache {
     this.maxSize = max;
   }
 
-  public Object get(Serializable name) {
+  public V get(Serializable name) {
     if (name == null) {
       return null;
     }
     return state.get(name);
   }
 
-  public void put(Serializable name, Object obj) {
+  public void put(K name, V obj) {
     if (name == null) {
-      throw new IllegalArgumentException("No null cache key accepted");
+      throw new NullPointerException("No null cache key accepted");
     }
-    long expirationTime = liveTimeMillis > 0 ? System.currentTimeMillis() + liveTimeMillis : Long.MAX_VALUE;
-    state.put(expirationTime, name, obj);
+    if (liveTimeMillis != 0) {
+      long expirationTime = liveTimeMillis > 0 ? System.currentTimeMillis() + liveTimeMillis : Long.MAX_VALUE;
+      state.put(expirationTime, name, obj);
+    }
   }
 
-  public void putMap(Map<Serializable, Object> objs) {
+  public void putMap(Map<? extends K, ? extends V> objs) {
     if (objs == null) {
-      throw new IllegalArgumentException("No null map accepted");
+      throw new NullPointerException("No null map accepted");
     }
     long expirationTime = liveTimeMillis > 0 ? System.currentTimeMillis() + liveTimeMillis : Long.MAX_VALUE;
     for (Serializable name : objs.keySet()) {
@@ -155,22 +162,22 @@ public class ConcurrentFIFOExoCache implements ExoCache {
         throw new IllegalArgumentException("No null cache key accepted");
       }
     }
-    for (Map.Entry<Serializable, Object> entry : objs.entrySet()) {
+    for (Map.Entry<? extends K, ? extends V> entry : objs.entrySet()) {
       state.put(expirationTime, entry.getKey(), entry.getValue());
     }
   }
 
-  public Object remove(Serializable name) {
+  public V remove(Serializable name) {
     if (name == null) {
-      throw new IllegalArgumentException("No null cache key accepted");
+      throw new NullPointerException("No null cache key accepted");
     }
     return state.remove(name);
   }
 
-  public List getCachedObjects() {
-    LinkedList<Object> list = new LinkedList<Object>();
-    for (ObjectRef objectRef : state.map.values()) {
-      Object object = objectRef.getObject();
+  public List<? extends V> getCachedObjects() {
+    LinkedList<V> list = new LinkedList<V>();
+    for (ObjectRef<K, V> objectRef : state.map.values()) {
+      V object = objectRef.getObject();
       if (objectRef.isValid()) {
         list.add(object);
       }
@@ -178,24 +185,25 @@ public class ConcurrentFIFOExoCache implements ExoCache {
     return list;
   }
 
-  public List removeCachedObjects() throws Exception {
-    List list = getCachedObjects();
+  public List<? extends V> removeCachedObjects() {
+    List<? extends V> list = getCachedObjects();
     clearCache();
     return list;
   }
 
   public void clearCache() {
-    state = new CacheState(this, log);
+    state = new CacheState<K, V>(this, log);
   }
 
-  public void select(CachedObjectSelector selector) throws Exception {
+  public void select(CachedObjectSelector<? super K, ? super V> selector) throws Exception {
     if (selector == null) {
       throw new IllegalArgumentException("No null selector");
     }
-    for (Map.Entry<Serializable, ObjectRef> entry : state.map.entrySet()) {
-      Serializable key = entry.getKey();
-      ObjectRef info = entry.getValue();
-      if (selector.select(key, info)) {
+    for (Map.Entry<K, ObjectRef<K, V>> entry : state.map.entrySet()) {
+      K key = entry.getKey();
+      ObjectRef<K, V> info = entry.getValue();
+      ObjectCacheInfo<V> bilto = null;
+      if (selector.select(key, bilto)) {
         selector.onSelect(this, key, info);
       }
     }
@@ -213,34 +221,11 @@ public class ConcurrentFIFOExoCache implements ExoCache {
     return misses;
   }
 
-  public synchronized void addCacheListener(CacheListener listener) {
+  public synchronized void addCacheListener(CacheListener<? super K, ? super V> listener) {
     if (listener == null) {
-      return;
+      throw new NullPointerException();
     }
-    if (listeners == null) {
-      listeners = new CacheListener[]{listener};
-    } else {
-      CacheListener[] tmp = new CacheListener[listeners.length + 1];
-      System.arraycopy(listeners, 0, tmp, 0, listeners.length);
-      tmp[listeners.length] = listener;
-      listeners = tmp;
-    }
-  }
-
-  public boolean isDistributed() {
-    return distributed;
-  }
-
-  public void setDistributed(boolean distributed) {
-    this.distributed = distributed;
-  }
-
-  public boolean isReplicated() {
-    return replicated;
-  }
-
-  public void setReplicated(boolean replicated) {
-    this.replicated = replicated;
+    listeners.add(new ListenerContext<K,V>(listener, this));
   }
 
   public boolean isLogEnabled() {
@@ -253,58 +238,33 @@ public class ConcurrentFIFOExoCache implements ExoCache {
 
   //
 
-  void onExpire(Serializable key, Object obj) {
-    if (listeners == null)
-      return;
-    for (CacheListener listener : listeners)
-      try {
-        listener.onExpire(this, key, obj);
-      }
-      catch (Exception ignore) {
-      }
+  void onExpire(K key, V obj) {
+    if (!listeners.isEmpty())
+      for (ListenerContext<K, V> context : listeners)
+        context.onExpire(key, obj);
   }
 
-  void onRemove(Serializable key, Object obj) {
-    if (listeners == null)
-      return;
-    for (CacheListener listener : listeners)
-      try {
-        listener.onRemove(this, key, obj);
-      }
-      catch (Exception ignore) {
-      }
+  void onRemove(K key, V obj) {
+    if (!listeners.isEmpty())
+      for (ListenerContext<K, V> context  : listeners)
+        context.onRemove(key, obj);
   }
 
-  void onPut(Serializable key, Object obj) {
-    if (listeners == null)
-      return;
-    for (CacheListener listener : listeners)
-      try {
-        listener.onPut(this, key, obj);
-      }
-      catch (Exception ignore) {
-      }
+  void onPut(K key, V obj) {
+    if (!listeners.isEmpty())
+      for (ListenerContext<K, V> context  : listeners)
+        context.onPut(key, obj);
   }
 
-  void onGet(Serializable key, Object obj) {
-    if (listeners == null)
-      return;
-    for (CacheListener listener : listeners)
-      try {
-        listener.onGet(this, key, obj);
-      }
-      catch (Exception ignore) {
-      }
+  void onGet(K key, V obj) {
+    if (!listeners.isEmpty())
+      for (ListenerContext<K, V> context  : listeners)
+        context.onGet(key, obj);
   }
 
   void onClearCache() {
-    if (listeners == null)
-      return;
-    for (CacheListener listener : listeners)
-      try {
-        listener.onClearCache(this);
-      }
-      catch (Exception ignore) {
-      }
+    if (!listeners.isEmpty())
+      for (ListenerContext<K, V> context  : listeners)
+        context.onClearCache();
   }
 }

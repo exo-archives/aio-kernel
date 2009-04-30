@@ -28,7 +28,7 @@ import java.util.List;
  * @email: tuan08@users.sourceforge.net
  * @version: $Id: InitParams.java 5799 2006-05-28 17:55:42Z geaz $
  */
-public class InitParams extends HashMap {
+public class InitParams extends HashMap<String, Object> {
 
   public InitParams() {
   }
@@ -49,16 +49,16 @@ public class InitParams extends HashMap {
     return (ObjectParameter) get(name);
   }
 
-  public List getObjectParamValues(Class type) {
-    List list = new ArrayList();
-    Iterator i = values().iterator();
-    while (i.hasNext()) {
-      Object o = i.next();
+  public <T> List<T> getObjectParamValues(Class<T> type) {
+    List<T> list = new ArrayList<T>();
+    for (Object o : values()) {
       if (o instanceof ObjectParameter) {
-        ObjectParameter param = (ObjectParameter) o;
+        ObjectParameter param = (ObjectParameter)o;
         Object paramValue = param.getObject();
-        if (type.isInstance(paramValue))
-          list.add(paramValue);
+        if (type.isInstance(paramValue)) {
+          T t = type.cast(paramValue);
+          list.add(t);
+        }
       }
     }
     return list;
@@ -77,51 +77,35 @@ public class InitParams extends HashMap {
   }
 
   // --------------xml binding---------------------------------
+
   public void addParam(Object o) {
     Parameter param = (Parameter) o;
     put(param.getName(), param);
   }
 
-  public Iterator getValueParamIterator() {
-    List list = new ArrayList();
-    Iterator i = values().iterator();
-    while (i.hasNext()) {
-      Object o = i.next();
-      if (o instanceof ValueParam)
-        list.add(o);
-    }
-    return list.iterator();
+  public Iterator<ValueParam> getValueParamIterator() {
+    return getValueIterator(ValueParam.class);
   }
 
-  public Iterator getValuesParamIterator() {
-    List list = new ArrayList();
-    Iterator i = values().iterator();
-    while (i.hasNext()) {
-      Object o = i.next();
-      if (o instanceof ValuesParam)
-        list.add(o);
-    }
-    return list.iterator();
+  public Iterator<ValuesParam> getValuesParamIterator() {
+    return getValueIterator(ValuesParam.class);
   }
 
   public Iterator getPropertiesParamIterator() {
-    List list = new ArrayList();
-    Iterator i = values().iterator();
-    while (i.hasNext()) {
-      Object o = i.next();
-      if (o instanceof PropertiesParam)
-        list.add(o);
-    }
-    return list.iterator();
+    return getValueIterator(PropertiesParam.class);
   }
 
   public Iterator getObjectParamIterator() {
-    List list = new ArrayList();
-    Iterator i = values().iterator();
-    while (i.hasNext()) {
-      Object o = i.next();
-      if (o instanceof ObjectParameter)
-        list.add(o);
+    return getValueIterator(ObjectParameter.class);
+  }
+
+  private <T> Iterator<T> getValueIterator(Class<T> type) {
+    List<T> list = new ArrayList<T>();
+    for (Object o : values()) {
+      if (type.isInstance(o)) {
+        T t = type.cast(o);
+        list.add(t);
+      }
     }
     return list.iterator();
   }

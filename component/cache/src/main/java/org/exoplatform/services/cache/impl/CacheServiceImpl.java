@@ -20,15 +20,16 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.services.cache.BaseExoCache;
 import org.exoplatform.services.cache.CacheService;
 import org.exoplatform.services.cache.ExoCache;
 import org.exoplatform.services.cache.ExoCacheConfig;
 import org.exoplatform.services.cache.ExoCacheConfigPlugin;
 import org.exoplatform.services.cache.SimpleExoCache;
+import org.exoplatform.services.cache.concurrent.ConcurrentFIFOExoCache;
 import org.exoplatform.management.annotations.ManagedBy;
 
 /**
@@ -39,20 +40,17 @@ import org.exoplatform.management.annotations.ManagedBy;
 public class CacheServiceImpl implements CacheService {
   private HashMap<String, ExoCacheConfig> configs_  = new HashMap<String, ExoCacheConfig>();
 
-  private HashMap<String, ExoCache>       cacheMap_ = new HashMap<String, ExoCache>();
+  private final ConcurrentHashMap<String, ExoCache<? extends Serializable, ?>> cacheMap_ = new ConcurrentHashMap<String, ExoCache<? extends Serializable, ?>>();
 
   private ExoCacheConfig                  defaultConfig_;
 
-  private DistributedCacheListener        distrbutedListener_;
-  
   private LoggingCacheListener            loggingListener_;
 
   CacheServiceManaged managed;
 
   public CacheServiceImpl(InitParams params) throws Exception {
-    List configs = params.getObjectParamValues(ExoCacheConfig.class);
-    for (int i = 0; i < configs.size(); i++) {
-      ExoCacheConfig config = (ExoCacheConfig) configs.get(i);
+    List<ExoCacheConfig> configs = params.getObjectParamValues(ExoCacheConfig.class);
+    for (ExoCacheConfig config : configs) {
       configs_.put(config.getName(), config);
     }
     defaultConfig_ = configs_.get("default");
@@ -70,85 +68,60 @@ public class CacheServiceImpl implements CacheService {
     }
   }
 
-  public void setDistributedCacheListener(DistributedCacheListener listener) {
-    distrbutedListener_ = listener;
-  }
-
-  public ExoCache getCacheInstance(String region) {
+  public <K extends Serializable, V> ExoCache<K, V> getCacheInstance(String region) {
     if (region == null) {
       throw new NullPointerException("region cannot be null");
     }
     if (region.length() == 0) {
       throw new IllegalArgumentException("region cannot be empty");
     }
-    ExoCache cache = cacheMap_.get(region);
+    ExoCache<? extends Serializable, ?> cache = cacheMap_.get(region);
     if (cache == null) {
-      synchronized (cacheMap_) {
-        ExoCacheConfig config = configs_.get(region);
-        if (config == null)
-          config = defaultConfig_;
-        try {
-          cache = createCacheInstance(region);
-          cacheMap_.put(region, cache);
-        }
-        catch (Exception e) {
-          e.printStackTrace();
+      try {
+        cache = createCacheInstance(region);
+        ExoCache<? extends Serializable, ?> existing = cacheMap_.putIfAbsent(region, cache);
+        if (existing != null) {
+          cache = existing;
         }
       }
+      catch (Exception e) {
+        e.printStackTrace();
+      }
     }
-    return cache;
+    return (ExoCache<K,V>)cache;
   }
 
-  synchronized private ExoCache createCacheInstance(String region) throws Exception {
+  synchronized private ExoCache<? extends Serializable, ?> createCacheInstance(String region) throws Exception {
     ExoCacheConfig config = configs_.get(region);
     if (config == null)
       config = defaultConfig_;
-    ExoCache simple = null;
+    ExoCache<? extends Serializable, ?> cache;
     if (config.getImplementation() == null) {
-      simple = new SimpleExoCache();
+      cache = new SimpleExoCache<Serializable, Object>();
     } else {
       ClassLoader cl = Thread.currentThread().getContextClassLoader();
-      Class clazz = cl.loadClass(config.getImplementation());
-      simple = (ExoCache) clazz.newInstance();
+      Class<ExoCache<? extends Serializable, ?>> clazz = (Class<ExoCache<? extends Serializable,?>>)cl.loadClass(config.getImplementation());
+      cache = clazz.newInstance();
     }
-    simple.setName(region);
-    simple.setLabel(config.getLabel());
-    simple.setMaxSize(config.getMaxSize());
-    simple.setLiveTime(config.getLiveTime());
-    simple.setReplicated(config.isRepicated());
-    simple.setDistributed(config.isDistributed());
-    if (simple.isDistributed()) {
-      simple.addCacheListener(distrbutedListener_);
-    }
-    simple.setLogEnabled(config.isLogEnabled());
-    if (simple.isLogEnabled()) {
-      simple.addCacheListener(loggingListener_);
+    cache.setName(region);
+    cache.setLabel(config.getLabel());
+    cache.setMaxSize(config.getMaxSize());
+    cache.setLiveTime(config.getLiveTime());
+    cache.setLogEnabled(config.isLogEnabled());
+    if (cache.isLogEnabled()) {
+      cache.addCacheListener(loggingListener_);
     }
 
     //
     if (managed != null) {
-      managed.registerCache(simple);
+      managed.registerCache(cache);
     }
 
     //
-    return simple;
+    return cache;
   }
 
-  public Collection getAllCacheInstances() {
+  public Collection<ExoCache<? extends Serializable, ?>> getAllCacheInstances() {
     return cacheMap_.values();
   }
-
-  synchronized public void synchronize(String region, Serializable key, Object value) throws Exception {
-    BaseExoCache cache = (BaseExoCache) getCacheInstance(region);
-    // S ystem.out.println("Synchonize key : " + key + " , value: " + value) ;
-    if (key == null) { // invalidate all cache if key is null ;
-      cache.localClear();
-    } else if (value == null) { // remove the key if value is null ;
-      cache.localRemove(key);
-    } else { // replicate the data
-      cache.localPut(key, value);
-    }
-  }
-  
-
 }

@@ -27,18 +27,18 @@ import java.util.ArrayList;
  * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
  * @version $Revision$
  */
-class CacheState {
+class CacheState<K extends Serializable, V> {
 
   private final Log log;
-  private final ConcurrentFIFOExoCache config;
-  final ConcurrentHashMap<Serializable, ObjectRef> map;
-  final Queue<ObjectRef> queue;
+  private final ConcurrentFIFOExoCache<K, V> config;
+  final ConcurrentHashMap<K, ObjectRef<K, V>> map;
+  final Queue<ObjectRef<K, V>> queue;
 
-  CacheState(ConcurrentFIFOExoCache config, Log log) {
+  CacheState(ConcurrentFIFOExoCache<K, V> config, Log log) {
     this.log = log;
     this.config = config;
-    this.map = new ConcurrentHashMap<Serializable, ObjectRef>();
-    this.queue = new SynchronizedQueue<ObjectRef>(log);
+    this.map = new ConcurrentHashMap<K, ObjectRef<K, V>>();
+    this.queue = new SynchronizedQueue<ObjectRef<K, V>>(log);
   }
 
   public void assertConsistency() {
@@ -52,20 +52,20 @@ class CacheState {
     }
   }
 
-  public Object get(Serializable name) {
-    ObjectRef entry = map.get(name);
+  public V get(Serializable name) {
+    ObjectRef<K, V> entry = map.get(name);
     if (entry != null) {
-      Object o = entry.getObject();
+      V o = entry.getObject();
       if (entry.isValid()) {
         config.hits++;
-        config.onGet(name, o);
+        config.onGet(entry.name, o);
         return o;
       } else {
         config.misses++;
         if (map.remove(name, entry)) {
           queue.remove(entry);
         }
-        config.onExpire(name, o);
+        config.onExpire(entry.name, o);
       }
     }
     return null;
@@ -87,10 +87,10 @@ class CacheState {
    * @param name the cache key
    * @param obj the cached value
    */
-  void put(long expirationTime, Serializable name, Object obj) {
+  void put(long expirationTime, K name, V obj) {
     boolean trace = isTraceEnabled();
-    ObjectRef nextRef = new SimpleObjectRef(expirationTime, name, obj);
-    ObjectRef previousRef = map.put(name, nextRef);
+    ObjectRef<K, V> nextRef = new SimpleObjectRef<K, V>(expirationTime, name, obj);
+    ObjectRef<K, V> previousRef = map.put(name, nextRef);
 
     // Remove previous (promoted as first element)
     if (previousRef != null) {
@@ -106,9 +106,9 @@ class CacheState {
     queue.add(nextRef);
 
     // Perform eviction from queue
-    ArrayList<ObjectRef> evictedRefs = queue.trim(config.maxSize);
+    ArrayList<ObjectRef<K, V>> evictedRefs = queue.trim(config.maxSize);
     if (evictedRefs != null) {
-      for (ObjectRef evictedRef : evictedRefs) {
+      for (ObjectRef<K, V> evictedRef : evictedRefs) {
         // We remove it from the map only if it was the same entry
         // it could have been removed concurrently by an explicit remove
         // or by a promotion
@@ -123,21 +123,21 @@ class CacheState {
     config.onPut(name, obj);
   }
 
-  public Object remove(Serializable name) {
+  public V remove(Serializable name) {
     boolean trace = isTraceEnabled();
-    ObjectRef item = map.remove(name);
+    ObjectRef<K, V> item = map.remove(name);
     if (item != null) {
       if (trace) {
         trace("Removed item=" + item.serial + " from the map going to remove it");
       }
       boolean removed = queue.remove(item);
       boolean valid = removed && item.isValid();
-      Object object = item.getObject();
+      V object = item.getObject();
       if (valid) {
-        config.onRemove(name, object);
+        config.onRemove(item.name, object);
         return object;
       } else {
-        config.onExpire(name, object);
+        config.onExpire(item.name, object);
         return null;
       }
     } else {

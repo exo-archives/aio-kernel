@@ -20,7 +20,7 @@ import java.io.Serializable;
 
 import org.apache.commons.logging.Log;
 import org.exoplatform.services.cache.CacheListener;
-import org.exoplatform.services.cache.ExoCache;
+import org.exoplatform.services.cache.CacheListenerContext;
 import org.exoplatform.services.log.ExoLogger;
 
 /**
@@ -33,43 +33,42 @@ public class LoggingCacheListener implements CacheListener {
   
   Log log = ExoLogger.getLogger("kernel.cache.log");
 
-  public void onClearCache(ExoCache cache) throws Exception {
+  public void onClearCache(CacheListenerContext context) throws Exception {
       if (log.isDebugEnabled()) {
-        log.debug("Cleared region " + cache.getName());
+        log.debug("Cleared region " + context.getCacheInfo().getName());
       }
   }
 
-  public void onExpire(ExoCache cache, Serializable key, Object obj) throws Exception {
+  public void onExpire(CacheListenerContext context, Serializable key, Object obj) throws Exception {
     if (log.isTraceEnabled()) {
-      log.trace("Expired entry " + key + " on region " + cache.getName());
+      log.trace("Expired entry " + key + " on region " + context.getCacheInfo().getName());
     }
   }
 
-  public void onGet(ExoCache cache, Serializable key, Object obj) throws Exception {
+  public void onGet(CacheListenerContext context, Serializable key, Object obj) throws Exception {
     if (log.isTraceEnabled()) {
-      log.trace("Get entry " + key + " on region " + cache.getName());
+      log.trace("Get entry " + key + " on region " + context.getCacheInfo().getName());
     }
   }
 
-  public void onPut(ExoCache cache, Serializable key, Object obj) throws Exception {
+  public void onPut(CacheListenerContext context, Serializable key, Object obj) throws Exception {
     if (log.isTraceEnabled()) {
-      log.trace("Put entry " + key + " region " + cache.getName());
+      log.trace("Put entry " + key + " region " + context.getCacheInfo().getName());
     }
     if (log.isWarnEnabled()) {
-      int maxSize = cache.getMaxSize();  
-      int size = cache.getCacheSize();
+      int maxSize = context.getCacheInfo().getMaxSize();
+      int size = context.getCacheInfo().getSize();
       double treshold = maxSize*0.95;
       if (size >= treshold) {
-        log.warn("region " + cache.getName() + " is 95% full, consider extending maxSize");
+        log.warn("region " + context.getCacheInfo().getName() + " is 95% full, consider extending maxSize");
       }
     }
     
   }
 
-  public void onRemove(ExoCache cache, Serializable key, Object obj) throws Exception {
+  public void onRemove(CacheListenerContext context, Serializable key, Object obj) throws Exception {
     if (log.isTraceEnabled()) {
-      log.trace("Removed entry " + key + " region " + cache.getName());
+      log.trace("Removed entry " + key + " region " + context.getCacheInfo().getName());
     }
   }
-
 }

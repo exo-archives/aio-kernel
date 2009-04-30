@@ -18,24 +18,21 @@ package org.exoplatform.services.cache.test;
 
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.Set;
 import java.util.Map;
 import java.util.HashMap;
+import java.io.Serializable;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.container.RootContainer;
 import org.exoplatform.services.cache.CacheService;
 import org.exoplatform.services.cache.ExoCache;
 import org.exoplatform.services.cache.FIFOExoCache;
 import org.exoplatform.services.cache.SimpleExoCache;
-import org.exoplatform.services.remote.group.CommunicationService;
 import org.exoplatform.test.BasicTestCase;
 
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
-import javax.management.ObjectInstance;
 import javax.management.MBeanInfo;
 import javax.management.MBeanAttributeInfo;
 
@@ -61,7 +58,7 @@ public class TestCacheService extends BasicTestCase {
 
   public void testCacheService() throws Exception {
     // -----nocache info is retrived from test-configuration(nocache 0bject)
-    ExoCache nocache = service_.getCacheInstance("nocache");
+    ExoCache<String, Object> nocache = service_.getCacheInstance("nocache");
     assertTrue("expect find nocache configuaration", nocache instanceof SimpleExoCache);
     assertEquals("expect 'maxsize' of nocache is", 5, nocache.getMaxSize());
     assertEquals("expect 'liveTime' of nocache' is", 0, nocache.getLiveTime());
@@ -69,11 +66,11 @@ public class TestCacheService extends BasicTestCase {
     assertEquals("expect 'nocache' is not lived(LiveTime=0)", 0, nocache.getCacheSize());
     // -----cacheLiveTime2s's info is retrived from test-configuration
     // (cacheLiveTime2s object)
-    ExoCache cacheLiveTime2s = service_.getCacheInstance("cacheLiveTime2s");
+    ExoCache<String, Object> cacheLiveTime2s = service_.getCacheInstance("cacheLiveTime2s");
     assertTrue("expect find cacheLiveTime2s configuaration",
                cacheLiveTime2s instanceof SimpleExoCache);
     assertEquals("expect 'maxsize' of this cache is", 5, cacheLiveTime2s.getMaxSize());
-    assertEquals("expect 'liveTime' of nocache' is", 2000, cacheLiveTime2s.getLiveTime());
+    assertEquals("expect 'liveTime' of nocache' is", 2, cacheLiveTime2s.getLiveTime());
     cacheLiveTime2s.put("key", "object2s");
     String obj2s = (String) cacheLiveTime2s.get("key");
     assertTrue("expect found 'object' in cache", obj2s != null && obj2s.equals("object2s"));
@@ -83,26 +80,26 @@ public class TestCacheService extends BasicTestCase {
     assertEquals("expect cache size is ", 0, cacheLiveTime2s.getCacheSize());
     // -----cacheMaxSize0's info retrived from test-configuration (cacheMaxSize0
     // object)
-    ExoCache cacheMaxSize0 = service_.getCacheInstance("cacheMaxSize0");
+    ExoCache<String, Object> cacheMaxSize0 = service_.getCacheInstance("cacheMaxSize0");
     assertTrue("expect find cacheMaxSize0 configuaration", cacheMaxSize0 instanceof SimpleExoCache);
     assertEquals("expect 'maxsize' of this cache is", 0, cacheMaxSize0.getMaxSize());
-    assertEquals("expect 'liveTime' of nocache' is", 4000, cacheMaxSize0.getLiveTime());
+    assertEquals("expect 'liveTime' of nocache' is", 4, cacheMaxSize0.getLiveTime());
     cacheMaxSize0.put("mkey", "maxsize object");
     assertTrue("expect can't put any object to  cache", cacheMaxSize0.get("mkey") == null);
     // -----default cache's info is retrived if no cache's info is found
-    ExoCache cache = service_.getCacheInstance("exo");
+    ExoCache<String, Object> cache = service_.getCacheInstance("exo");
     assertTrue("expect find defaul cache configuaration", cache instanceof SimpleExoCache);
     assertEquals("expect 'maxsize' of this cache is", 100, cache.getMaxSize());
-    assertEquals("expect 'liveTime' of this cache' is", 300000, cache.getLiveTime());
+    assertEquals("expect 'liveTime' of this cache' is", 300, cache.getLiveTime());
     cache.put("test", "this is a test");
     String ret = (String) cache.get("test");
     assertTrue("expect object is cached", ret != null);
 
     /* ----------FIFOExoCache--------------- */
-    ExoCache fifoCache = service_.getCacheInstance("fifocache");
+    ExoCache<String, Object> fifoCache = service_.getCacheInstance("fifocache");
     assertTrue("expect find fifo cache configuration", fifoCache instanceof FIFOExoCache);
     assertEquals("expect 'maxsize' of this cache is", 3, fifoCache.getMaxSize());
-    assertEquals("expect 'liveTime' of this cache' is", 4000, fifoCache.getLiveTime());
+    assertEquals("expect 'liveTime' of this cache' is", 4, fifoCache.getLiveTime());
     fifoCache.put("key1", "object 1");
     fifoCache.put("key2", "object 2");
     assertEquals("expect FIFOExoCache size is:", 2, fifoCache.getCacheSize());
@@ -146,14 +143,14 @@ public class TestCacheService extends BasicTestCase {
     assertTrue("expect found simpleCache from extenal plugin",
                simpleCachePlugin instanceof SimpleExoCache);
     assertEquals("expect 'maxsize' of this cache is", 8, simpleCachePlugin.getMaxSize());
-    assertEquals("expect 'LiveTime' of this cache is", 5000, simpleCachePlugin.getLiveTime());
+    assertEquals("expect 'LiveTime' of this cache is", 5, simpleCachePlugin.getLiveTime());
     ExoCache fifoCachePlugin = service_.getCacheInstance("fifoCachePlugin");
     assertTrue("expect found fifoCache from extenal plugin",
                fifoCachePlugin instanceof FIFOExoCache);
     assertEquals("expect 'maxsize' of this cache is", 6, fifoCachePlugin.getMaxSize());
-    assertEquals("expect 'LiveTime' of this cache is", 10000, fifoCachePlugin.getLiveTime());
+    assertEquals("expect 'LiveTime' of this cache is", 10, fifoCachePlugin.getLiveTime());
     // ----all cache instances---
-    Collection<ExoCache> caches = service_.getAllCacheInstances();
+    Collection<ExoCache<? extends Serializable, ?>> caches = service_.getAllCacheInstances();
     assertEquals("expect number of cache instanse is ", 7, caches.size());
     hasObjectInCollection(nocache, caches, new ExoCacheComparator());
     hasObjectInCollection(cacheLiveTime2s, caches, new ExoCacheComparator());
@@ -184,13 +181,8 @@ public class TestCacheService extends BasicTestCase {
     assertEquals(5, server.getAttribute(name, "Capacity"));
   }
 
-  public void testDistributedCache() throws Exception {
-    CommunicationService comunicationService = (CommunicationService) PortalContainer.getInstance()
-                                                                                     .getComponentInstanceOfType(CommunicationService.class);
-  }
-  
   public void testLoggingListener() throws Exception {
-    ExoCache cache = service_.getCacheInstance("TestLogCache");
+    ExoCache<String, Object> cache = service_.getCacheInstance("TestLogCache");
     
     int count = 100;
     while (count-- > 0) {
@@ -201,7 +193,7 @@ public class TestCacheService extends BasicTestCase {
     assertTrue("logger is not MockTestLogger, you needto pass -Dorg.apache.commons.logging.Log=org.exoplatform.services.cache.test.MockTestLogger", (log instanceof MockTestLogger));
     
     MockTestLogger logger = (MockTestLogger) log;
-    assertEquals("Number of warnings ", 5,logger.getWarnCount());
+    assertEquals("Number of warnings ", 6,logger.getWarnCount());
   }
 
   private static class ExoCacheComparator implements Comparator {
