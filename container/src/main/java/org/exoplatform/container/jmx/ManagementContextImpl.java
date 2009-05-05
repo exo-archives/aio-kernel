@@ -32,6 +32,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Set;
+import java.util.Iterator;
 
 /**
  * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
@@ -136,8 +138,8 @@ public class ManagementContextImpl implements ManagementContext {
       PropertiesInfo oni = PropertiesInfo.resolve(mr.getClass(), NameTemplate.class);
       if (oni != null) {
         try {
-          Hashtable<?, ?> foo = new Hashtable<Object, Object>(oni.resolve(mr));
-          on = ObjectName.getInstance("exo", foo);
+          Map<String, String> foo = oni.resolve(mr);
+          on = JMX.createObjectName("exo", foo);
         }
         catch (MalformedObjectNameException e) {
           e.printStackTrace();
@@ -148,13 +150,22 @@ public class ManagementContextImpl implements ManagementContext {
       if (on != null) {
         // Merge with the container hierarchy context
         try {
-          Hashtable<Object, Object> props = new Hashtable<Object, Object>();
-          Hashtable<?, ?> t = on.getKeyPropertyList();
-          props.putAll(t);
+          Map<String, String> props = new Hashtable<String, String>();
+
+          // Julien : I know it's does not look great but it's necessary
+          // for compiling under Java 5 and Java 6 properly. The methods
+          // ObjectName#getKeyPropertyList() returns an Hashtable with Java 5
+          // and a Hashtable<String, String> with Java 6.
+          for (Object o : on.getKeyPropertyList().entrySet()) {
+            Map.Entry entry = (Map.Entry)o;
+            String key = (String)entry.getKey();
+            String value = (String)entry.getValue();
+            props.put(key, value);
+          }
           for (ManagementContextImpl current = this;current != null;current = current.parent) {
             props.putAll(current.scopingProperties);
           }
-          on = new ObjectName(on.getDomain(), props);
+          on = JMX.createObjectName(on.getDomain(), props);
           attemptToRegister(on, mbean);
           return on;
         }

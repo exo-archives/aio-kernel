@@ -67,8 +67,7 @@ public class ObjectNameBuilder<T> {
 
       try {
         Map<String, String> props = info.resolve(object);
-        Hashtable<?, ?> table = new Hashtable<Object, Object>(props);
-        return new ObjectName(domain, table);
+        return JMX.createObjectName(domain, props);
       }
       catch (MalformedObjectNameException e) {
         throw new IllegalArgumentException("ObjectName template is malformed", e);
