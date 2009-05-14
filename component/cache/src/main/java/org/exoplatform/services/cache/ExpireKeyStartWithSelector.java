@@ -22,7 +22,7 @@ import java.io.Serializable;
  * Created by The eXo Platform SAS Author : Thuannd nhudinhthuan@yahoo.com Apr
  * 4, 2006
  */
-public class ExpireKeyStartWithSelector implements CachedObjectSelector {
+public class ExpireKeyStartWithSelector<K extends Serializable, V> implements CachedObjectSelector<K, V> {
 
   private String keyStartWith_;
 
@@ -30,15 +30,14 @@ public class ExpireKeyStartWithSelector implements CachedObjectSelector {
     keyStartWith_ = keyStartWith;
   }
 
-  public boolean select(Serializable key, ObjectCacheInfo ocinfo) {
+  public boolean select(K key, ObjectCacheInfo<? extends V> ocinfo) {
     String skey = (String) key;
     if (skey.startsWith(keyStartWith_))
       return true;
     return false;
   }
 
-  public void onSelect(ExoCache cache, Serializable key, ObjectCacheInfo ocinfo) {
+  public void onSelect(ExoCache<? extends K, ? extends V> cache, K key, ObjectCacheInfo<? extends V> ocinfo) {
     cache.remove(key);
   }
-
 }
