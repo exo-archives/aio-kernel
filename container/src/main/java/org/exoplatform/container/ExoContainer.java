@@ -24,6 +24,7 @@ import org.exoplatform.container.jmx.ManagementContextImpl;
 import org.exoplatform.container.util.ContainerUtil;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.management.ManagementContext;
+import org.exoplatform.services.log.ExoLogger;
 
 /**
  * Created by The eXo Platform SAS Author : Tuan Nguyen
@@ -31,7 +32,7 @@ import org.exoplatform.management.ManagementContext;
  */
 public class ExoContainer extends ManageableContainer {
 
-  Log                                           log                       = LogFactory.getLog(ExoContainer.class);
+  Log                                           log                       = ExoLogger.getLogger(ExoContainer.class);
 
   private Map<String, ComponentLifecyclePlugin> componentLifecylePlugin_  = new HashMap<String, ComponentLifecyclePlugin>();
 

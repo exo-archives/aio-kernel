@@ -17,7 +17,7 @@
 package org.exoplatform.container;
 
 import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.exoplatform.services.log.ExoLogger;
 
 import java.util.HashMap;
 import java.util.Set;
@@ -40,7 +40,7 @@ public final class ExoContainerContext implements java.io.Serializable {
 
   private String                           name;
 
-  private static final Log log = LogFactory.getLog(ExoContainerContext.class);
+  private static final Log log = ExoLogger.getLogger(ExoContainerContext.class);
 
   public ExoContainerContext(ExoContainer container) {
     this.container = container;

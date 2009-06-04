@@ -22,8 +22,6 @@ import java.util.Map;
 import java.util.HashMap;
 import java.io.Serializable;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.services.cache.CacheService;
 import org.exoplatform.services.cache.ExoCache;
@@ -181,6 +179,7 @@ public class TestCacheService extends BasicTestCase {
     assertEquals(5, server.getAttribute(name, "Capacity"));
   }
 
+/*
   public void testLoggingListener() throws Exception {
     ExoCache<String, Object> cache = service_.getCacheInstance("TestLogCache");
     
@@ -188,13 +187,14 @@ public class TestCacheService extends BasicTestCase {
     while (count-- > 0) {
       cache.put("key"+count, "anything");
     }
-    Log log = LogFactory.getLog("kernel.cache.log");
+    Log log = ExoLogger.getLogger("kernel.cache.log");
     
     assertTrue("logger is not MockTestLogger, you needto pass -Dorg.apache.commons.logging.Log=org.exoplatform.services.cache.test.MockTestLogger", (log instanceof MockTestLogger));
     
     MockTestLogger logger = (MockTestLogger) log;
     assertEquals("Number of warnings ", 6,logger.getWarnCount());
   }
+*/
 
   private static class ExoCacheComparator implements Comparator {
 

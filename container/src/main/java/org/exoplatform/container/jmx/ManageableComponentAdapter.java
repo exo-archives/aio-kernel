@@ -22,7 +22,7 @@ import org.picocontainer.PicoInitializationException;
 import org.picocontainer.PicoIntrospectionException;
 import org.picocontainer.PicoVisitor;
 import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.exoplatform.services.log.ExoLogger;
 
 /**
  * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
@@ -31,7 +31,7 @@ import org.apache.commons.logging.LogFactory;
 public class ManageableComponentAdapter implements ComponentAdapter {
 
   /** . */
-  private Log log = LogFactory.getLog(ManageableComponentAdapter.class);
+  private Log log = ExoLogger.getLogger(ManageableComponentAdapter.class);
 
   /** . */
   private ComponentAdapter delegate;

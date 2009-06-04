@@ -18,7 +18,6 @@ import org.picocontainer.PicoContainer;
 import org.picocontainer.defaults.AbstractComponentAdapter;
 
 import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.component.ComponentLifecycle;
@@ -27,6 +26,7 @@ import org.exoplatform.container.configuration.ConfigurationManager;
 import org.exoplatform.container.xml.Component;
 import org.exoplatform.container.xml.ExternalComponentPlugins;
 import org.exoplatform.container.xml.InitParams;
+import org.exoplatform.services.log.ExoLogger;
 
 /**
  * @author James Strachan
@@ -38,7 +38,7 @@ import org.exoplatform.container.xml.InitParams;
 public class MX4JComponentAdapter extends AbstractComponentAdapter {
   private Object instance_;
 
-  private Log    log = LogFactory.getLog(MX4JComponentAdapter.class);
+  private Log    log = ExoLogger.getLogger(MX4JComponentAdapter.class);
 
   public MX4JComponentAdapter(Object key, Class implementation) {
     super(key, implementation);

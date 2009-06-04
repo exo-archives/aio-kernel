@@ -161,8 +161,8 @@ public class LogConfigurationInitializer implements Startable {
       props.putAll(properties);
       conf.configure(props);
     }
-    if (logger != null)
-      LogFactory.getFactory().setAttribute("org.apache.commons.logging.Log", logger);
+
+    // todo if logger exists create and replace the factory
   }
 
 }

@@ -17,6 +17,7 @@
 package org.exoplatform.container.configuration;
 
 import org.exoplatform.container.xml.Configuration;
+import org.exoplatform.services.log.ExoLogger;
 import org.xml.sax.InputSource;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXParseException;
@@ -24,7 +25,6 @@ import org.xml.sax.SAXException;
 import org.jibx.runtime.IBindingFactory;
 import org.jibx.runtime.BindingDirectory;
 import org.jibx.runtime.IUnmarshallingContext;
-import org.apache.commons.logging.LogFactory;
 import org.apache.commons.logging.Log;
 
 import javax.xml.validation.SchemaFactory;
@@ -52,7 +52,7 @@ import java.net.URL;
  */
 public class ConfigurationUnmarshaller {
 
-  private static final Log log = LogFactory.getLog(ConfigurationUnmarshaller.class);
+  private static final Log log = ExoLogger.getLogger(ConfigurationUnmarshaller.class);
 
   private class Reporter implements ErrorHandler {
 

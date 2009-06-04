@@ -20,8 +20,8 @@ import java.lang.management.ManagementFactory;
 
 import org.exoplatform.container.BaseContainerLifecyclePlugin;
 import org.exoplatform.container.ExoContainer;
+import org.exoplatform.services.log.ExoLogger;
 import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * @author Tuan Nguyen (tuan08@users.sourceforge.net)
@@ -31,7 +31,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class AddJVMComponentsToRootContainer extends BaseContainerLifecyclePlugin {
 
-  private static final Log log = LogFactory.getLog(AddJVMComponentsToRootContainer.class);
+  private static final Log log = ExoLogger.getLogger(AddJVMComponentsToRootContainer.class);
 
   public void initContainer(ExoContainer container) {
     attemptToRegisterMXComponent(container, ManagementFactory.getOperatingSystemMXBean());

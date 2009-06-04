@@ -23,8 +23,8 @@ import org.exoplatform.test.mocks.servlet.MockServletContext;
 import org.exoplatform.management.jmx.annotations.NamingContext;
 import org.exoplatform.management.jmx.annotations.Property;
 import org.exoplatform.management.annotations.Managed;
+import org.exoplatform.services.log.ExoLogger;
 import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.picocontainer.ComponentAdapter;
 
 /**
@@ -50,7 +50,7 @@ public class RootContainer extends ExoContainer {
 
   private OperatingSystemInfo  osenv_;
 
-  private static final Log log = LogFactory.getLog(RootContainer.class);
+  private static final Log log = ExoLogger.getLogger(RootContainer.class);
 
   private static volatile boolean booting = false;
 
