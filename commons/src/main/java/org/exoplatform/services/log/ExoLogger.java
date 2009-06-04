@@ -74,7 +74,6 @@ public abstract class ExoLogger implements Log {
    * @param name the logger name
    * @return the logger
    */
-  @Deprecated
   public static Log getLogger(String name) {
     return getExoLogger(name);
   }
@@ -85,7 +84,6 @@ public abstract class ExoLogger implements Log {
    * @param name the logger name
    * @return the logger
    */
-  @Deprecated
   public static Log getLogger(Class name) {
     return getExoLogger(name);
   }
