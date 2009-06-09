@@ -40,7 +40,7 @@ public class Event<S, D> {
   }
 
   /**
-   * @return the source emmitting the event
+   * 
    */
   public S getSource() {
     return source;
