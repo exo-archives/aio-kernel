@@ -154,6 +154,8 @@ public class IOUtil {
         }
         catch (IOException ignore) {
         }
+        catch (RuntimeException ignore) {
+        }
       }
     }
   }
