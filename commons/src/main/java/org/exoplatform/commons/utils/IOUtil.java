@@ -148,7 +148,13 @@ public class IOUtil {
       return output.toByteArray();
     }
     finally {
-      Safe.close(is);
+      if (is != null) {
+        try {
+          is.close();
+        }
+        catch (IOException ignore) {
+        }
+      }
     }
   }
 
