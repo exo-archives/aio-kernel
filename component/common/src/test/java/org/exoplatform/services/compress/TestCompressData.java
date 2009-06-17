@@ -18,7 +18,9 @@ package org.exoplatform.services.compress;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 import org.exoplatform.test.BasicTestCase;
 
@@ -41,9 +43,10 @@ public class TestCompressData extends BasicTestCase {
     System.out.println("Test InputStream");
     compressIS.addInputStream("ZipService.java", in);
     compressIS.addInputStream("helper.txt", in2);
-    compressIS.createJarFile("target/ZipService");
-    // compress.createZipFile("/home/exo/Desktop/ZipService");
+    compressIS.createJarFile("target/ZipServiceJar");
+    compressIS.createZipFile("target/ZipServiceZip");
     in.close();
+    in2.close();
 
     // ----------- Test with Add File ------------------//
     System.out.println("Test File");
@@ -52,7 +55,8 @@ public class TestCompressData extends BasicTestCase {
     File file2 = new File("src/test/resources/helper.txt");
     compress.addFile("ZipService.java", file);
     compress.addFile("helper.txt", file2);
-    compress.createZipFile("target/testFile");
+    compress.createZipFile("target/testZipFile");
+    compress.createJarFile("target/testJarFile");
     // compress.cleanDataInstance();
     // --------------- Test thu muc --------------------------------//
     // TODO what is t?
@@ -63,5 +67,29 @@ public class TestCompressData extends BasicTestCase {
 //    compressF.addDir(folder1);
 //    compressF.createZipFile("/home/exo/setup/tailieu/chung/hcm/TestZip");
     // compress.createJarFile("/home/exo/setup/tailieu/chung/hcm/TestJar");
+  }
+  
+  /**
+   * Testcase based on http://jira.exoplatform.org/browse/KER-94
+   * @throws Exception 
+   */
+  public void testCompressIS() throws Exception {
+    
+    CompressData compressData = new CompressData();
+    
+    File f1 = new File("src/test/resources/ZipService.java");
+    File f2 = new File("src/test/resources/helper.txt");
+    
+    compressData.addFile("ZipService.java", f1);
+    compressData.addFile("helper.txt", f2);
+    
+    OutputStream outStream = new FileOutputStream(new File("target/CompressedZipIS.zip"));
+    compressData.createZip(outStream);
+    outStream.close();
+    
+    outStream = new FileOutputStream(new File("target/CompressedJarIS.jar"));
+    compressData.createJar(outStream);
+    outStream.close();
+    
   }
 }

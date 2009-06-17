@@ -86,8 +86,9 @@ public class CompressData {
     ZipOutputStream zos = new ZipOutputStream(out);
     int size = datas_.size();
     byte InputData[] = new byte[BUFFER];
-    if (size < 0)
+    if (size < 0) {
       throw new Exception("Data size is null");
+    }
     for (int i = 0; i < size; i++) {
       DataInstance di = datas_.get(i);
       if (di instanceof InputStreamDataInstance) {
@@ -108,13 +109,13 @@ public class CompressData {
 
   public void createZip(OutputStream os) throws Exception {
     int size = datas_.size();
+    ZipOutputStream zos = new ZipOutputStream(os);
     if (size == 0)
       throw new Exception("Data is null");
     for (int i = 0; i < size; i++) {
       DataInstance di = datas_.get(i);
       if (di instanceof InputStreamDataInstance) {
         InputStream is = di.getInputStream();
-        ZipOutputStream zos = new ZipOutputStream(os);
         zos.putNextEntry(new ZipEntry(di.getEntryName()));
         int len;
         byte InputData[] = new byte[BUFFER];
@@ -122,7 +123,6 @@ public class CompressData {
           zos.write(InputData, 0, len);
         }
         zos.closeEntry();
-        zos.close();
       } else if (di instanceof FileDataInstance) {
         di.setType("Zip");
         InputStream is = di.getInputStream();
@@ -134,6 +134,7 @@ public class CompressData {
         is.close();
       }
     }
+    zos.close();
     os.close();
   }
 
@@ -167,13 +168,14 @@ public class CompressData {
 
   public void createJar(OutputStream os) throws Exception {
     int size = datas_.size();
+    JarOutputStream jos = new JarOutputStream(os);
     if (size == 0)
       throw new Exception("Data is null");
     for (int i = 0; i < size; i++) {
       DataInstance di = datas_.get(i);
       if (di instanceof InputStreamDataInstance) {
         InputStream is = di.getInputStream();
-        JarOutputStream jos = new JarOutputStream(os);
+
         jos.putNextEntry(new ZipEntry(di.getEntryName()));
         int len;
         byte InputData[] = new byte[BUFFER];
@@ -181,7 +183,6 @@ public class CompressData {
           jos.write(InputData, 0, len);
         }
         jos.closeEntry();
-        jos.close();
         is.close();
       } else if (di instanceof FileDataInstance) {
         di.setType("Jar");
@@ -194,6 +195,7 @@ public class CompressData {
         is.close();
       }
     }
+    jos.close();
     os.close();
   }
 
