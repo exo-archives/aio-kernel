@@ -16,9 +16,6 @@
  */
 package org.exoplatform.services.log;
 
-import java.net.MalformedURLException;
-
-import org.exoplatform.container.StandaloneContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,14 +30,9 @@ import junit.framework.TestCase;
  */
 public class TestSLF4J extends TestCase {
   
-  private StandaloneContainer container; 
-  
   @Override
   protected void setUp() throws Exception {
     
-    StandaloneContainer.setConfigurationPath("src/test/java/conf/standalone/test-configuration.xml");
-    container = StandaloneContainer.getInstance();
-
   }
   
   public void testSimpleLog() throws Exception {
@@ -50,12 +42,7 @@ public class TestSLF4J extends TestCase {
     logger.info("INFO");
     logger.debug("DEBUG");
     
-    container.setConfigurationPath("src/test/java/conf/standalone/test-configuration.xml");
-    
     logger.info("INFO");
     logger.debug("DEBUG");
-    
   }
-
-
 }
