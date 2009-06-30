@@ -20,8 +20,13 @@ import org.exoplatform.services.log.impl.SLF4JExoLogFactory;
 import org.exoplatform.services.log.impl.SimpleExoLogFactory;
 
 /**
+ * 
  * The logger definition for exo platform.
  * <p>
+ *
+ * ExoLogger it's wrapping factory for different Log factories existing in runtime for eXo.
+ * <br/>
+ *  
  * The logger implements the {@link org.exoplatform.services.log.Log} interface
  * for backward compatibility purpose.
  * </p>
