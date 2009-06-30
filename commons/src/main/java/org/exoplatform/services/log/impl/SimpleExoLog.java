@@ -27,7 +27,7 @@ import org.exoplatform.services.log.Log;
  * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
  * @version $Revision$
  */
-public class SimpleExoLogger implements Log {
+public class SimpleExoLog implements Log {
 
   /** . */
   private final SimpleLog delegate;
@@ -112,7 +112,7 @@ public class SimpleExoLogger implements Log {
     return delegate.isWarnEnabled();
   }
 
-  public SimpleExoLogger(String name) {
+  public SimpleExoLog(String name) {
     this.delegate = new SimpleLog(name);
   }
 }

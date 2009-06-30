@@ -19,7 +19,7 @@ package org.exoplatform.services.log.impl;
 import org.exoplatform.services.log.Log;
 
 /**
- * A factory for {@link org.exoplatform.services.log.impl.SimpleExoLogger}.
+ * A factory for {@link org.exoplatform.services.log.impl.SimpleExoLog}.
  *
  * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
  * @version $Revision$
@@ -27,6 +27,6 @@ import org.exoplatform.services.log.Log;
 public class SimpleExoLogFactory extends AbstractExoLogFactory {
 
   protected Log getLogger(String name) {
-    return new SimpleExoLogger(name);
+    return new SimpleExoLog(name);
   }
 }

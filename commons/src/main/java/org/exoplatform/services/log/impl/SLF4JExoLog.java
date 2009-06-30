@@ -26,7 +26,7 @@ import org.slf4j.Logger;
  * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
  * @version $Revision$
  */
-public class SLF4JExoLogger implements Log{
+public class SLF4JExoLog implements Log{
 
   /** . */
   private Logger logger;
@@ -37,7 +37,7 @@ public class SLF4JExoLogger implements Log{
    * @param logger the logger
    * @throws NullPointerException if the logger is null
    */
-  public SLF4JExoLogger(Logger logger) throws NullPointerException {
+  public SLF4JExoLog(Logger logger) throws NullPointerException {
     if (logger == null) {
       throw new NullPointerException();
     }
