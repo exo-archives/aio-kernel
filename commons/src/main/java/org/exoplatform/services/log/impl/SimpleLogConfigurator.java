@@ -28,7 +28,7 @@ import org.exoplatform.services.log.AbstractLogConfigurator;
  * 
  * @author <a href="mailto:gennady.azarenkov@exoplatform.com">Gennady
  *         Azarenkov</a>
- * @version $Id: SimpleLogConfigurator.java 5332 2006-04-29 18:32:44Z geaz $
+ * @version $Id$
  */
 
 public class SimpleLogConfigurator extends AbstractLogConfigurator {

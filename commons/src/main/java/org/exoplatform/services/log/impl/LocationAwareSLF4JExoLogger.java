@@ -16,8 +16,9 @@
  */
 package org.exoplatform.services.log.impl;
 
-import org.slf4j.spi.LocationAwareLogger;
 import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
+import org.slf4j.spi.LocationAwareLogger;
 
 /**
  * An implementation of {@link ExoLogger} that delegates to an instance of {@link LocationAwareLogger}.
@@ -25,7 +26,7 @@ import org.exoplatform.services.log.ExoLogger;
  * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
  * @version $Revision$
  */
-public class LocationAwareSLF4JExoLogger extends ExoLogger {
+public class LocationAwareSLF4JExoLogger implements Log {
 
   /** . */
   private static final String FQCN = LocationAwareSLF4JExoLogger.class.getName();

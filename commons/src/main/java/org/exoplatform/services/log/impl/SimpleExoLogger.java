@@ -16,8 +16,8 @@
  */
 package org.exoplatform.services.log.impl;
 
-import org.exoplatform.services.log.ExoLogger;
 import org.apache.commons.logging.impl.SimpleLog;
+import org.exoplatform.services.log.Log;
 
 /**
  * Based on apache commons logging {@link org.apache.commons.logging.impl.SimpleLog} class. It could be
@@ -27,7 +27,7 @@ import org.apache.commons.logging.impl.SimpleLog;
  * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
  * @version $Revision$
  */
-public class SimpleExoLogger extends ExoLogger {
+public class SimpleExoLogger implements Log {
 
   /** . */
   private final SimpleLog delegate;

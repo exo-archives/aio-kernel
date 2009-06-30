@@ -24,7 +24,7 @@ import java.util.Properties;
  * 
  * @author <a href="mailto:gennady.azarenkov@exoplatform.com">Gennady
  *         Azarenkov</a>
- * @version $Id: LogConfigurator.java 5332 2006-04-29 18:32:44Z geaz $
+ * @version $Id$
  */
 
 public interface LogConfigurator {

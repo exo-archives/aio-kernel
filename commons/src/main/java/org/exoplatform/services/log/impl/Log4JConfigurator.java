@@ -26,7 +26,7 @@ import org.exoplatform.services.log.AbstractLogConfigurator;
  * <br/> Log4J configurator. The properties are the same as log4j.properties file's name value pairs.
  *  
  * @author <a href="mailto:gennady.azarenkov@exoplatform.com">Gennady Azarenkov</a>
- * @version $Id: Log4JConfigurator.java 5332 2006-04-29 18:32:44Z geaz $
+ * @version $Id$
  */
 
 public class Log4JConfigurator extends AbstractLogConfigurator {

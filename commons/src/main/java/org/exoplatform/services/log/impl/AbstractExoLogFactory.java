@@ -19,7 +19,7 @@ package org.exoplatform.services.log.impl;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import org.exoplatform.services.log.ExoLoggerFactory;
+import org.exoplatform.services.log.ExoLogFactory;
 import org.exoplatform.services.log.Log;
 
 /**
@@ -29,7 +29,7 @@ import org.exoplatform.services.log.Log;
  * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
  * @version $Revision$
  */
-public abstract class AbstractExoLoggerFactory implements ExoLoggerFactory {
+public abstract class AbstractExoLogFactory implements ExoLogFactory {
 
   /** . */
   private final ConcurrentMap<String, Log> loggers = new ConcurrentHashMap<String, Log>();

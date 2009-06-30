@@ -16,27 +16,17 @@
  */
 package org.exoplatform.services.log.impl;
 
-import org.exoplatform.services.log.ExoLogger;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.slf4j.spi.LocationAwareLogger;
+import org.exoplatform.services.log.Log;
 
 /**
- * A factory for {@link org.exoplatform.services.log.impl.LocationAwareSLF4JExoLogger} and
- * {@link org.exoplatform.services.log.impl.SLF4JExoLogger} based on the type of the logger
- * returned by {@link org.slf4j.LoggerFactory} which can be {@link Logger} or {@link org.slf4j.spi.LocationAwareLogger}.
+ * A factory for {@link org.exoplatform.services.log.impl.SimpleExoLogger}.
  *
  * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
  * @version $Revision$
  */
-public class SLF4JExoLoggerFactory extends AbstractExoLoggerFactory {
+public class SimpleExoLogFactory extends AbstractExoLogFactory {
 
-  protected ExoLogger getLogger(String name) {
-    Logger slf4jlogger = LoggerFactory.getLogger(name);
-    if (slf4jlogger instanceof LocationAwareLogger) {
-      return new LocationAwareSLF4JExoLogger((LocationAwareLogger)slf4jlogger);
-    } else {
-      return new SLF4JExoLogger(slf4jlogger);
-    }
+  protected Log getLogger(String name) {
+    return new SimpleExoLogger(name);
   }
 }

@@ -14,19 +14,33 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.services.log.impl;
+package org.exoplatform.services.log;
 
-import org.exoplatform.services.log.ExoLogger;
 
 /**
- * A factory for {@link org.exoplatform.services.log.impl.SimpleExoLogger}.
+ * This factory garantees the plugability of the logging system. 
  *
  * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
  * @version $Revision$
  */
-public class SimpleExoLoggerFactory extends AbstractExoLoggerFactory {
+public interface ExoLogFactory {
 
-  protected ExoLogger getLogger(String name) {
-    return new SimpleExoLogger(name);
-  }
+  /**
+   * Obtain a logger for the specified name.
+   *
+   * @param name the logger name
+   * @return the logger
+   * @throws NullPointerException if the name is null
+   */
+  Log getExoLogger(String name) throws NullPointerException;
+
+  /**
+   * Obtain a logger for the specified name.
+   *
+   * @param clazz the logger name
+   * @return the logger
+   * @throws NullPointerException if the name is null
+   */
+  Log getExoLogger(Class clazz) throws NullPointerException;
+
 }

@@ -16,8 +16,9 @@
  */
 package org.exoplatform.services.log.impl;
 
-import org.slf4j.Logger;
 import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
+import org.slf4j.Logger;
 
 /**
  * An implementation of {@link ExoLogger} that delegates to an instance of {@link Logger}.
@@ -25,7 +26,7 @@ import org.exoplatform.services.log.ExoLogger;
  * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
  * @version $Revision$
  */
-public class SLF4JExoLogger extends ExoLogger {
+public class SLF4JExoLogger implements Log{
 
   /** . */
   private Logger logger;
