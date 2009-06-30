@@ -43,6 +43,13 @@
       </dependency>
 
       <dependency>
+        <groupId>commons-chain</groupId>
+        <artifactId>commons-chain</artifactId>
+        <version>1.0</version>
+        <scope>compile</scope>
+      </dependency>
+
+      <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
         <version>3.8.1</version>
@@ -83,20 +90,20 @@
         <version>1.5.6</version>
         <scope>compile</scope>
       </dependency>
-	
+
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-log4j12</artifactId>
         <version>1.5.6</version>
         <scope>compile</scope>
       </dependency>
-	
+
       <dependency>
         <groupId>log4j</groupId>
         <artifactId>log4j</artifactId>
         <version>1.2.12</version>
         <scope>compile</scope>
-      </dependency>	
+      </dependency>
 
       <!-- dependency>
         <groupId>org.slf4j</groupId>
@@ -108,29 +115,29 @@
       <dependency>
         <groupId>picocontainer</groupId>
         <artifactId>picocontainer</artifactId>
-      <version>1.1</version>
+        <version>1.1</version>
       </dependency>
-      
+
       <dependency>
         <groupId>commons-beanutils</groupId>
         <artifactId>commons-beanutils</artifactId>
         <version>1.6</version>
       </dependency>
-    
+
       <dependency>
         <groupId>org.jibx</groupId>
         <artifactId>jibx-run</artifactId>
         <version>1.1.6a</version>
         <scope>compile</scope>
       </dependency>
-    
+
       <dependency>
         <groupId>org.jibx</groupId>
         <artifactId>jibx-bind</artifactId>
         <version>1.1.6a</version>
         <scope>compile</scope>
       </dependency>
-    
+
       <dependency>
         <groupId>org.jibx</groupId>
         <artifactId>jibx-extras</artifactId>
@@ -143,6 +150,49 @@
         <artifactId>exo.tool.framework.junit</artifactId>
         <version>1.0.0</version>
       </dependency>
+
+      <dependency>
+        <groupId>javax.activation</groupId>
+        <artifactId>activation</artifactId>
+        <version>1.1</version>
+        <scope>compile</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>javax.resource</groupId>
+        <artifactId>connector-api</artifactId>
+        <version>1.5</version>
+        <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>jotm</groupId>
+        <artifactId>jotm</artifactId>
+        <version>2.0.10</version>
+        <scope>compile</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>quartz</groupId>
+        <artifactId>quartz</artifactId>
+        <version>1.5.0-RC2</version>
+        <scope>compile</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>javax.mail</groupId>
+        <artifactId>mail</artifactId>
+        <version>1.4</version>
+        <scope>compile</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>javax.transaction</groupId>
+        <artifactId>jta</artifactId>
+        <version>1.0.1B</version>
+        <scope>compile</scope>
+      </dependency>
+
     </dependencies>
   </dependencyManagement>
 
