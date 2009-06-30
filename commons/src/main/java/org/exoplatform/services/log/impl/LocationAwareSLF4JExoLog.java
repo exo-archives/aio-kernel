@@ -26,10 +26,10 @@ import org.slf4j.spi.LocationAwareLogger;
  * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
  * @version $Revision$
  */
-public class LocationAwareSLF4JExoLogger implements Log {
+public class LocationAwareSLF4JExoLog implements Log {
 
   /** . */
-  private static final String FQCN = LocationAwareSLF4JExoLogger.class.getName();
+  private static final String FQCN = LocationAwareSLF4JExoLog.class.getName();
   
   /** . */
   private final LocationAwareLogger logger;
@@ -40,7 +40,7 @@ public class LocationAwareSLF4JExoLogger implements Log {
    * @param logger the logger
    * @throws NullPointerException if the logger is null
    */
-  public LocationAwareSLF4JExoLogger(LocationAwareLogger logger) {
+  public LocationAwareSLF4JExoLog(LocationAwareLogger logger) {
     if (logger == null) {
       throw new NullPointerException();
     }

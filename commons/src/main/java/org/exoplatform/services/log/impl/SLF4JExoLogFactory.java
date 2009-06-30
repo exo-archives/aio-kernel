@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.spi.LocationAwareLogger;
 
 /**
- * A factory for {@link org.exoplatform.services.log.impl.LocationAwareSLF4JExoLogger} and
+ * A factory for {@link org.exoplatform.services.log.impl.LocationAwareSLF4JExoLog} and
  * {@link org.exoplatform.services.log.impl.SLF4JExoLog} based on the type of the logger
  * returned by {@link org.slf4j.LoggerFactory} which can be {@link Logger} or {@link org.slf4j.spi.LocationAwareLogger}.
  *
@@ -34,7 +34,7 @@ public class SLF4JExoLogFactory extends AbstractExoLogFactory {
   protected Log getLogger(String name) {
     Logger slf4jlogger = LoggerFactory.getLogger(name);
     if (slf4jlogger instanceof LocationAwareLogger) {
-      return new LocationAwareSLF4JExoLogger((LocationAwareLogger)slf4jlogger);
+      return new LocationAwareSLF4JExoLog((LocationAwareLogger)slf4jlogger);
     } else {
       return new SLF4JExoLog(slf4jlogger);
     }
