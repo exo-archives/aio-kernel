@@ -16,7 +16,6 @@
  */
 package org.exoplatform.services.log;
 
-import org.exoplatform.services.log.impl.ExoLog;
 
 /**
  * This factory garantees the plugability of the logging system. 
@@ -33,7 +32,7 @@ public interface ExoLoggerFactory {
    * @return the logger
    * @throws NullPointerException if the name is null
    */
-  ExoLog getExoLogger(String name) throws NullPointerException;
+  Log getExoLogger(String name) throws NullPointerException;
 
   /**
    * Obtain a logger for the specified name.
@@ -42,6 +41,6 @@ public interface ExoLoggerFactory {
    * @return the logger
    * @throws NullPointerException if the name is null
    */
-  ExoLog getExoLogger(Class clazz) throws NullPointerException;
+  Log getExoLogger(Class clazz) throws NullPointerException;
 
 }

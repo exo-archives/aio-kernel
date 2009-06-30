@@ -52,7 +52,7 @@ import org.exoplatform.services.log.impl.SimpleExoLoggerFactory;
  * @version $Id: ExoLogger.java 5332 2006-04-29 18:32:44Z geaz $
  */
 
-public abstract class ExoLogger implements Log {
+public abstract class ExoLogger {
 
   /**
    * The factory we use when we cannot load SLF4J (for instance when jibx maven
@@ -104,7 +104,7 @@ public abstract class ExoLogger implements Log {
    * @return the logger
    * @throws NullPointerException if the name is null
    */
-  public static ExoLogger getExoLogger(String name) throws NullPointerException {
+  public static Log getExoLogger(String name) throws NullPointerException {
     if (name == null) {
       throw new NullPointerException("No null name accepted");
     }
@@ -124,7 +124,7 @@ public abstract class ExoLogger implements Log {
    * @return the logger
    * @throws NullPointerException if the name is null
    */
-  public static ExoLogger getExoLogger(Class name) throws NullPointerException {
+  public static Log getExoLogger(Class name) throws NullPointerException {
     if (name == null) {
       throw new NullPointerException("No null name accepted");
     }

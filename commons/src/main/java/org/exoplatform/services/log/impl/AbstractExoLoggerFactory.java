@@ -16,11 +16,11 @@
  */
 package org.exoplatform.services.log.impl;
 
-import org.exoplatform.services.log.ExoLoggerFactory;
-import org.exoplatform.services.log.ExoLogger;
-
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+
+import org.exoplatform.services.log.ExoLoggerFactory;
+import org.exoplatform.services.log.Log;
 
 /**
  * An abstract logger factory that maintains a cache of name to logger instance.
@@ -32,7 +32,7 @@ import java.util.concurrent.ConcurrentMap;
 public abstract class AbstractExoLoggerFactory implements ExoLoggerFactory {
 
   /** . */
-  private final ConcurrentMap<String, ExoLogger> loggers = new ConcurrentHashMap<String, ExoLogger>();
+  private final ConcurrentMap<String, Log> loggers = new ConcurrentHashMap<String, Log>();
 
   /**
    * Obtain a specified logger.
@@ -40,16 +40,16 @@ public abstract class AbstractExoLoggerFactory implements ExoLoggerFactory {
    * @param name the logger name
    * @return the logger
    */
-  protected abstract ExoLogger getLogger(String name);
+  protected abstract Log getLogger(String name);
 
-  public final ExoLogger getExoLogger(String name) {
+  public final Log getExoLogger(String name) {
     if (name == null) {
       throw new NullPointerException();
     }
-    ExoLogger exoLogger = loggers.get(name);
+    Log exoLogger = loggers.get(name);
     if (exoLogger == null) {
       exoLogger = getLogger(name);
-      ExoLogger phantom = loggers.putIfAbsent(name, exoLogger);
+      Log phantom = loggers.putIfAbsent(name, exoLogger);
       if (phantom != null) {
         exoLogger = phantom;
       }
@@ -57,7 +57,7 @@ public abstract class AbstractExoLoggerFactory implements ExoLoggerFactory {
     return exoLogger;
   }
 
-  public final ExoLogger getExoLogger(Class clazz) {
+  public final Log getExoLogger(Class clazz) {
     if (clazz == null) {
       throw new NullPointerException();
     }
