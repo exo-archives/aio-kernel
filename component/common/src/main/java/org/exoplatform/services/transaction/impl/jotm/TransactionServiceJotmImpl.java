@@ -32,7 +32,7 @@ import org.objectweb.jotm.TransactionFactory;
 import org.objectweb.jotm.TransactionFactoryImpl;
 import org.objectweb.jotm.XidImpl;
 
-import org.apache.commons.logging.Log;
+import org.exoplatform.services.log.Log;
 
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.services.log.ExoLogger;

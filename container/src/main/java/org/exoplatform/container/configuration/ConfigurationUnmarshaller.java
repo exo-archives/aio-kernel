@@ -25,7 +25,7 @@ import org.xml.sax.SAXException;
 import org.jibx.runtime.IBindingFactory;
 import org.jibx.runtime.BindingDirectory;
 import org.jibx.runtime.IUnmarshallingContext;
-import org.apache.commons.logging.Log;
+import org.exoplatform.services.log.Log;
 
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Schema;

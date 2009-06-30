@@ -9,7 +9,7 @@ import junit.framework.TestCase;
 
 import org.objectweb.jotm.Current;
 
-import org.apache.commons.logging.Log;
+import org.exoplatform.services.log.Log;
 
 import org.exoplatform.container.StandaloneContainer;
 import org.exoplatform.services.log.ExoLogger;

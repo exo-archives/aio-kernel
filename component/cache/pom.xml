@@ -45,7 +45,7 @@
         <configuration>
           <systemProperties>
             <property>
-              <name>org.apache.commons.logging.Log</name>
+              <name>org.exoplatform.services.log.Log</name>
               <value>org.exoplatform.services.cache.test.MockTestLogger</value>
             </property>
           </systemProperties>

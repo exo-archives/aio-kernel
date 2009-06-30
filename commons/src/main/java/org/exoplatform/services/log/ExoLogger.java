@@ -16,31 +16,37 @@
  */
 package org.exoplatform.services.log;
 
-import org.apache.commons.logging.Log;
 import org.exoplatform.services.log.impl.SLF4JExoLoggerFactory;
 import org.exoplatform.services.log.impl.SimpleExoLoggerFactory;
 
 /**
  * The logger definition for exo platform.
- *
- * <p>The logger implements the {@link org.apache.commons.logging.Log} interface for backward compatibility
- * purpose.</p>
- *
- * <p>This class is also the way to obtain a reference to a logger through the static methods {@link #getExoLogger(String)}
- * and {@link #getExoLogger(Class)}.</p>
- *
- *
- * <p>The factory methods delegates to an instance of {@link org.exoplatform.services.log.ExoLoggerFactory} that is determined
- * by the following rules
+ * <p>
+ * The logger implements the {@link org.exoplatform.services.log.Log} interface
+ * for backward compatibility purpose.
+ * </p>
+ * <p>
+ * This class is also the way to obtain a reference to a logger through the
+ * static methods {@link #getExoLogger(String)} and {@link #getExoLogger(Class)}
+ * .
+ * </p>
+ * <p>
+ * The factory methods delegates to an instance of
+ * {@link org.exoplatform.services.log.ExoLoggerFactory} that is determined by
+ * the following rules
  * <ul>
- * <li>A static instance is used and by default the static instance is assigned with an instance of the class
- * {@link org.exoplatform.services.log.impl.SLF4JExoLoggerFactory}. It is possible to change the instance
- * at runtime by calling the static method {@link #setFactory(ExoLoggerFactory)}.</li>
- * <li>If the static instance fails to deliver a logger at runtime due to a {@link NoClassDefFoundError} then a factory
- * instance of class {@link org.exoplatform.services.log.impl.SimpleExoLoggerFactory} is used for fail over.</li>
+ * <li>A static instance is used and by default the static instance is assigned
+ * with an instance of the class
+ * {@link org.exoplatform.services.log.impl.SLF4JExoLoggerFactory}. It is
+ * possible to change the instance at runtime by calling the static method
+ * {@link #setFactory(ExoLoggerFactory)}.</li>
+ * <li>If the static instance fails to deliver a logger at runtime due to a
+ * {@link NoClassDefFoundError} then a factory instance of class
+ * {@link org.exoplatform.services.log.impl.SimpleExoLoggerFactory} is used for
+ * fail over.</li>
  * </ul>
  * </p>
- *
+ * 
  * @author <a href="mailto:gennady.azarenkov@exoplatform.com">Gennady
  *         Azarenkov</a>
  * @version $Id: ExoLogger.java 5332 2006-04-29 18:32:44Z geaz $
@@ -48,16 +54,19 @@ import org.exoplatform.services.log.impl.SimpleExoLoggerFactory;
 
 public abstract class ExoLogger implements Log {
 
-  /** The factory we use when we cannot load SLF4J (for instance when jibx maven plugin is executed). */
+  /**
+   * The factory we use when we cannot load SLF4J (for instance when jibx maven
+   * plugin is executed).
+   */
   private static SimpleExoLoggerFactory failOverFactory = new SimpleExoLoggerFactory();
 
   /** . */
-  private static ExoLoggerFactory loggerFactory = new SLF4JExoLoggerFactory();
+  private static ExoLoggerFactory       loggerFactory   = new SLF4JExoLoggerFactory();
 
   /**
-   * Configures the exo logger factory. This method can be called multiple times to replace
-   * the current static instance.
-   *
+   * Configures the exo logger factory. This method can be called multiple times
+   * to replace the current static instance.
+   * 
    * @param factory the new factory
    * @throws NullPointerException when the factory is null
    */
@@ -70,7 +79,7 @@ public abstract class ExoLogger implements Log {
 
   /**
    * Use instead {@link #getExoLogger(String)}.
-   *
+   * 
    * @param name the logger name
    * @return the logger
    */
@@ -80,7 +89,7 @@ public abstract class ExoLogger implements Log {
 
   /**
    * Use instead {@link #getExoLogger(Class)}.
-   *
+   * 
    * @param name the logger name
    * @return the logger
    */
@@ -90,7 +99,7 @@ public abstract class ExoLogger implements Log {
 
   /**
    * Returns a specified logger.
-   *
+   * 
    * @param name the logger name
    * @return the logger
    * @throws NullPointerException if the name is null
@@ -101,16 +110,16 @@ public abstract class ExoLogger implements Log {
     }
     try {
       return loggerFactory.getExoLogger(name);
-    }
-    catch (NoClassDefFoundError e) {
-      System.err.println("Could not load logger class factory " + e.getMessage() + " will use fail over logger instead");
+    } catch (NoClassDefFoundError e) {
+      System.err.println("Could not load logger class factory " + e.getMessage()
+          + " will use fail over logger instead");
       return failOverFactory.getExoLogger(name);
     }
   }
 
   /**
    * Returns a specified logger.
-   *
+   * 
    * @param name the logger name
    * @return the logger
    * @throws NullPointerException if the name is null
@@ -121,9 +130,9 @@ public abstract class ExoLogger implements Log {
     }
     try {
       return loggerFactory.getExoLogger(name);
-    }
-    catch (NoClassDefFoundError e) {
-      System.err.println("Could not load logger class factory " + e.getMessage() + " will use fail over logger instead");
+    } catch (NoClassDefFoundError e) {
+      System.err.println("Could not load logger class factory " + e.getMessage()
+          + " will use fail over logger instead");
       return failOverFactory.getExoLogger(name);
     }
   }

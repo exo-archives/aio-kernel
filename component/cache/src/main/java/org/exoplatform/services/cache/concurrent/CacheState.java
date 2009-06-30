@@ -16,7 +16,7 @@
  */
 package org.exoplatform.services.cache.concurrent;
 
-import org.apache.commons.logging.Log;
+import org.exoplatform.services.log.Log;
 
 import java.io.Serializable;
 import java.util.concurrent.ConcurrentHashMap;

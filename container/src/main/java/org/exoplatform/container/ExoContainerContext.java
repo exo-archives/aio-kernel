@@ -16,7 +16,7 @@
  */
 package org.exoplatform.container;
 
-import org.apache.commons.logging.Log;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.services.log.ExoLogger;
 
 import java.util.HashMap;

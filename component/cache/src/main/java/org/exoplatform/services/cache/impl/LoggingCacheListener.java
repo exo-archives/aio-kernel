@@ -18,7 +18,7 @@ package org.exoplatform.services.cache.impl;
 
 import java.io.Serializable;
 
-import org.apache.commons.logging.Log;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.services.cache.CacheListener;
 import org.exoplatform.services.cache.CacheListenerContext;
 import org.exoplatform.services.log.ExoLogger;

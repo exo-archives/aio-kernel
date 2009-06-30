@@ -189,7 +189,7 @@ public class TestCacheService extends BasicTestCase {
     }
     Log log = ExoLogger.getLogger("kernel.cache.log");
     
-    assertTrue("logger is not MockTestLogger, you needto pass -Dorg.apache.commons.logging.Log=org.exoplatform.services.cache.test.MockTestLogger", (log instanceof MockTestLogger));
+    assertTrue("logger is not MockTestLogger, you needto pass -Dorg.exoplatform.services.log.Log=org.exoplatform.services.cache.test.MockTestLogger", (log instanceof MockTestLogger));
     
     MockTestLogger logger = (MockTestLogger) log;
     assertEquals("Number of warnings ", 6,logger.getWarnCount());

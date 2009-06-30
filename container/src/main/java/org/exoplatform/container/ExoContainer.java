@@ -14,8 +14,7 @@ import org.picocontainer.PicoContainer;
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.defaults.ComponentAdapterFactory;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.exoplatform.services.log.Log;
 
 import org.exoplatform.container.component.ComponentLifecyclePlugin;
 import org.exoplatform.container.configuration.ConfigurationManager;

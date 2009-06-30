@@ -21,7 +21,7 @@ import org.picocontainer.PicoContainer;
 import org.picocontainer.PicoInitializationException;
 import org.picocontainer.PicoIntrospectionException;
 import org.picocontainer.PicoVisitor;
-import org.apache.commons.logging.Log;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.services.log.ExoLogger;
 
 /**

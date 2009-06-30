@@ -17,7 +17,7 @@ import java.util.List;
 import org.picocontainer.PicoContainer;
 import org.picocontainer.defaults.AbstractComponentAdapter;
 
-import org.apache.commons.logging.Log;
+import org.exoplatform.services.log.Log;
 
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.component.ComponentLifecycle;

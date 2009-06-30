@@ -27,7 +27,7 @@ import javax.naming.NameAlreadyBoundException;
 import javax.naming.NamingException;
 import javax.naming.Reference;
 
-import org.apache.commons.logging.Log;
+import org.exoplatform.services.log.Log;
 
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.container.configuration.ConfigurationException;

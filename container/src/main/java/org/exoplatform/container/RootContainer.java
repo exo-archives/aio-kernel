@@ -24,7 +24,7 @@ import org.exoplatform.management.jmx.annotations.NamingContext;
 import org.exoplatform.management.jmx.annotations.Property;
 import org.exoplatform.management.annotations.Managed;
 import org.exoplatform.services.log.ExoLogger;
-import org.apache.commons.logging.Log;
+import org.exoplatform.services.log.Log;
 import org.picocontainer.ComponentAdapter;
 
 /**

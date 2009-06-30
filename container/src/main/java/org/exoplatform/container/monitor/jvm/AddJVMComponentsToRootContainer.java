@@ -21,7 +21,7 @@ import java.lang.management.ManagementFactory;
 import org.exoplatform.container.BaseContainerLifecyclePlugin;
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.services.log.ExoLogger;
-import org.apache.commons.logging.Log;
+import org.exoplatform.services.log.Log;
 
 /**
  * @author Tuan Nguyen (tuan08@users.sourceforge.net)

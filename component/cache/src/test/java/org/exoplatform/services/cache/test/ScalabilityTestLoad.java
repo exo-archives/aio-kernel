@@ -32,7 +32,7 @@ import org.exoplatform.services.cache.FIFOExoCache;
 import org.exoplatform.services.cache.CacheListener;
 import org.exoplatform.services.cache.CacheListenerContext;
 import org.exoplatform.services.cache.concurrent.ConcurrentFIFOExoCache;
-import org.apache.commons.logging.Log;
+import org.exoplatform.services.log.Log;
 
 /**
  * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>

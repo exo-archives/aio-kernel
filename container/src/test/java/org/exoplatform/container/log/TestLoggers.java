@@ -19,6 +19,8 @@ package org.exoplatform.container.log;
 import java.util.Properties;
 
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.services.log.LogConfigurationInitializer;
 import org.exoplatform.test.BasicTestCase;
 import org.slf4j.Logger;
@@ -32,8 +34,17 @@ import org.slf4j.LoggerFactory;
 public class TestLoggers extends BasicTestCase {
 
   private final String logger = "org.slf4j.Logger";
+  
+  
+  public void testExoLog() {
+    Log log = ExoLogger.getLogger(TestLoggers.class);
+    System.out.println(log.getClass().getName());
+    
+    
+  }
+  
 
-  public void testLog4j() throws Exception {
+  public void _testLog4j() throws Exception {
 
     Logger log = LoggerFactory.getLogger(TestLoggers.class);
 

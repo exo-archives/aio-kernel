@@ -20,7 +20,7 @@ import org.exoplatform.services.cache.ExoCache;
 import org.exoplatform.services.cache.CachedObjectSelector;
 import org.exoplatform.services.cache.CacheListener;
 import org.exoplatform.services.cache.ObjectCacheInfo;
-import org.apache.commons.logging.Log;
+import org.exoplatform.services.log.Log;
 
 import java.io.Serializable;
 import java.util.Map;

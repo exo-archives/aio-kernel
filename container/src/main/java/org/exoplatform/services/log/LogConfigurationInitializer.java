@@ -21,8 +21,6 @@ import java.util.Properties;
 
 import org.picocontainer.Startable;
 
-import org.apache.commons.logging.LogFactory;
-
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.PropertiesParam;
 import org.exoplatform.container.xml.ValueParam;
@@ -31,7 +29,7 @@ import org.exoplatform.container.xml.ValueParam;
  * Created by The eXo Platform SAS. <br/> The component for commons based
  * logging configuration initialization. There are 3 optional initialization
  * parameters: logger - a logger class implemented
- * org.apache.commons.logging.Log configurator - a log system configurator
+ * org.exoplatform.services.log.Log configurator - a log system configurator
  * implementation of LogConfigurator parameters - list of parameters for the
  * configurator
  * 
