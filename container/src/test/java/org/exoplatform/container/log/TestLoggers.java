@@ -34,8 +34,8 @@ public class TestLoggers extends BasicTestCase {
   private final String logger = "org.slf4j.Logger";
   
   
-  public void _testExoLog() throws Exception {
-    long started = System.currentTimeMillis();
+  public void testExoLogPerformance() throws Exception {
+    
     Log log = ExoLogger.getLogger(TestLoggers.class);
 
     String confClass = "org.exoplatform.services.log.impl.Log4JConfigurator";
@@ -64,9 +64,12 @@ public class TestLoggers extends BasicTestCase {
                                                                               confClass,
                                                                               props);
     
-    for (int i = 0; i< 10000; i++) {
-      log.info("Info " + i);
-    }
+    log.info("Performance test.");
+    long started = System.currentTimeMillis();
+    
+//    for (int i = 0; i< 10000; i++) {
+//      log.info("Info " + i);
+//    }
     
     long finished = System.currentTimeMillis();
     
@@ -76,7 +79,7 @@ public class TestLoggers extends BasicTestCase {
   }
   
 
-  public void _testLog4j() throws Exception {
+  public void testLog4j() throws Exception {
 
     Log log = ExoLogger.getLogger(TestLoggers.class);
 
@@ -126,10 +129,10 @@ public class TestLoggers extends BasicTestCase {
   }
 
   /**
-   * To launch this test: 1. remove Log4jConfogurator from
-   * org.exoplatform.services.log. 2. remove log4j dependency from
-   * exo.kernel.commons. 3. replace slf4j-log4j12 with slf4j-jcl in
-   * exo.kernel.commons dependencies.
+   * To launch this test: 
+   * 1. remove Log4jConfogurator from org.exoplatform.services.log. 
+   * 2. remove log4j dependency from exo.kernel.commons. 
+   * 3. replace slf4j-log4j12 with slf4j-jcl in exo.kernel.commons dependencies.
    */
   public void _testJCLLog() throws Exception {
 
