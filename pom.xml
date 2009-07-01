@@ -233,7 +233,7 @@
         <configuration>
           <skip>${exo.test.skip}</skip>
           <useFile>${exo.test.use.file}</useFile>
-          <forkMode>${exo.test.forkMode}</forkMode>
+          <forkMode>always</forkMode>
           <testFailureIgnore>${exo.test.failure.ignore}</testFailureIgnore>
           <classesDirectory>${exo.test.classesdirectory}</classesDirectory>
           <includes>

@@ -16,17 +16,13 @@
  */
 package org.exoplatform.container.jmx;
 
-import junit.framework.TestCase;
-import org.exoplatform.container.RootContainer;
-import org.exoplatform.container.jmx.support.ManagedManagementAware;
-import org.exoplatform.container.jmx.support.ManagedDependent;
-import org.exoplatform.container.jmx.support.ManagedWithObjectNameTemplate;
-import org.exoplatform.container.configuration.ConfigurationManagerImpl;
-import org.exoplatform.container.configuration.ConfigurationManager;
-
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
-import java.net.URL;
+
+import org.exoplatform.container.RootContainer;
+import org.exoplatform.container.jmx.support.ManagedDependent;
+import org.exoplatform.container.jmx.support.ManagedManagementAware;
+import org.exoplatform.container.jmx.support.ManagedWithObjectNameTemplate;
 
 /**
  * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>

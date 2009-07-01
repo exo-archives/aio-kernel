@@ -90,23 +90,7 @@ public class TestJ2EEServerInfo extends TestCase {
       if (!fileExists(configurationURL) && configClassLoader != null) {
         configurationURL = configClassLoader.getResource("conf/exo-configuration.xml");
       }
-
-      // (4) conf/standalone/configuration.xml in jar
-      // Note: this option may be suitable for test only as there can be more
-      // than
-      // one jars with conf/standalone/configuration.xml file
-      /*
-       * if(!fileExists(configurationURL)) { configurationURL =
-       * Thread.currentThread
-       * ().getContextClassLoader().getResource("conf/standalone/configuration.xml"
-       * ); if (configurationURL == null) throw new ConfigurationException( "No
-       * StandaloneContainer config found. Check if
-       * conf/standalone/configuration.xml exists !"); }
-       */
-      // container.getContext().setAttribute(CONFIGURATION_URL_ATTR,
-      // configurationURL);
     }
-
   }
 
   private static boolean fileExists(URL url) {

@@ -10,10 +10,10 @@ import org.exoplatform.mocks.PriorityService;
 import org.exoplatform.test.BasicTestCase;
 
 /**
- * Created by the Exo Development team. Author : Mestrallet Benjamin
- * benjamin.mestrallet@exoplatform.com
+ * Created by the Exo Development team.<br/> 
+ * Author : Mestrallet Benjamin benjamin.mestrallet@exoplatform.com
+ * @version $Id$
  */
-
 public class TestContainer extends BasicTestCase {
 
   public void setUp() throws Exception {
@@ -104,10 +104,4 @@ public class TestContainer extends BasicTestCase {
     assertEquals("PluginPriority1", l.get(1).getName());
     assertEquals("PluginPriority2", l.get(2).getName());
   }
-
-  // public void testClientType() throws Exception {
-  // System.setProperty("javax.xml.parsers.DocumentBuilderFactory",
-  // "javax.xml.parsers.DocumentBuilderFactory") ;
-  // ClientTypeMap.getInstance() ;
-  // }
 }
