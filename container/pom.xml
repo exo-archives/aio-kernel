@@ -18,6 +18,7 @@
       <groupId>org.exoplatform.kernel</groupId>
       <artifactId>exo.kernel.commons</artifactId>
       <version>2.1.2-SNAPSHOT</version>
+      <scope>compile</scope>
     </dependency>
 
     <dependency>
