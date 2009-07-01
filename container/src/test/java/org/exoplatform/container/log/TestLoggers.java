@@ -23,8 +23,6 @@ import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.log.LogConfigurationInitializer;
 import org.exoplatform.test.BasicTestCase;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Created by The eXo Platform SAS
@@ -32,21 +30,55 @@ import org.slf4j.LoggerFactory;
  * @author <a href="work.visor.ck@gmail.com">Dmytro Katayev</a> Jun 24, 2009
  */
 public class TestLoggers extends BasicTestCase {
-
+    
   private final String logger = "org.slf4j.Logger";
   
   
-  public void testExoLog() {
+  public void _testExoLog() throws Exception {
+    long started = System.currentTimeMillis();
     Log log = ExoLogger.getLogger(TestLoggers.class);
-    System.out.println(log.getClass().getName());
+
+    String confClass = "org.exoplatform.services.log.impl.Log4JConfigurator";
+
+    Properties props = new Properties();
+
+    props.put("log4j.rootLogger", "INFO, stdout, file");
+
+    props.put("log4j.appender.stdout", "org.apache.log4j.ConsoleAppender");
+    props.put("log4j.appender.stdout.threshold", "DEBUG");
+
+    props.put("log4j.appender.stdout.layout", "org.apache.log4j.PatternLayout");
+    props.put("log4j.appender.stdout.layout.ConversionPattern",
+              "%d{dd.MM.yyyy HH:mm:ss} *%-5p* [%t] %c{1}: %m (%F, line %L) %n");
+
+    props.put("log4j.appender.file", "org.apache.log4j.FileAppender");
+    props.put("log4j.appender.file.File", "target/l4j_info.log");
+
+    props.put("log4j.appender.file.layout", "org.apache.log4j.PatternLayout");
+    props.put("log4j.appender.file.layout.ConversionPattern",
+              "%d{dd.MM.yyyy HH:mm:ss} *%-5p* [%t] %c{1}: %m (%F, line %L) %n");
+
+    props.put("log4j.category.jcr.FileCleaner", "DEBUG");
+
+    LogConfigurationInitializer initializer = new LogConfigurationInitializer(logger,
+                                                                              confClass,
+                                                                              props);
     
+    for (int i = 0; i< 10000; i++) {
+      log.info("Info " + i);
+    }
+    
+    long finished = System.currentTimeMillis();
+    
+    System.out.println(started);
+    System.out.println(finished);
     
   }
   
 
   public void _testLog4j() throws Exception {
 
-    Logger log = LoggerFactory.getLogger(TestLoggers.class);
+    Log log = ExoLogger.getLogger(TestLoggers.class);
 
     String confClass = "org.exoplatform.services.log.impl.Log4JConfigurator";
 
@@ -86,7 +118,7 @@ public class TestLoggers extends BasicTestCase {
   public void _testLog4jContainer() throws Exception {
 
     PortalContainer container = PortalContainer.getInstance();
-    Logger log = LoggerFactory.getLogger(TestLoggers.class);
+    Log log = ExoLogger.getLogger(TestLoggers.class);
 
     log.info("Log4j Container Tests");
     logOut(log);
@@ -114,7 +146,7 @@ public class TestLoggers extends BasicTestCase {
     LogConfigurationInitializer initializer = new LogConfigurationInitializer(logger,
                                                                               confClass,
                                                                               props);
-    Logger log = LoggerFactory.getLogger(TestLoggers.class);
+    Log log = ExoLogger.getLogger(TestLoggers.class);
 
     log.info("JCL Tests");
     logOut(log);
@@ -131,14 +163,14 @@ public class TestLoggers extends BasicTestCase {
   public void _testJCLContainer() throws Exception {
 
     PortalContainer container = PortalContainer.getInstance();
-    Logger log = LoggerFactory.getLogger(TestLoggers.class);
+    Log log = ExoLogger.getLogger(TestLoggers.class);
 
     log.info("JCL Container Tests");
     logOut(log);
 
   }
 
-  private void logOut(Logger log) {
+  private void logOut(Log log) {
     log.debug(log.getClass().getName() + ": \tDEBUG");
     log.error(log.getClass().getName() + ": \tERROR");
     log.info(log.getClass().getName() + ": \tINFO");
