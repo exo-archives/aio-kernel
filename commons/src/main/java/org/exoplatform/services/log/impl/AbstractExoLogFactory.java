@@ -42,6 +42,9 @@ public abstract class AbstractExoLogFactory implements ExoLogFactory {
    */
   protected abstract Log getLogger(String name);
 
+  /**
+   * {@inheritDoc}
+   */
   public final Log getExoLogger(String name) {
     if (name == null) {
       throw new NullPointerException();
@@ -57,6 +60,9 @@ public abstract class AbstractExoLogFactory implements ExoLogFactory {
     return exoLogger;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public final Log getExoLogger(Class clazz) {
     if (clazz == null) {
       throw new NullPointerException();

@@ -56,7 +56,6 @@ import org.exoplatform.services.log.impl.SimpleExoLogFactory;
  *         Azarenkov</a>
  * @version $Id$
  */
-
 public abstract class ExoLogger {
 
   /**
@@ -65,14 +64,14 @@ public abstract class ExoLogger {
    */
   private static SimpleExoLogFactory failOverFactory = new SimpleExoLogFactory();
 
-  /** . */
+  /** SLF4J logger factory. */
   private static ExoLogFactory       loggerFactory   = new SLF4JExoLogFactory();
 
   /**
    * Configures the exo logger factory. This method can be called multiple times
    * to replace the current static instance.
    * 
-   * @param factory the new factory
+   * @param factory ExoLogFactory, the new factory
    * @throws NullPointerException when the factory is null
    */
   public static void setFactory(ExoLogFactory factory) throws NullPointerException {
@@ -85,7 +84,7 @@ public abstract class ExoLogger {
   /**
    * Use instead {@link #getExoLogger(String)}.
    * 
-   * @param name the logger name
+   * @param name String, the logger name
    * @return the logger
    */
   public static Log getLogger(String name) {
@@ -95,7 +94,7 @@ public abstract class ExoLogger {
   /**
    * Use instead {@link #getExoLogger(Class)}.
    * 
-   * @param name the logger name
+   * @param name Class, the logger name
    * @return the logger
    */
   public static Log getLogger(Class name) {
