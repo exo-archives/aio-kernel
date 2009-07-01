@@ -23,8 +23,7 @@ import org.slf4j.Logger;
  * Created by The eXo Platform SAS
  * 
  * @author <a href="work.visor.ck@gmail.com">Dmytro Katayev</a>
- *
- * Jun 26, 2009  
+ * @version $Id$  
  */
 public class ExoLog implements Log {
   

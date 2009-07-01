@@ -28,7 +28,6 @@ import org.exoplatform.services.log.AbstractLogConfigurator;
  * @author <a href="mailto:gennady.azarenkov@exoplatform.com">Gennady Azarenkov</a>
  * @version $Id$
  */
-
 public class Log4JConfigurator extends AbstractLogConfigurator {
 
   public void configure(Properties properties) {

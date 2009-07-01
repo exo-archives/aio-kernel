@@ -22,7 +22,7 @@ import org.exoplatform.services.log.Log;
  * A factory for {@link org.exoplatform.services.log.impl.SimpleExoLog}.
  *
  * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
- * @version $Revision$
+ * @version $Id$
  */
 public class SimpleExoLogFactory extends AbstractExoLogFactory {
 

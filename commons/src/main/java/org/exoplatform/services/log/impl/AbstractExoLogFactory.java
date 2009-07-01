@@ -27,7 +27,7 @@ import org.exoplatform.services.log.Log;
  * The cache is based on the {@link ConcurrentHashMap} for better scalability.
  *
  * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
- * @version $Revision$
+ * @version $Id$
  */
 public abstract class AbstractExoLogFactory implements ExoLogFactory {
 

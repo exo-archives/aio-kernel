@@ -24,7 +24,7 @@ import org.slf4j.Logger;
  * An implementation of {@link ExoLogger} that delegates to an instance of {@link Logger}.
  *
  * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
- * @version $Revision$
+ * @version $Id$
  */
 public class SLF4JExoLog implements Log{
 
@@ -34,13 +34,13 @@ public class SLF4JExoLog implements Log{
   /**
    * Create a new instance.
    *
-   * @param logger the logger
+   * @param logger Logger
    * @throws NullPointerException if the logger is null
    */
   public SLF4JExoLog(Logger logger) throws NullPointerException {
-    if (logger == null) {
+    if (logger == null)
       throw new NullPointerException();
-    }
+    
     this.logger = logger;
   }
 
@@ -48,70 +48,121 @@ public class SLF4JExoLog implements Log{
     return logger.isDebugEnabled();
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public boolean isErrorEnabled() {
     return logger.isErrorEnabled();
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public boolean isFatalEnabled() {
     return logger.isErrorEnabled();
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public boolean isInfoEnabled() {
     return logger.isInfoEnabled();
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public boolean isTraceEnabled() {
     return logger.isTraceEnabled();
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public boolean isWarnEnabled() {
     return logger.isWarnEnabled();
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public void trace(Object o) {
     logger.trace(String.valueOf(o));
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public void trace(Object o, Throwable throwable) {
     logger.trace(String.valueOf(o), throwable);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public void debug(Object o) {
     logger.debug(String.valueOf(o));
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public void debug(Object o, Throwable throwable) {
     logger.debug(String.valueOf(o), throwable);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public void info(Object o) {
     logger.info(String.valueOf(o));
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public void info(Object o, Throwable throwable) {
     logger.info(String.valueOf(o), throwable);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public void warn(Object o) {
     logger.warn(String.valueOf(o));
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public void warn(Object o, Throwable throwable) {
     logger.warn(String.valueOf(o), throwable);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public void error(Object o) {
     logger.error(String.valueOf(o));
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public void error(Object o, Throwable throwable) {
     logger.error(String.valueOf(o), throwable);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public void fatal(Object o) {
     logger.error(String.valueOf(o));
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public void fatal(Object o, Throwable throwable) {
     logger.error(String.valueOf(o), throwable);
   }

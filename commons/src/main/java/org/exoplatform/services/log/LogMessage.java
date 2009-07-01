@@ -18,7 +18,7 @@ package org.exoplatform.services.log;
 
 /**
  * Created by the Exo Development team. Author : Tuan Nguyen
- * tuan08@users.sourceforge.net Date: 14 nov. 2003 Time: 20:19:45
+ * @version $Id$
  */
 public class LogMessage {
 

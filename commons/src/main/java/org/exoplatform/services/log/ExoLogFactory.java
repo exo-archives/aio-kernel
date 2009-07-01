@@ -21,7 +21,7 @@ package org.exoplatform.services.log;
  * This factory garantees the plugability of the logging system. 
  *
  * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
- * @version $Revision$
+ * @version $Id$
  */
 public interface ExoLogFactory {
 

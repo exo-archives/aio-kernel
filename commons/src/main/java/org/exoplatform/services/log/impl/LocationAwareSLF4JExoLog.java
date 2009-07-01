@@ -24,7 +24,7 @@ import org.slf4j.spi.LocationAwareLogger;
  * An implementation of {@link ExoLogger} that delegates to an instance of {@link LocationAwareLogger}.
  *
  * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
- * @version $Revision$
+ * @version $Id$
  */
 public class LocationAwareSLF4JExoLog implements Log {
 

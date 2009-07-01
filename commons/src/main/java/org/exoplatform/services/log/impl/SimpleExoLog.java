@@ -25,7 +25,7 @@ import org.exoplatform.services.log.Log;
  * logging is removed.
  *
  * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
- * @version $Revision$
+ * @version $Id$
  */
 public class SimpleExoLog implements Log {
 

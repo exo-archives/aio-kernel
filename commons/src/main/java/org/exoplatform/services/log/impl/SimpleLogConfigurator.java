@@ -30,7 +30,6 @@ import org.exoplatform.services.log.AbstractLogConfigurator;
  *         Azarenkov</a>
  * @version $Id$
  */
-
 public class SimpleLogConfigurator extends AbstractLogConfigurator {
 
   public void configure(Properties properties) {

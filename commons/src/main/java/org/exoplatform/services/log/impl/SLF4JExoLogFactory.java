@@ -27,10 +27,13 @@ import org.slf4j.spi.LocationAwareLogger;
  * returned by {@link org.slf4j.LoggerFactory} which can be {@link Logger} or {@link org.slf4j.spi.LocationAwareLogger}.
  *
  * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
- * @version $Revision$
+ * @version $Id$
  */
 public class SLF4JExoLogFactory extends AbstractExoLogFactory {
 
+  /**
+   * {@inheritDoc}
+   */
   protected Log getLogger(String name) {
     Logger slf4jlogger = LoggerFactory.getLogger(name);
     if (slf4jlogger instanceof LocationAwareLogger) {
