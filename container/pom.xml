@@ -23,21 +23,25 @@
     <dependency>
       <groupId>org.exoplatform.tool</groupId>
       <artifactId>exo.tool.framework.junit</artifactId>
+      <scope>compile</scope>
     </dependency>
     
     <dependency>
       <groupId>picocontainer</groupId>
       <artifactId>picocontainer</artifactId>
+      <scope>compile</scope>
     </dependency>
     
     <dependency>
       <groupId>commons-beanutils</groupId>
       <artifactId>commons-beanutils</artifactId>
+      <scope>compile</scope>
     </dependency>
     
     <dependency>
       <groupId>org.jibx</groupId>
       <artifactId>jibx-run</artifactId>
+      <scope>compile</scope>
       <exclusions>
         <exclusion>
           <groupId>org.codehaus.woodstox</groupId>
@@ -49,6 +53,7 @@
     <dependency>
       <groupId>org.jibx</groupId>
       <artifactId>jibx-bind</artifactId>
+      <scope>compile</scope>
       <exclusions>
         <exclusion>
           <groupId>org.codehaus.woodstox</groupId>
@@ -60,6 +65,7 @@
     <dependency>
       <groupId>org.jibx</groupId>
       <artifactId>jibx-extras</artifactId>
+      <scope>compile</scope>
     </dependency>
   </dependencies>
   

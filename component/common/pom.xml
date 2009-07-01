@@ -23,11 +23,13 @@
     <dependency>
       <groupId>javax.activation</groupId>
       <artifactId>activation</artifactId>
+      <scope>compile</scope>
     </dependency>
 
     <dependency>
       <groupId>jotm</groupId>
       <artifactId>jotm</artifactId>
+      <scope>compile</scope>
       <exclusions>
         <exclusion>
           <groupId>javax.resource</groupId>
@@ -39,23 +41,26 @@
     <dependency>
       <groupId>javax.resource</groupId>
       <artifactId>connector-api</artifactId>
+      <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>quartz</groupId>
       <artifactId>quartz</artifactId>
+      <scope>compile</scope>
     </dependency>
 
     <dependency>
       <groupId>javax.mail</groupId>
       <artifactId>mail</artifactId>
+      <scope>compile</scope>
     </dependency>
 
     <dependency>
       <groupId>javax.transaction</groupId>
       <artifactId>jta</artifactId>
+      <scope>compile</scope>
     </dependency>
-
   </dependencies>
 
 </project>
