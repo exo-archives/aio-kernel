@@ -177,6 +177,11 @@
 
   <dependencies>
     <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>emma</groupId>
       <artifactId>emma</artifactId>
       <scope>test</scope>
