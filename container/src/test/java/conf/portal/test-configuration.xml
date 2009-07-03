@@ -61,7 +61,7 @@
     </init-params>
   </component>
  
- <!-- Log4J logger configuration -->
+  <!-- Log4J logger configuration -->
   <component>
     <key>org.exoplatform.services.log.LogConfigurationInitializer</key>
     <type>org.exoplatform.services.log.LogConfigurationInitializer</type>
