@@ -1,4 +1,4 @@
-eXo Kernel v.2.0.7.
+eXo Kernel v.2.1.1.
 
 Release Notes
 =============
