@@ -30,12 +30,11 @@ import org.exoplatform.test.BasicTestCase;
  * @author <a href="work.visor.ck@gmail.com">Dmytro Katayev</a> Jun 24, 2009
  */
 public class TestLoggers extends BasicTestCase {
-    
+
   private final String logger = "org.slf4j.Logger";
-  
-  
-  public void testExoLogPerformance() throws Exception {
-    
+
+  public void _testExoLogPerformance() throws Exception {
+
     Log log = ExoLogger.getLogger(TestLoggers.class);
 
     String confClass = "org.exoplatform.services.log.impl.Log4JConfigurator";
@@ -58,28 +57,26 @@ public class TestLoggers extends BasicTestCase {
     props.put("log4j.appender.file.layout.ConversionPattern",
               "%d{dd.MM.yyyy HH:mm:ss} *%-5p* [%t] %c{1}: %m (%F, line %L) %n");
 
-    props.put("log4j.category.jcr.FileCleaner", "DEBUG");
 
     LogConfigurationInitializer initializer = new LogConfigurationInitializer(logger,
                                                                               confClass,
                                                                               props);
-    
+
     log.info("Performance test.");
     long started = System.currentTimeMillis();
-    
-//    for (int i = 0; i< 10000; i++) {
-//      log.info("Info " + i);
-//    }
-    
+
+    // for (int i = 0; i< 10000; i++) {
+    // log.info("Info " + i);
+    // }
+
     long finished = System.currentTimeMillis();
-    
+
     System.out.println(started);
     System.out.println(finished);
-    
-  }
-  
 
-  public void testLog4j() throws Exception {
+  }
+
+  public void _testLog4j() throws Exception {
 
     Log log = ExoLogger.getLogger(TestLoggers.class);
 
@@ -87,7 +84,7 @@ public class TestLoggers extends BasicTestCase {
 
     Properties props = new Properties();
 
-    props.put("log4j.rootLogger", "INFO, stdout, file");
+    props.put("log4j.rootLogger", "DEBUG, stdout, file");
 
     props.put("log4j.appender.stdout", "org.apache.log4j.ConsoleAppender");
     props.put("log4j.appender.stdout.threshold", "DEBUG");
@@ -102,8 +99,6 @@ public class TestLoggers extends BasicTestCase {
     props.put("log4j.appender.file.layout", "org.apache.log4j.PatternLayout");
     props.put("log4j.appender.file.layout.ConversionPattern",
               "%d{dd.MM.yyyy HH:mm:ss} *%-5p* [%t] %c{1}: %m (%F, line %L) %n");
-
-    props.put("log4j.category.jcr.FileCleaner", "DEBUG");
 
     LogConfigurationInitializer initializer = new LogConfigurationInitializer(logger,
                                                                               confClass,
@@ -111,14 +106,14 @@ public class TestLoggers extends BasicTestCase {
     log.info("LOG4J Tests");
     logOut(log);
 
-    initializer.setProperty("log4j.rootLogger", "DEBUG, stdout, file");
+    initializer.setProperty("log4j.rootLogger", "INFO, stdout, file");
     initializer.setProperty("log4j.appender.file.File", "target/l4j_debg.log");
 
     logOut(log);
 
   }
 
-  public void _testLog4jContainer() throws Exception {
+  public void testLog4jContainer() throws Exception {
 
     PortalContainer container = PortalContainer.getInstance();
     Log log = ExoLogger.getLogger(TestLoggers.class);
@@ -129,10 +124,10 @@ public class TestLoggers extends BasicTestCase {
   }
 
   /**
-   * To launch this test: 
-   * 1. remove Log4jConfogurator from org.exoplatform.services.log. 
-   * 2. remove log4j dependency from exo.kernel.commons. 
-   * 3. replace slf4j-log4j12 with slf4j-jcl in exo.kernel.commons dependencies.
+   * To launch this test: 1. remove Log4jConfogurator from
+   * org.exoplatform.services.log. 2. remove log4j dependency from
+   * exo.kernel.commons. 3. replace slf4j-log4j12 with slf4j-jcl in
+   * exo.kernel.commons dependencies.
    */
   public void _testJCLLog() throws Exception {
 
@@ -157,11 +152,11 @@ public class TestLoggers extends BasicTestCase {
   }
 
   /**
-   * To launch this test: 
-   * 1. remove Log4jConfogurator from org.exoplatform.services.log. 
-   * 2. remove log4j dependency from exo.kernel.commons. 
-   * 3. replace slf4j-log4j12 with slf4j-jcl in exo.kernel.commons dependencies. 
-   * 4. Comment Log4J logger configuration and uncomment JDK14 logger configuration in conf.portal/test-configuration.xml.
+   * To launch this test: 1. remove Log4jConfogurator from
+   * org.exoplatform.services.log. 2. remove log4j dependency from
+   * exo.kernel.commons. 3. replace slf4j-log4j12 with slf4j-jcl in
+   * exo.kernel.commons dependencies. 4. Comment Log4J logger configuration and
+   * uncomment JDK14 logger configuration in conf.portal/test-configuration.xml.
    */
   public void _testJCLContainer() throws Exception {
 
