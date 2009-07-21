@@ -28,6 +28,8 @@ import org.exoplatform.services.cache.CacheService;
 import org.exoplatform.services.cache.ExoCache;
 import org.exoplatform.services.cache.ExoCacheConfig;
 import org.exoplatform.services.cache.ExoCacheConfigPlugin;
+import org.exoplatform.services.cache.ExoCacheFactory;
+import org.exoplatform.services.cache.ExoCacheInitException;
 import org.exoplatform.services.cache.SimpleExoCache;
 import org.exoplatform.management.annotations.ManagedBy;
 
@@ -37,19 +39,25 @@ import org.exoplatform.management.annotations.ManagedBy;
  */
 @ManagedBy(CacheServiceManaged.class)
 public class CacheServiceImpl implements CacheService {
-  private HashMap<String, ExoCacheConfig> configs_  = new HashMap<String, ExoCacheConfig>();
+  private final HashMap<String, ExoCacheConfig> configs_  = new HashMap<String, ExoCacheConfig>();
 
-  private HashMap<String, ExoCache>       cacheMap_ = new HashMap<String, ExoCache>();
+  private final HashMap<String, ExoCache>       cacheMap_ = new HashMap<String, ExoCache>();
 
-  private ExoCacheConfig                  defaultConfig_;
+  private final ExoCacheConfig                  defaultConfig_;
+  
+  private final LoggingCacheListener            loggingListener_;
+  
+  private final ExoCacheFactory                 factory_;
 
   private DistributedCacheListener        distrbutedListener_;
-  
-  private LoggingCacheListener            loggingListener_;
 
   CacheServiceManaged managed;
 
   public CacheServiceImpl(InitParams params) throws Exception {
+    this(params, null);
+  }
+  
+  public CacheServiceImpl(InitParams params, ExoCacheFactory factory) throws Exception {
     List configs = params.getObjectParamValues(ExoCacheConfig.class);
     for (int i = 0; i < configs.size(); i++) {
       ExoCacheConfig config = (ExoCacheConfig) configs.get(i);
@@ -57,6 +65,7 @@ public class CacheServiceImpl implements CacheService {
     }
     defaultConfig_ = configs_.get("default");
     loggingListener_ = new LoggingCacheListener();
+    factory_ = factory == null ? new SimpleExoCacheFactory() : factory;
   }
 
   public void addExoCacheConfig(ComponentPlugin plugin) {
@@ -103,28 +112,11 @@ public class CacheServiceImpl implements CacheService {
     ExoCacheConfig config = configs_.get(region);
     if (config == null)
       config = defaultConfig_;
-    ExoCache simple = null;
-    if (config.getImplementation() == null) {
-      simple = new SimpleExoCache();
-    } else {
-      ClassLoader cl = Thread.currentThread().getContextClassLoader();
-      Class clazz = cl.loadClass(config.getImplementation());
-      simple = (ExoCache) clazz.newInstance();
-    }
-    simple.setName(region);
-    simple.setLabel(config.getLabel());
-    simple.setMaxSize(config.getMaxSize());
-    simple.setLiveTime(config.getLiveTime());
-    simple.setReplicated(config.isRepicated());
-    simple.setDistributed(config.isDistributed());
-    if (simple.isDistributed()) {
-      simple.addCacheListener(distrbutedListener_);
-    }
-    simple.setLogEnabled(config.isLogEnabled());
-    if (simple.isLogEnabled()) {
-      simple.addCacheListener(loggingListener_);
-    }
-
+    // Ensure the configuration integrity
+    final ExoCacheConfig safeConfig = config.clone();
+    // Set the region as name 
+    safeConfig.setName(region);
+    final ExoCache simple = factory_.createCache(safeConfig);
     //
     if (managed != null) {
       managed.registerCache(simple);
@@ -140,7 +132,7 @@ public class CacheServiceImpl implements CacheService {
 
   synchronized public void synchronize(String region, Serializable key, Object value) throws Exception {
     BaseExoCache cache = (BaseExoCache) getCacheInstance(region);
-    // S ystem.out.println("Synchonize key : " + key + " , value: " + value) ;
+    // System.out.println("Synchronize key : " + key + " , value: " + value) ;
     if (key == null) { // invalidate all cache if key is null ;
       cache.localClear();
     } else if (value == null) { // remove the key if value is null ;
@@ -150,5 +142,53 @@ public class CacheServiceImpl implements CacheService {
     }
   }
   
+  /**
+   * Default implementation of an {@link org.exoplatform.services.cache.ExoCacheFactory}
+   */
+  private class SimpleExoCacheFactory implements ExoCacheFactory {
+    
+    /**
+     * {@inheritDoc}
+     */
+    public ExoCache createCache(ExoCacheConfig config) throws ExoCacheInitException {
+      final ExoCache simple = createCacheInstance(config);
+      simple.setName(config.getName());
+      simple.setLabel(config.getLabel());
+      simple.setMaxSize(config.getMaxSize());
+      simple.setLiveTime(config.getLiveTime());
+      simple.setReplicated(config.isRepicated());
+      simple.setDistributed(config.isDistributed());
+      if (simple.isDistributed()) {
+        simple.addCacheListener(distrbutedListener_);
+      }
+      simple.setLogEnabled(config.isLogEnabled());
+      if (simple.isLogEnabled()) {
+        simple.addCacheListener(loggingListener_);
+      }
+      return simple;
+    }
 
+    /**
+     * Create a new instance of ExoCache according to the given configuration
+     * @param config the ExoCache configuration
+     * @return a new instance of ExoCache
+     * @throws ExoCacheInitException if any exception happens while initializing the cache
+     */
+    @SuppressWarnings("unchecked")
+    private ExoCache createCacheInstance(ExoCacheConfig config) throws ExoCacheInitException {
+      if (config.getImplementation() == null) {
+        // No implementation has been defined
+        return new SimpleExoCache();
+      } else {
+        // An implementation has been defined
+        final ClassLoader cl = Thread.currentThread().getContextClassLoader();
+        try {
+          final Class clazz = cl.loadClass(config.getImplementation());
+          return (ExoCache) clazz.newInstance();
+        } catch (Exception e) {
+          throw new ExoCacheInitException("Cannot create instance of ExoCache of type " + config.getImplementation(), e);
+        }
+      }    
+    }  
+  }
 }

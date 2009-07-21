@@ -21,7 +21,7 @@ package org.exoplatform.services.cache;
  * @since Feb 20, 2005
  * @version $Id: ExoCacheConfig.java 5799 2006-05-28 17:55:42Z geaz $
  */
-public class ExoCacheConfig {
+public class ExoCacheConfig implements Cloneable {
   private String  name;
 
   private String  label;
@@ -30,13 +30,18 @@ public class ExoCacheConfig {
 
   private long    liveTime;
 
-  private boolean distributed = false;
+  private boolean distributed;
 
-  private boolean replicated  = false;
+  private boolean replicated;
 
   private String  implementation;
   
-  private boolean logEnabled = false;
+  /**
+   * The type of cache
+   */
+  private String type;
+  
+  private boolean logEnabled;
 
   public String getName() {
     return name;
@@ -95,6 +100,14 @@ public class ExoCacheConfig {
   public void setImplementation(String alg) {
     implementation = alg;
   }
+  
+  public String getType() {
+    return type;
+  }
+
+  public void setType(String type) {
+    this.type = type;
+  }
 
   public boolean isLogEnabled() {
     return logEnabled;
@@ -102,5 +115,14 @@ public class ExoCacheConfig {
 
   public void setLogEnabled(boolean enableLogging) {
     this.logEnabled = enableLogging;
+  }
+  
+  @Override
+  public ExoCacheConfig clone() {
+    try {
+      return (ExoCacheConfig) super.clone();
+    } catch (CloneNotSupportedException e) {
+      throw new AssertionError();
+    }
   }
 }
