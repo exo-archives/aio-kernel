@@ -32,8 +32,9 @@ import org.exoplatform.services.cache.ObjectCacheInfo;
 import org.jboss.cache.Cache;
 import org.jboss.cache.Fqn;
 import org.jboss.cache.Node;
+import org.jboss.cache.notifications.annotation.NodeCreated;
 import org.jboss.cache.notifications.annotation.NodeEvicted;
-import org.jboss.cache.notifications.annotation.NodeInvalidated;
+import org.jboss.cache.notifications.annotation.NodeRemoved;
 import org.jboss.cache.notifications.event.NodeEvent;
 
 /**
@@ -88,8 +89,13 @@ public abstract class AbstractExoCache implements ExoCache {
    * {@inheritDoc}
    */
   public void clearCache() throws Exception {
-    cache.evict(Fqn.ROOT, true);
-    size.set(0);
+    final Node<Serializable, Object> rootNode = cache.getRoot();
+    for (Node<Serializable, Object> node : rootNode.getChildren()) {
+      if (node == null) {
+        continue;
+      }      
+      remove(getKey(node));
+    }
   }
 
   /**
@@ -297,10 +303,23 @@ public abstract class AbstractExoCache implements ExoCache {
   public class SizeManager {
  
     @NodeEvicted
-    @NodeInvalidated
-    public void nodeRemoved(NodeEvent ne) {
+    public void nodeEvicted(NodeEvent ne) {
       if (!ne.isPre()) {
         size.decrementAndGet();        
+      }
+    }    
+    
+    @NodeRemoved
+    public void nodeRemoved(NodeEvent ne) {
+      if (!ne.isPre() && !ne.isOriginLocal()) {
+        size.decrementAndGet();        
+      }
+    }
+    
+    @NodeCreated
+    public void nodeCreated(NodeEvent ne) {
+      if (!ne.isPre() && !ne.isOriginLocal()) {
+        size.incrementAndGet();        
       }
     }
   }

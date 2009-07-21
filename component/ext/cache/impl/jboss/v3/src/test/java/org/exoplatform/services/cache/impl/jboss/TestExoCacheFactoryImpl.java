@@ -16,9 +16,18 @@
  */
 package org.exoplatform.services.cache.impl.jboss;
 
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
+
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.services.cache.CacheService;
 import org.exoplatform.services.cache.ExoCache;
+import org.exoplatform.services.cache.ExoCacheConfig;
+import org.exoplatform.services.cache.ExoCacheFactory;
 import org.exoplatform.services.cache.impl.jboss.TestExoCacheCreator.TestExoCache;
 import org.exoplatform.test.BasicTestCase;
 import org.jboss.cache.config.Configuration.CacheMode;
@@ -32,6 +41,7 @@ import org.jboss.cache.config.Configuration.CacheMode;
 public class TestExoCacheFactoryImpl extends BasicTestCase {
 
   CacheService service_;
+  ExoCacheFactory factory_;
 
   public TestExoCacheFactoryImpl(String name) {
     super(name);
@@ -40,6 +50,85 @@ public class TestExoCacheFactoryImpl extends BasicTestCase {
   public void setUp() throws Exception {
     service_ = (CacheService) PortalContainer.getInstance()
                                              .getComponentInstanceOfType(CacheService.class);
+    factory_ = (ExoCacheFactory) PortalContainer.getInstance()
+    .getComponentInstanceOfType(ExoCacheFactory.class);
+  }
+  
+  public void testDistributedCache() throws Exception {
+    ExoCacheConfig config = new ExoCacheConfig();
+    config.setName("MyCacheReplicated");
+    config.setMaxSize(5);
+    config.setLiveTime(1000);
+    config.setReplicated(true);
+    ExoCacheConfig config2 = new ExoCacheConfig();
+    config2.setName("MyCacheReplicated2");
+    config2.setMaxSize(5);
+    config2.setLiveTime(1000);
+    config2.setReplicated(true);    
+    ExoCache cache1 = factory_.createCache(config);
+    ExoCache cache2 = factory_.createCache(config);
+    ExoCache cache3 = factory_.createCache(config2);
+    cache1.put("a", "b");
+    assertEquals(1, cache1.getCacheSize());
+    assertEquals("b", cache2.get("a"));
+    assertEquals(1, cache2.getCacheSize());
+    assertEquals(0, cache3.getCacheSize());
+    cache2.put("b", "c");
+    assertEquals(2, cache1.getCacheSize());
+    assertEquals(2, cache2.getCacheSize());
+    assertEquals("c", cache2.get("b"));
+    assertEquals(0, cache3.getCacheSize());
+    cache3.put("c", "d");
+    assertEquals(2, cache1.getCacheSize());
+    assertEquals(2, cache2.getCacheSize());
+    assertEquals(1, cache3.getCacheSize());
+    assertEquals("d", cache3.get("c"));
+    cache2.put("a", "a");
+    assertEquals(2, cache1.getCacheSize());
+    assertEquals(2, cache2.getCacheSize());
+    assertEquals("a", cache1.get("a"));
+    cache2.remove("a");
+    assertEquals(1, cache1.getCacheSize());
+    assertEquals(1, cache2.getCacheSize());   
+    cache1.clearCache();
+    assertEquals(0, cache1.getCacheSize());
+    assertEquals(null, cache2.get("b"));
+    assertEquals(0, cache2.getCacheSize());
+    Map<Serializable, Object> values = new HashMap<Serializable, Object>();
+    values.put("a", "a");
+    values.put("b", "b");
+    cache1.putMap(values);
+    assertEquals(2, cache1.getCacheSize());
+    assertEquals(2, cache2.getCacheSize());
+    values = new HashMap<Serializable, Object>() {
+      public Set<Entry<Serializable, Object>> entrySet() {
+        Set<Entry<Serializable, Object>> set = new LinkedHashSet<Entry<Serializable,Object>>(super.entrySet());
+        set.add(new Entry<Serializable, Object>() {
+          
+          public Object setValue(Object paramV) {
+            return null;
+          }
+          
+          public Object getValue() {
+            throw new RuntimeException("An exception");
+          }
+          
+          public Serializable getKey() {
+            return "c";
+          }
+        });
+        return set;
+      }
+    };
+    values.put("e", "e"); 
+    values.put("d", "d");
+    try {
+      cache1.putMap(values);
+      assertTrue("An error was expected", false);
+    } catch (Exception e) {
+    }
+    assertEquals(2, cache1.getCacheSize());    
+    assertEquals(2, cache2.getCacheSize());
   }
   
   public void testCacheFactory() {
