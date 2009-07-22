@@ -13,17 +13,25 @@
           <field  name="name"><string>default</string></field>
           <field  name="maxSize"><int>5</int></field>
           <field  name="liveTime"><long>2</long></field>
-          <field  name="replicated"><boolean>false</boolean></field>
         </object>
       </object-param>
       <object-param>
-        <name>cacheReplicated</name>
+        <name>test-multi-threading</name>
+        <description>The default cache configuration</description>
+        <object type="org.exoplatform.services.cache.impl.jboss.fifo.FIFOExoCacheConfig">
+          <field  name="name"><string>test-multi-threading</string></field>
+          <field  name="maxNodes"><int>-1</int></field>
+          <field  name="minTimeToLive"><long>0</long></field>
+        </object>        
+      </object-param>      
+      <object-param>
+        <name>cacheDistributed</name>
         <description>The default cache configuration</description>
         <object type="org.exoplatform.services.cache.ExoCacheConfig">
-          <field  name="name"><string>cacheReplicated</string></field>
+          <field  name="name"><string>cacheDistributed</string></field>
           <field  name="maxSize"><int>5</int></field>
           <field  name="liveTime"><long>2</long></field>
-          <field  name="replicated"><boolean>true</boolean></field>
+          <field  name="distributed"><boolean>true</boolean></field>
         </object>
       </object-param>                
       <object-param>
@@ -106,8 +114,8 @@
         <value>jar:/conf/portal/local-cache-configuration-template.xml</value>
       </value-param>
       <value-param>
-        <name>replicated.cache.config.template</name>
-        <value>jar:/conf/portal/replicated-cache-configuration-template.xml</value>
+        <name>distributed.cache.config.template</name>
+        <value>jar:/conf/portal/distributed-cache-configuration-template.xml</value>
       </value-param>
       <value-param>
         <name>custom.cache.config#myCustomCache</name>

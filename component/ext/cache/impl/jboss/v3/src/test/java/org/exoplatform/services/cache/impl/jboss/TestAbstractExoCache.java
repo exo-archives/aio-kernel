@@ -17,18 +17,24 @@
 package org.exoplatform.services.cache.impl.jboss;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.services.cache.CacheListener;
 import org.exoplatform.services.cache.CacheService;
 import org.exoplatform.services.cache.CachedObjectSelector;
 import org.exoplatform.services.cache.ExoCache;
+import org.exoplatform.services.cache.ExoCacheConfig;
+import org.exoplatform.services.cache.ExoCacheFactory;
 import org.exoplatform.services.cache.ObjectCacheInfo;
 import org.exoplatform.test.BasicTestCase;
 
@@ -40,16 +46,20 @@ import org.exoplatform.test.BasicTestCase;
  */
 public class TestAbstractExoCache extends BasicTestCase {
 
+  CacheService service;
   AbstractExoCache cache;
+  ExoCacheFactory factory;
 
   public TestAbstractExoCache(String name) {
     super(name);
   }
 
   public void setUp() throws Exception {
-    CacheService service = (CacheService) PortalContainer.getInstance()
+    this.service = (CacheService) PortalContainer.getInstance()
                                              .getComponentInstanceOfType(CacheService.class);
     this.cache = (AbstractExoCache) service.getCacheInstance("myCache");
+    this.factory = (ExoCacheFactory) PortalContainer.getInstance()
+                                            .getComponentInstanceOfType(ExoCacheFactory.class);    
   }
   
   protected void tearDown() throws Exception {
@@ -194,5 +204,325 @@ public class TestAbstractExoCache extends BasicTestCase {
     cache.get("z");
     assertEquals(1, cache.getCacheHit() - hits);
     assertEquals(2, cache.getCacheMiss() - misses);
+  }
+  
+  
+  public void testDistributedCache() throws Exception {
+    ExoCacheConfig config = new ExoCacheConfig();
+    config.setName("MyCacheDistributed");
+    config.setMaxSize(5);
+    config.setLiveTime(1000);
+    config.setDistributed(true);
+    ExoCacheConfig config2 = new ExoCacheConfig();
+    config2.setName("MyCacheDistributed2");
+    config2.setMaxSize(5);
+    config2.setLiveTime(1000);
+    config2.setDistributed(true);    
+    AbstractExoCache cache1 = (AbstractExoCache) factory.createCache(config);
+    MyCacheListener listener1 = new MyCacheListener();
+    cache1.addCacheListener(listener1);
+    AbstractExoCache cache2 = (AbstractExoCache) factory.createCache(config);
+    MyCacheListener listener2 = new MyCacheListener();
+    cache2.addCacheListener(listener2);
+    AbstractExoCache cache3 = (AbstractExoCache) factory.createCache(config2);
+    MyCacheListener listener3 = new MyCacheListener();
+    cache3.addCacheListener(listener3);
+    try {
+      cache1.put("a", "b");
+      assertEquals(1, cache1.getCacheSize());
+      assertEquals("b", cache2.get("a"));
+      assertEquals(1, cache2.getCacheSize());
+      assertEquals(0, cache3.getCacheSize());
+      assertEquals(1, listener1.put);
+      assertEquals(1, listener2.put);
+      assertEquals(0, listener3.put);
+      assertEquals(0, listener1.get);
+      assertEquals(1, listener2.get);
+      assertEquals(0, listener3.get);
+      cache2.put("b", "c");
+      assertEquals(2, cache1.getCacheSize());
+      assertEquals(2, cache2.getCacheSize());
+      assertEquals("c", cache1.get("b"));
+      assertEquals(0, cache3.getCacheSize());
+      assertEquals(2, listener1.put);
+      assertEquals(2, listener2.put);
+      assertEquals(0, listener3.put);
+      assertEquals(1, listener1.get);
+      assertEquals(1, listener2.get);
+      assertEquals(0, listener3.get);
+      cache3.put("c", "d");
+      assertEquals(2, cache1.getCacheSize());
+      assertEquals(2, cache2.getCacheSize());
+      assertEquals(1, cache3.getCacheSize());
+      assertEquals("d", cache3.get("c"));
+      assertEquals(2, listener1.put);
+      assertEquals(2, listener2.put);
+      assertEquals(1, listener3.put);
+      assertEquals(1, listener1.get);
+      assertEquals(1, listener2.get);
+      assertEquals(1, listener3.get);
+      cache2.put("a", "a");
+      assertEquals(2, cache1.getCacheSize());
+      assertEquals(2, cache2.getCacheSize());
+      assertEquals("a", cache1.get("a"));
+      assertEquals(3, listener1.put);
+      assertEquals(3, listener2.put);
+      assertEquals(1, listener3.put);
+      assertEquals(2, listener1.get);
+      assertEquals(1, listener2.get);
+      assertEquals(1, listener3.get);    
+      cache2.remove("a");
+      assertEquals(1, cache1.getCacheSize());
+      assertEquals(1, cache2.getCacheSize());   
+      assertEquals(3, listener1.put);
+      assertEquals(3, listener2.put);
+      assertEquals(1, listener3.put);
+      assertEquals(2, listener1.get);
+      assertEquals(1, listener2.get);
+      assertEquals(1, listener3.get);    
+      assertEquals(1, listener1.remove);
+      assertEquals(1, listener2.remove);
+      assertEquals(0, listener3.remove);    
+      cache1.clearCache();
+      assertEquals(0, cache1.getCacheSize());
+      assertEquals(null, cache2.get("b"));
+      assertEquals(0, cache2.getCacheSize());
+      assertEquals(3, listener1.put);
+      assertEquals(3, listener2.put);
+      assertEquals(1, listener3.put);
+      assertEquals(2, listener1.get);
+      assertEquals(2, listener2.get);
+      assertEquals(1, listener3.get);    
+      assertEquals(2, listener1.remove);
+      assertEquals(2, listener2.remove);
+      assertEquals(0, listener3.remove);    
+      assertEquals(1, listener1.clearCache);
+      assertEquals(0, listener2.clearCache);
+      assertEquals(0, listener3.clearCache);    
+      Map<Serializable, Object> values = new HashMap<Serializable, Object>();
+      values.put("a", "a");
+      values.put("b", "b");
+      cache1.putMap(values);
+      assertEquals(2, cache1.getCacheSize());
+      Thread.sleep(40);
+      assertEquals("a", cache2.get("a"));
+      assertEquals("b", cache2.get("b"));
+      assertEquals(2, cache2.getCacheSize());
+      assertEquals(5, listener1.put);
+      assertEquals(5, listener2.put);
+      assertEquals(1, listener3.put);
+      assertEquals(2, listener1.get);
+      assertEquals(4, listener2.get);
+      assertEquals(1, listener3.get);    
+      assertEquals(2, listener1.remove);
+      assertEquals(2, listener2.remove);
+      assertEquals(0, listener3.remove);    
+      assertEquals(1, listener1.clearCache);
+      assertEquals(0, listener2.clearCache);
+      assertEquals(0, listener3.clearCache);     
+      values = new HashMap<Serializable, Object>() {
+        public Set<Entry<Serializable, Object>> entrySet() {
+          Set<Entry<Serializable, Object>> set = new LinkedHashSet<Entry<Serializable,Object>>(super.entrySet());
+          set.add(new Entry<Serializable, Object>() {
+            
+            public Object setValue(Object paramV) {
+              return null;
+            }
+            
+            public Object getValue() {
+              throw new RuntimeException("An exception");
+            }
+            
+            public Serializable getKey() {
+              return "c";
+            }
+          });
+          return set;
+        }
+      };
+      values.put("e", "e"); 
+      values.put("d", "d");
+      try {
+        cache1.putMap(values);
+        assertTrue("An error was expected", false);
+      } catch (Exception e) {
+      }
+      assertEquals(2, cache1.getCacheSize());    
+      assertEquals(2, cache2.getCacheSize());
+      assertEquals(5, listener1.put);
+      assertEquals(5, listener2.put);
+      assertEquals(1, listener3.put);
+      assertEquals(2, listener1.get);
+      assertEquals(4, listener2.get);
+      assertEquals(1, listener3.get);    
+      assertEquals(2, listener1.remove);
+      assertEquals(2, listener2.remove);
+      assertEquals(0, listener3.remove);    
+      assertEquals(1, listener1.clearCache);
+      assertEquals(0, listener2.clearCache);
+      assertEquals(0, listener3.clearCache);
+    } finally {
+      cache1.cache.stop();
+      cache2.cache.stop();
+      cache3.cache.stop();
+    } 
+  } 
+  
+  public void testMultiThreading() throws Exception {
+    final ExoCache cache = service.getCacheInstance("test-multi-threading");    
+    final int totalElement = 100;
+    final int totalTimes = 100;
+    int reader = 20;
+    int writer = 10;
+    int remover = 5;
+    int cleaner = 1;
+    final CountDownLatch startSignalWriter = new CountDownLatch(1);
+    final CountDownLatch startSignalOthers = new CountDownLatch(1);
+    final CountDownLatch doneSignal = new CountDownLatch(reader + writer + remover);
+    final List<Exception> errors = Collections.synchronizedList(new ArrayList<Exception>());
+    for (int i = 0; i < writer; i++) {
+      final int index = i;
+      Thread thread = new Thread() {
+        public void run() {
+          try {
+            startSignalWriter.await();
+            for (int j = 0; j < totalTimes; j++) {
+              for (int i = 0; i < totalElement; i++) {
+                cache.put("key" + i, "value" + i);
+              }
+              if (index == 0 && j == 0) {
+                // The cache is full, we can launch the others
+                startSignalOthers.countDown();
+              }
+              sleep(50);
+            }
+            doneSignal.countDown();
+          } catch (Exception e) {
+            errors.add(e);
+          }
+        }
+      };
+      thread.start();
+    }
+    startSignalWriter.countDown();
+    for (int i = 0; i < reader; i++) {
+      Thread thread = new Thread() {
+        public void run() {
+          try {
+            startSignalOthers.await();
+            for (int j = 0; j < totalTimes; j++) {
+              for (int i = 0; i < totalElement; i++) {
+                cache.get("key" + i);
+              }
+              sleep(50);
+            }
+            doneSignal.countDown();
+          } catch (Exception e) {
+            errors.add(e);
+          }
+        }
+      };
+      thread.start();
+    }    
+    for (int i = 0; i < remover; i++) {
+      Thread thread = new Thread() {
+        public void run() {
+          try {
+            startSignalOthers.await();
+            for (int j = 0; j < totalTimes; j++) {
+              for (int i = 0; i < totalElement; i++) {
+                cache.remove("key" + i);
+              }
+              sleep(50);
+            }
+            doneSignal.countDown();
+          } catch (Exception e) {
+            errors.add(e);
+          }
+        }
+      };
+      thread.start();
+    }
+    doneSignal.await();
+    for (int i = 0; i < totalElement; i++) {
+      cache.put("key" + i, "value" + i);
+    }
+    assertEquals(totalElement, cache.getCacheSize());
+    final CountDownLatch startSignal = new CountDownLatch(1);
+    final CountDownLatch doneSignal2 = new CountDownLatch(writer + cleaner);
+    for (int i = 0; i < writer; i++) {
+      Thread thread = new Thread() {
+        public void run() {
+          try {
+            startSignal.await();
+            for (int j = 0; j < totalTimes; j++) {
+              for (int i = 0; i < totalElement; i++) {
+                cache.put("key" + i, "value" + i);
+              }
+              sleep(50);
+            }
+            doneSignal2.countDown();
+          } catch (Exception e) {
+            errors.add(e);
+          }
+        }
+      };
+      thread.start();
+    }    
+    for (int i = 0; i < cleaner; i++) {
+      Thread thread = new Thread() {
+        public void run() {
+          try {
+            startSignal.await();
+            for (int j = 0; j < totalTimes; j++) {
+              sleep(150);
+              cache.clearCache();
+            }
+            doneSignal2.countDown();
+          } catch (Exception e) {
+            errors.add(e);
+          }
+        }
+      };
+      thread.start();
+    }       
+    cache.clearCache();
+    assertEquals(0, cache.getCacheSize());
+    if (!errors.isEmpty()) {
+      for (Exception e: errors) {
+        e.printStackTrace();
+      }
+      throw errors.get(0);
+    }
+    
+  }
+  
+  public static class MyCacheListener implements CacheListener {
+    
+    public int clearCache;
+    public int expire;
+    public int get;
+    public int put;
+    public int remove;
+
+    public void onClearCache(ExoCache cache) throws Exception {
+      clearCache++;
+    }
+
+    public void onExpire(ExoCache cache, Serializable key, Object obj) throws Exception {
+      expire++;
+    }
+
+    public void onGet(ExoCache cache, Serializable key, Object obj) throws Exception {
+      get++;
+    }
+
+    public void onPut(ExoCache cache, Serializable key, Object obj) throws Exception {
+      put++;
+    }
+
+    public void onRemove(ExoCache cache, Serializable key, Object obj) throws Exception {
+      remove++;
+    }
   }
 }

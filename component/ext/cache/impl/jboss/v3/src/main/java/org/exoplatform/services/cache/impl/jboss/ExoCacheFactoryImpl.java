@@ -56,9 +56,9 @@ public class ExoCacheFactoryImpl implements ExoCacheFactory {
   
   /**
    * The initial parameter key that defines the full path of the configuration template
-   * of all the replicated caches
+   * of all the distributed caches
    */
-  private static final String REPLICATED_CACHE_CONFIG_TEMPLATE_KEY = "replicated.cache.config.template";
+  private static final String DISTRIBUTED_CACHE_CONFIG_TEMPLATE_KEY = "distributed.cache.config.template";
 
   /**
    * The initial parameter key that defines the full path of the configuration template
@@ -83,9 +83,9 @@ public class ExoCacheFactoryImpl implements ExoCacheFactory {
   private final ConfigurationManager configManager;
   
   /**
-   * The full path of the configuration template of all the replicated caches
+   * The full path of the configuration template of all the distributed caches
    */
-  private final String replicatedCacheConfigTemplate;
+  private final String distributedCacheConfigTemplate;
   
   /**
    * The full path of the configuration template of all the local caches
@@ -114,7 +114,7 @@ public class ExoCacheFactoryImpl implements ExoCacheFactory {
     if (localCacheConfigTemplate == null) {
       throw new RuntimeException("The parameter '" + LOCAL_CACHE_CONFIG_TEMPLATE_KEY + "' must be set");
     }    
-    this.replicatedCacheConfigTemplate = getValueParam(params, REPLICATED_CACHE_CONFIG_TEMPLATE_KEY);
+    this.distributedCacheConfigTemplate = getValueParam(params, DISTRIBUTED_CACHE_CONFIG_TEMPLATE_KEY);
   }
   
   /**
@@ -122,9 +122,9 @@ public class ExoCacheFactoryImpl implements ExoCacheFactory {
    * 
    * 1. We first try to find if a specific location of the cache configuration has been defined. To do
    * so we seek for a key of type "${SPECIAL_CACHE_CONFIGURATION_KEY_PREFIX}#${cache.name}"
-   * 2. If no specific location has been defined, we check if the cache is replicated, if so we use
-   * the key "${REPLICATED_CACHE_CONFIG_TEMPLATE_KEY}" otherwise we use the key
-   * "${LOCAL_CACHE_CONFIG_TEMPLATE_KEY}". If no key "${REPLICATED_CACHE_CONFIG_TEMPLATE_KEY}"
+   * 2. If no specific location has been defined, we check if the cache is distributed, if so we use
+   * the key "${DISTRIBUTED_CACHE_CONFIG_TEMPLATE_KEY}" otherwise we use the key
+   * "${LOCAL_CACHE_CONFIG_TEMPLATE_KEY}". If no key "${DISTRIBUTED_CACHE_CONFIG_TEMPLATE_KEY}"
    * has been defined then we use the key "${LOCAL_CACHE_CONFIG_TEMPLATE_KEY}"
    */
   public ExoCache createCache(ExoCacheConfig config) throws ExoCacheInitException {
@@ -140,10 +140,10 @@ public class ExoCacheFactoryImpl implements ExoCacheFactory {
         cache = factory.createCache(configManager.getInputStream(customConfig), false);
       } else {
         // No custom configuration has been found, a configuration template will be used 
-        if (replicatedCacheConfigTemplate != null && config.isRepicated()) {
-          // The cache is replicated
-          if (LOG.isInfoEnabled()) LOG.info("The configuration template for replicated caches will be used for the the cache '" + region + "'.");
-          cache = factory.createCache(configManager.getInputStream(replicatedCacheConfigTemplate), false);
+        if (distributedCacheConfigTemplate != null && config.isDistributed()) {
+          // The cache is distributed
+          if (LOG.isInfoEnabled()) LOG.info("The configuration template for distributed caches will be used for the the cache '" + region + "'.");
+          cache = factory.createCache(configManager.getInputStream(distributedCacheConfigTemplate), false);
         } else {
           // The cache is local
           if (LOG.isInfoEnabled()) LOG.info("The configuration template for local caches will be used for the the cache '" + region + "'.");

@@ -17,24 +17,29 @@
 package org.exoplatform.services.cache.impl.jboss;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.apache.commons.logging.Log;
 import org.exoplatform.services.cache.CacheListener;
 import org.exoplatform.services.cache.CachedObjectSelector;
 import org.exoplatform.services.cache.ExoCache;
 import org.exoplatform.services.cache.ExoCacheConfig;
 import org.exoplatform.services.cache.ObjectCacheInfo;
+import org.exoplatform.services.log.ExoLogger;
 import org.jboss.cache.Cache;
+import org.jboss.cache.CacheSPI;
 import org.jboss.cache.Fqn;
 import org.jboss.cache.Node;
 import org.jboss.cache.notifications.annotation.NodeCreated;
 import org.jboss.cache.notifications.annotation.NodeEvicted;
+import org.jboss.cache.notifications.annotation.NodeModified;
 import org.jboss.cache.notifications.annotation.NodeRemoved;
+import org.jboss.cache.notifications.event.EventImpl;
 import org.jboss.cache.notifications.event.NodeEvent;
 
 /**
@@ -47,7 +52,12 @@ import org.jboss.cache.notifications.event.NodeEvent;
 @org.jboss.cache.notifications.annotation.CacheListener
 public abstract class AbstractExoCache implements ExoCache {
   
-  private final AtomicInteger size = new AtomicInteger();
+  /**
+   * Logger.
+   */
+  private static final Log LOG  = ExoLogger.getLogger(AbstractExoCache.class);
+  
+  protected final AtomicInteger size = new AtomicInteger();
   
   private volatile int hits;
   private volatile int misses;
@@ -57,12 +67,19 @@ public abstract class AbstractExoCache implements ExoCache {
   private boolean replicated;
   private boolean logEnabled;
   
-  private ArrayList<CacheListener> listeners_;
+  private final CopyOnWriteArrayList<CacheListener> listeners;
 
   protected final Cache<Serializable, Object> cache;
+  protected final boolean isCacheSPI; 
   
+  @SuppressWarnings("unchecked")
   public AbstractExoCache(ExoCacheConfig config, Cache<Serializable, Object> cache) {
     this.cache = cache;
+    this.isCacheSPI = cache instanceof CacheSPI;
+    this.listeners = new CopyOnWriteArrayList<CacheListener>();
+    if (!isCacheSPI) {
+      LOG.warn("The cache is not an instance of CacheSPI, the cache size will be evaluated but won't be accurate");
+    }
     setDistributed(config.isDistributed());
     setLabel(config.getLabel());
     setName(config.getName());
@@ -75,14 +92,11 @@ public abstract class AbstractExoCache implements ExoCache {
   /**
    * {@inheritDoc}
    */
-  public synchronized void addCacheListener(CacheListener listener) {
+  public void addCacheListener(CacheListener listener) {
     if (listener == null) {
       return;
     }
-    if (listeners_ == null) {
-      listeners_ = new ArrayList<CacheListener>();
-    }
-    listeners_.add(listener);  
+    listeners.add(listener);  
   }
 
   /**
@@ -96,6 +110,7 @@ public abstract class AbstractExoCache implements ExoCache {
       }      
       remove(getKey(node));
     }
+    onClearCache();
   }
 
   /**
@@ -108,6 +123,7 @@ public abstract class AbstractExoCache implements ExoCache {
     } else {
       hits++;
     }
+    onGet(name, result);
     return result;
   }
 
@@ -128,7 +144,11 @@ public abstract class AbstractExoCache implements ExoCache {
   /**
    * {@inheritDoc}
    */
+  @SuppressWarnings("unchecked")
   public int getCacheSize() {
+    if (isCacheSPI) {
+      return ((CacheSPI) cache).getNumberOfNodes();
+    }
     return size.intValue();
   }
 
@@ -188,12 +208,17 @@ public abstract class AbstractExoCache implements ExoCache {
    * {@inheritDoc}
    */
   public void put(Serializable name, Object obj) throws Exception {
-    final Object oldValue = cache.put(Fqn.fromElements(name), name, obj);
-    if (oldValue == null) {
-      size.incrementAndGet();      
-    }
+    putOnly(name, obj);
+    onPut(name, obj);
   }
 
+  /**
+   * Only puts the data into the cache nothing more
+   */
+  private Object putOnly(Serializable name, Object obj) throws Exception {
+    return cache.put(Fqn.fromElements(name), name, obj);
+  }
+  
   /**
    * {@inheritDoc}
    */
@@ -201,16 +226,23 @@ public abstract class AbstractExoCache implements ExoCache {
     cache.startBatch();
     int total = 0;
     try {
+      // Start transaction
       for (Entry<Serializable, Object> entry : objs.entrySet()) {
-        put(entry.getKey(), entry.getValue());
-        total++;
+        Object value = putOnly(entry.getKey(), entry.getValue());
+        if (value == null) {
+          total++;
+        }        
+      }
+      cache.endBatch(true);
+      // End transaction
+      for (Entry<Serializable, Object> entry : objs.entrySet()) {
+        onPut(entry.getKey(), entry.getValue());       
       }
     } catch (Exception e) {
+      if (!isCacheSPI) size.addAndGet(-total);
       cache.endBatch(false);
-      size.addAndGet(-total);
       throw e;
     }
-    cache.endBatch(true);
   }
 
   /**
@@ -220,9 +252,9 @@ public abstract class AbstractExoCache implements ExoCache {
     final Fqn<Serializable> fqn = Fqn.fromElements(name);
     final Node<Serializable, Object> node = cache.getNode(fqn);
     if (node != null) {
-      Object result = node.get(name);
-      if (cache.removeNode(fqn)) {
-        size.decrementAndGet();        
+      final Object result = node.get(name);
+      if (cache.removeNode(fqn)) {        
+        onRemove(name, result);
       }
       return result;
     }
@@ -299,8 +331,86 @@ public abstract class AbstractExoCache implements ExoCache {
     this.replicated = replicated;
   }
   
+  /**
+   * Returns the key related to the given node
+   */
   private Serializable getKey(Node<Serializable, Object> node) {
-    return (Serializable) node.getFqn().get(0);
+    return getKey(node.getFqn());
+  }
+
+  /**
+   * Returns the key related to the given Fqn
+   */  
+  @SuppressWarnings("unchecked")
+  private Serializable getKey(Fqn fqn) {
+    return (Serializable) fqn.get(0);
+  }
+  
+  void onExpire(Serializable key, Object obj) {
+    if (listeners.isEmpty()) {
+      return;      
+    }
+    for (CacheListener listener : listeners) {
+      try {
+        listener.onExpire(this, key, obj);
+      }
+      catch (Exception e) {
+        if (LOG.isWarnEnabled()) LOG.warn("Cannot execute the CacheListener properly", e);
+      }
+    }
+  }
+
+  void onRemove(Serializable key, Object obj) {
+    if (listeners.isEmpty()) {
+      return;      
+    }
+    for (CacheListener listener : listeners) {
+      try {
+        listener.onRemove(this, key, obj);
+      }
+      catch (Exception e) {
+        if (LOG.isWarnEnabled()) LOG.warn("Cannot execute the CacheListener properly", e);
+      }
+    }
+  }
+
+  void onPut(Serializable key, Object obj) {
+    if (listeners.isEmpty()) {
+      return;      
+    }
+    for (CacheListener listener : listeners)
+      try {
+        listener.onPut(this, key, obj);
+      }
+      catch (Exception e) {
+        if (LOG.isWarnEnabled()) LOG.warn("Cannot execute the CacheListener properly", e);
+      }
+  }
+
+  void onGet(Serializable key, Object obj) {
+    if (listeners.isEmpty()) {
+      return;      
+    }
+    for (CacheListener listener : listeners)
+      try {
+        listener.onGet(this, key, obj);
+      }
+      catch (Exception e) {
+        if (LOG.isWarnEnabled()) LOG.warn("Cannot execute the CacheListener properly", e);
+      }
+  }
+
+  void onClearCache() {
+    if (listeners.isEmpty()) {
+      return;      
+    }
+    for (CacheListener listener : listeners)
+      try {
+        listener.onClearCache(this);
+      }
+      catch (Exception e) {
+        if (LOG.isWarnEnabled()) LOG.warn("Cannot execute the CacheListener properly", e);
+      }
   }
   
   @org.jboss.cache.notifications.annotation.CacheListener
@@ -308,23 +418,52 @@ public abstract class AbstractExoCache implements ExoCache {
  
     @NodeEvicted
     public void nodeEvicted(NodeEvent ne) {
-      if (!ne.isPre()) {
+      if (ne.isPre()) {
+        // Cannot give the value since
+        // since it disturbs the eviction
+        // algorithms
+        onExpire(getKey(ne.getFqn()), null);        
+      } else if (!isCacheSPI) { 
         size.decrementAndGet();        
       }
     }    
     
     @NodeRemoved
     public void nodeRemoved(NodeEvent ne) {
-      if (!ne.isPre() && !ne.isOriginLocal()) {
-        size.decrementAndGet();        
+      if (ne.isPre()) {
+        if (!ne.isOriginLocal()) {
+          final Node<Serializable, Object> node = cache.getNode(ne.getFqn());
+          final Serializable key = getKey(ne.getFqn());
+          onRemove(key, node.get(key));          
+        }
+      } else if (!isCacheSPI) { 
+        size.decrementAndGet();          
       }
     }
     
     @NodeCreated
     public void nodeCreated(NodeEvent ne) {
-      if (!ne.isPre() && !ne.isOriginLocal()) {
-        size.incrementAndGet();        
+      if (!ne.isPre() && !isCacheSPI) {
+        size.incrementAndGet(); 
       }
     }
+    
+    @SuppressWarnings("unchecked")
+    @NodeModified
+    public void nodeModified(NodeEvent ne) {
+      if (!ne.isOriginLocal() && !ne.isPre()) {
+        final Serializable key = getKey(ne.getFqn());
+        if (ne instanceof EventImpl) {
+          EventImpl evt = (EventImpl) ne;
+          Map<Serializable, Object> data = evt.getData();
+          if (data != null) {
+            onPut(key, data.get(key));
+            return;
+          }
+        }
+        final Node<Serializable, Object> node = cache.getNode(ne.getFqn());          
+        onPut(key, node.get(key));          
+      }
+    }    
   }
 }
