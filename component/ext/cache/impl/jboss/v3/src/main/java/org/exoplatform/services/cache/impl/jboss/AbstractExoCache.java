@@ -218,11 +218,15 @@ public abstract class AbstractExoCache implements ExoCache {
    */
   public Object remove(Serializable name) throws Exception {
     final Fqn<Serializable> fqn = Fqn.fromElements(name);
-    final Object result = cache.getNode(fqn);
-    if (result != null && cache.removeNode(fqn)) {
-      size.decrementAndGet();      
+    final Node<Serializable, Object> node = cache.getNode(fqn);
+    if (node != null) {
+      Object result = node.get(name);
+      if (cache.removeNode(fqn)) {
+        size.decrementAndGet();        
+      }
+      return result;
     }
-    return result;
+    return null;
   }
 
   /**

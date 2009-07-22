@@ -87,15 +87,15 @@ public class TestAbstractExoCache extends BasicTestCase {
   }
   
   public void testRemove() throws Exception {
-    cache.put("a", "a");
-    cache.put("b", "b");
-    cache.put("c", "c");
+    cache.put("a", 1);
+    cache.put("b", 2);
+    cache.put("c", 3);
     assertEquals(3, cache.getCacheSize());
-    cache.remove("a");
+    assertEquals(1, cache.remove("a"));
     assertEquals(2, cache.getCacheSize());
-    cache.remove("b");
+    assertEquals(2, cache.remove("b"));
     assertEquals(1, cache.getCacheSize());
-    cache.remove("x");
+    assertEquals(null, cache.remove("x"));
     assertEquals(1, cache.getCacheSize());
   }
   
