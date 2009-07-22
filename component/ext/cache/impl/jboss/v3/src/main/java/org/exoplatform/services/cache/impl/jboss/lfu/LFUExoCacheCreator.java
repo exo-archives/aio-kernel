@@ -50,7 +50,7 @@ public class LFUExoCacheCreator implements ExoCacheCreator {
   /**
    * The default value for the parameter maxAge
    */
-  private int defaultMinNodes;
+  protected int defaultMinNodes;
   
   /**
    * {@inheritDoc}

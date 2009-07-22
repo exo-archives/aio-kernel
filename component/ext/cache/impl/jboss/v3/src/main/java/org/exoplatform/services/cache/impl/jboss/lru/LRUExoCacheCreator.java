@@ -50,12 +50,12 @@ public class LRUExoCacheCreator implements ExoCacheCreator {
   /**
    * The default value for the parameter timeToLive
    */
-  private long defaultTimeToLive;
+  protected long defaultTimeToLive;
   
   /**
    * The default value for the parameter maxAge
    */
-  private long defaultMaxAge;
+  protected long defaultMaxAge;
   
   /**
    * {@inheritDoc}
