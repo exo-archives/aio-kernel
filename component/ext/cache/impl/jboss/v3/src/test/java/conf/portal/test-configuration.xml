@@ -117,18 +117,26 @@
         <name>distributed.cache.config.template</name>
         <value>jar:/conf/portal/distributed-cache-configuration-template.xml</value>
       </value-param>
-      <value-param>
-        <name>custom.cache.config#myCustomCache</name>
-        <value>jar:/conf/portal/local-cache-configuration-template.xml</value>
-      </value-param>
     </init-params>
   </component>  
     
   <external-component-plugins>
     <target-component>org.exoplatform.services.cache.ExoCacheFactory</target-component>
     <component-plugin>
-      <name>addExoCacheCreator</name>
-      <set-method>addExoCacheCreator</set-method>
+      <name>addConfig</name>
+      <set-method>addConfig</set-method>
+      <type>org.exoplatform.services.cache.impl.jboss.ExoCacheFactoryConfigPlugin</type>
+      <description>add Custom Configurations</description>
+      <init-params>	
+	      <value-param>
+	        <name>myCustomCache</name>
+	        <value>jar:/conf/portal/distributed-cache-configuration-template.xml</value>
+	      </value-param>    		          
+      </init-params>	
+    </component-plugin>    
+    <component-plugin>
+      <name>addCreator</name>
+      <set-method>addCreator</set-method>
       <type>org.exoplatform.services.cache.impl.jboss.ExoCacheCreatorPlugin</type>
       <description>add Exo Cache Creator</description>
       <init-params>	

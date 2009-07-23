@@ -56,7 +56,7 @@ public class TestExoCacheFactoryImpl extends BasicTestCase {
     cache = service_.getCacheInstance("myCustomCache");
     assertTrue("expect an instance of AbstractExoCache", cache instanceof AbstractExoCache);
     aCache = (AbstractExoCache) cache;
-    assertTrue("expect a local cache", aCache.cache.getConfiguration().getCacheMode() == CacheMode.LOCAL);
+    assertTrue("expect a distributed cache", aCache.cache.getConfiguration().getCacheMode() == CacheMode.REPL_SYNC);
     aCache.cache.stop();    
   }
   

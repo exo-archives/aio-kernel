@@ -65,16 +65,6 @@ public class ExoCacheFactoryImpl implements ExoCacheFactory {
    * of all the local caches
    */
   private static final String LOCAL_CACHE_CONFIG_TEMPLATE_KEY = "local.cache.config.template";
-
-  /**
-   * The prefix of the configuration key of all the specific caches
-   */
-  private static final String SPECIAL_CACHE_CONFIGURATION_KEY_PREFIX = "custom.cache.config#";
-  
-  /**
-   * The initial parameters of the factory
-   */
-  private final InitParams params;
   
   /**
    * The configuration manager that allows us to retrieve a configuration file in several different
@@ -103,12 +93,16 @@ public class ExoCacheFactoryImpl implements ExoCacheFactory {
   private final Map<String, ExoCacheCreator> mappingImplCreators  = new HashMap<String, ExoCacheCreator>();
   
   /**
+   * The mapping between the cache names and the configuration paths
+   */
+  private final Map<String, String> mappingCacheNameConfig = new HashMap<String, String>();
+  
+  /**
    * The default creator
    */
   private final ExoCacheCreator defaultCreator = new FIFOExoCacheCreator();
   
   public ExoCacheFactoryImpl(InitParams params, ConfigurationManager configManager) throws ConfigurationException, Exception {
-    this.params = params;
     this.configManager = configManager;
     this.localCacheConfigTemplate = getValueParam(params, LOCAL_CACHE_CONFIG_TEMPLATE_KEY);
     if (localCacheConfigTemplate == null) {
@@ -129,7 +123,7 @@ public class ExoCacheFactoryImpl implements ExoCacheFactory {
    */
   public ExoCache createCache(ExoCacheConfig config) throws ExoCacheInitException {
     final String region = config.getName();
-    final String customConfig = getValueParam(params, SPECIAL_CACHE_CONFIGURATION_KEY_PREFIX + region);
+    final String customConfig = mappingCacheNameConfig.get(region);
     final Cache<Serializable, Object> cache;
     final CacheFactory<Serializable, Object> factory = new DefaultCacheFactory<Serializable, Object>();
     final ExoCache eXoCache;
@@ -169,13 +163,22 @@ public class ExoCacheFactoryImpl implements ExoCacheFactory {
    * Add a list of creators to register
    * @param plugin the plugin that contains the creators
    */
-  public void addExoCacheCreator(ExoCacheCreatorPlugin plugin) {
-    List<ExoCacheCreator> creators = plugin.getCreators();
+  public void addCreator(ExoCacheCreatorPlugin plugin) {
+    final List<ExoCacheCreator> creators = plugin.getCreators();
     for (ExoCacheCreator creator : creators) {
       mappingConfigTypeCreators.put(creator.getExpectedConfigType(), creator);
       mappingImplCreators.put(creator.getExpectedImplementation(), creator);
     }
   }  
+  
+  /**
+   * Add a list of custom configuration to register
+   * @param plugin the plugin that contains the configs
+   */
+  public void addConfig(ExoCacheFactoryConfigPlugin plugin) {
+    final Map<String, String> configs = plugin.getConfigs();
+    mappingCacheNameConfig.putAll(configs);
+  }
   
   /**
    * Returns the value of the ValueParam if and only if the value is not empty
