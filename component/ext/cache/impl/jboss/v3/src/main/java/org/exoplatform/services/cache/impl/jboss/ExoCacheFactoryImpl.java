@@ -36,7 +36,6 @@ import org.jboss.cache.Cache;
 import org.jboss.cache.CacheFactory;
 import org.jboss.cache.DefaultCacheFactory;
 import org.jboss.cache.config.Configuration;
-import org.jboss.cache.config.ConfigurationException;
 import org.jboss.cache.config.EvictionConfig;
 import org.jboss.cache.config.EvictionRegionConfig;
 import org.jboss.cache.config.Configuration.CacheMode;
@@ -91,7 +90,7 @@ public class ExoCacheFactoryImpl implements ExoCacheFactory {
    */
   private final ExoCacheCreator defaultCreator = new FIFOExoCacheCreator();
   
-  public ExoCacheFactoryImpl(InitParams params, ConfigurationManager configManager) throws ConfigurationException, Exception {
+  public ExoCacheFactoryImpl(InitParams params, ConfigurationManager configManager) {
     this.configManager = configManager;
     this.cacheConfigTemplate = getValueParam(params, CACHE_CONFIG_TEMPLATE_KEY);
     if (cacheConfigTemplate == null) {
