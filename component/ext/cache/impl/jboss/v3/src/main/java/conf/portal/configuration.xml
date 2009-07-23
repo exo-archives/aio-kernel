@@ -6,12 +6,8 @@
     <type>org.exoplatform.services.cache.impl.jboss.ExoCacheFactoryImpl</type>
     <init-params>
       <value-param>
-        <name>local.cache.config.template</name>
-        <value>jar:/conf/portal/local-cache-configuration-template.xml</value>
-      </value-param>
-      <value-param>
-        <name>distributed.cache.config.template</name>
-        <value>jar:/conf/portal/distributed-cache-configuration-template.xml</value>
+        <name>cache.config.template</name>
+        <value>jar:/conf/portal/cache-configuration-template.xml</value>
       </value-param>
     </init-params>
   </component>   

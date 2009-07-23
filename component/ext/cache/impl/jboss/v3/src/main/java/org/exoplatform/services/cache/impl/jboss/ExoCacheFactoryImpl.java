@@ -39,6 +39,7 @@ import org.jboss.cache.config.Configuration;
 import org.jboss.cache.config.ConfigurationException;
 import org.jboss.cache.config.EvictionConfig;
 import org.jboss.cache.config.EvictionRegionConfig;
+import org.jboss.cache.config.Configuration.CacheMode;
 
 /**
  * This class is the JBoss Cache implementation of the {@link org.exoplatform.services.cache.ExoCacheFactory}
@@ -56,15 +57,8 @@ public class ExoCacheFactoryImpl implements ExoCacheFactory {
   
   /**
    * The initial parameter key that defines the full path of the configuration template
-   * of all the distributed caches
    */
-  private static final String DISTRIBUTED_CACHE_CONFIG_TEMPLATE_KEY = "distributed.cache.config.template";
-
-  /**
-   * The initial parameter key that defines the full path of the configuration template
-   * of all the local caches
-   */
-  private static final String LOCAL_CACHE_CONFIG_TEMPLATE_KEY = "local.cache.config.template";
+  private static final String CACHE_CONFIG_TEMPLATE_KEY = "cache.config.template";
   
   /**
    * The configuration manager that allows us to retrieve a configuration file in several different
@@ -73,14 +67,9 @@ public class ExoCacheFactoryImpl implements ExoCacheFactory {
   private final ConfigurationManager configManager;
   
   /**
-   * The full path of the configuration template of all the distributed caches
+   * The full path of the configuration template
    */
-  private final String distributedCacheConfigTemplate;
-  
-  /**
-   * The full path of the configuration template of all the local caches
-   */
-  private final String localCacheConfigTemplate; 
+  private final String cacheConfigTemplate; 
   
   /**
    * The mapping between the configuration types and the creators
@@ -104,22 +93,19 @@ public class ExoCacheFactoryImpl implements ExoCacheFactory {
   
   public ExoCacheFactoryImpl(InitParams params, ConfigurationManager configManager) throws ConfigurationException, Exception {
     this.configManager = configManager;
-    this.localCacheConfigTemplate = getValueParam(params, LOCAL_CACHE_CONFIG_TEMPLATE_KEY);
-    if (localCacheConfigTemplate == null) {
-      throw new RuntimeException("The parameter '" + LOCAL_CACHE_CONFIG_TEMPLATE_KEY + "' must be set");
-    }    
-    this.distributedCacheConfigTemplate = getValueParam(params, DISTRIBUTED_CACHE_CONFIG_TEMPLATE_KEY);
+    this.cacheConfigTemplate = getValueParam(params, CACHE_CONFIG_TEMPLATE_KEY);
+    if (cacheConfigTemplate == null) {
+      throw new RuntimeException("The parameter '" + CACHE_CONFIG_TEMPLATE_KEY + "' must be set");
+    }
   }
   
   /**
    * To create a new cache instance according to the given configuration, we follow the steps below:
    * 
-   * 1. We first try to find if a specific location of the cache configuration has been defined. To do
-   * so we seek for a key of type "${SPECIAL_CACHE_CONFIGURATION_KEY_PREFIX}#${cache.name}"
-   * 2. If no specific location has been defined, we check if the cache is distributed, if so we use
-   * the key "${DISTRIBUTED_CACHE_CONFIG_TEMPLATE_KEY}" otherwise we use the key
-   * "${LOCAL_CACHE_CONFIG_TEMPLATE_KEY}". If no key "${DISTRIBUTED_CACHE_CONFIG_TEMPLATE_KEY}"
-   * has been defined then we use the key "${LOCAL_CACHE_CONFIG_TEMPLATE_KEY}"
+   * 1. We first try to find if a specific location of the cache configuration has been defined thanks
+   * to an external component plugin of type ExoCacheFactoryConfigPlugin
+   * 2. If no specific location has been defined, we use the default configuration which is
+   * "${CACHE_CONFIG_TEMPLATE_KEY}"
    */
   public ExoCache createCache(ExoCacheConfig config) throws ExoCacheInitException {
     final String region = config.getName();
@@ -134,14 +120,11 @@ public class ExoCacheFactoryImpl implements ExoCacheFactory {
         cache = factory.createCache(configManager.getInputStream(customConfig), false);
       } else {
         // No custom configuration has been found, a configuration template will be used 
-        if (distributedCacheConfigTemplate != null && config.isDistributed()) {
-          // The cache is distributed
-          if (LOG.isInfoEnabled()) LOG.info("The configuration template for distributed caches will be used for the the cache '" + region + "'.");
-          cache = factory.createCache(configManager.getInputStream(distributedCacheConfigTemplate), false);
-        } else {
+        if (LOG.isInfoEnabled()) LOG.info("The configuration template will be used for the the cache '" + region + "'.");
+        cache = factory.createCache(configManager.getInputStream(cacheConfigTemplate), false);
+        if (!config.isDistributed()) {
           // The cache is local
-          if (LOG.isInfoEnabled()) LOG.info("The configuration template for local caches will be used for the the cache '" + region + "'.");
-          cache = factory.createCache(configManager.getInputStream(localCacheConfigTemplate), false);
+          cache.getConfiguration().setCacheMode(CacheMode.LOCAL);
         }
         // Re initialize the template to avoid conflicts
         cleanConfigurationTemplate(cache, region);
