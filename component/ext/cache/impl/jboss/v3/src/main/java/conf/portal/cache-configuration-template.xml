@@ -117,7 +117,7 @@
 		run.
 	-->
 
-	<eviction wakeUpInterval="500">
+	<eviction wakeUpInterval="5000">
 
 		<default algorithmClass="org.jboss.cache.eviction.FIFOAlgorithm"
 			eventQueueSize="200000">
