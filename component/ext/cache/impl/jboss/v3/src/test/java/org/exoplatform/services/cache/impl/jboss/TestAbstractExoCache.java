@@ -67,52 +67,52 @@ public class TestAbstractExoCache extends BasicTestCase {
   }  
   
   public void testPut() throws Exception {
-    cache.put("a", "a");
-    cache.put("b", "b");
-    cache.put("c", "c");
+    cache.put(new MyKey("a"), "a");
+    cache.put(new MyKey("b"), "b");
+    cache.put(new MyKey("c"), "c");
     assertEquals(3, cache.getCacheSize());
-    cache.put("a", "c");
+    cache.put(new MyKey("a"), "c");
     assertEquals(3, cache.getCacheSize());
-    cache.put("d", "c");
+    cache.put(new MyKey("d"), "c");
     assertEquals(4, cache.getCacheSize());
   }
   
   public void testClearCache() throws Exception {
-    cache.put("a", "a");
-    cache.put("b", "b");
-    cache.put("c", "c");
+    cache.put(new MyKey("a"), "a");
+    cache.put(new MyKey("b"), "b");
+    cache.put(new MyKey("c"), "c");
     assertTrue(cache.getCacheSize() > 0);
     cache.clearCache();
     assertTrue(cache.getCacheSize() == 0);
   }
   
   public void testGet() throws Exception {
-    cache.put("a", "a");
-    assertEquals("a", cache.get("a"));
-    cache.put("a", "c");
-    assertEquals("c", cache.get("a"));
-    cache.remove("a");
-    assertEquals(null, cache.get("a"));
-    assertEquals(null, cache.get("x"));
+    cache.put(new MyKey("a"), "a");
+    assertEquals("a", cache.get(new MyKey("a")));
+    cache.put(new MyKey("a"), "c");
+    assertEquals("c", cache.get(new MyKey("a")));
+    cache.remove(new MyKey("a"));
+    assertEquals(null, cache.get(new MyKey("a")));
+    assertEquals(null, cache.get(new MyKey("x")));
   }
   
   public void testRemove() throws Exception {
-    cache.put("a", 1);
-    cache.put("b", 2);
-    cache.put("c", 3);
+    cache.put(new MyKey("a"), 1);
+    cache.put(new MyKey("b"), 2);
+    cache.put(new MyKey("c"), 3);
     assertEquals(3, cache.getCacheSize());
-    assertEquals(1, cache.remove("a"));
+    assertEquals(1, cache.remove(new MyKey("a")));
     assertEquals(2, cache.getCacheSize());
-    assertEquals(2, cache.remove("b"));
+    assertEquals(2, cache.remove(new MyKey("b")));
     assertEquals(1, cache.getCacheSize());
-    assertEquals(null, cache.remove("x"));
+    assertEquals(null, cache.remove(new MyKey("x")));
     assertEquals(1, cache.getCacheSize());
   }
   
   public void testPutMap() throws Exception {
     Map<Serializable, Object> values = new HashMap<Serializable, Object>();
-    values.put("a", "a");
-    values.put("b", "b");
+    values.put(new MyKey("a"), "a");
+    values.put(new MyKey("b"), "b");
     assertEquals(0, cache.getCacheSize());
     cache.putMap(values);
     assertEquals(2, cache.getCacheSize());
@@ -136,8 +136,8 @@ public class TestAbstractExoCache extends BasicTestCase {
         return set;
       }
     };
-    values.put("e", "e"); 
-    values.put("d", "d");
+    values.put(new MyKey("e"), "e"); 
+    values.put(new MyKey("d"), "d");
     try {
       cache.putMap(values);
       assertTrue("An error was expected", false);
@@ -147,10 +147,10 @@ public class TestAbstractExoCache extends BasicTestCase {
   }
   
   public void testGetCachedObjects() throws Exception {
-    cache.put("a", "a");
-    cache.put("b", "b");
-    cache.put("c", "c");
-    cache.put("d", null);
+    cache.put(new MyKey("a"), "a");
+    cache.put(new MyKey("b"), "b");
+    cache.put(new MyKey("c"), "c");
+    cache.put(new MyKey("d"), null);
     assertEquals(4, cache.getCacheSize());
     List<Object> values = cache.getCachedObjects();
     assertEquals(3, values.size());
@@ -160,10 +160,10 @@ public class TestAbstractExoCache extends BasicTestCase {
   }
   
   public void testRemoveCachedObjects() throws Exception {
-    cache.put("a", "a");
-    cache.put("b", "b");
-    cache.put("c", "c");
-    cache.put("d", null);
+    cache.put(new MyKey("a"), "a");
+    cache.put(new MyKey("b"), "b");
+    cache.put(new MyKey("c"), "c");
+    cache.put(new MyKey("d"), null);
     assertEquals(4, cache.getCacheSize());
     List<Object> values = cache.removeCachedObjects();
     assertEquals(3, values.size());
@@ -174,14 +174,14 @@ public class TestAbstractExoCache extends BasicTestCase {
   }
   
   public void testSelect() throws Exception {
-    cache.put("a", 1);
-    cache.put("b", 2);
-    cache.put("c", 3);
+    cache.put(new MyKey("a"), 1);
+    cache.put(new MyKey("b"), 2);
+    cache.put(new MyKey("c"), 3);
     final AtomicInteger count = new AtomicInteger();
     CachedObjectSelector selector = new CachedObjectSelector() {
 
       public void onSelect(ExoCache cache, Serializable key, ObjectCacheInfo ocinfo) throws Exception {
-        assertTrue(key.equals("a") || key.equals("b") || key.equals("c"));
+        assertTrue(key.equals(new MyKey("a")) || key.equals(new MyKey("b")) || key.equals(new MyKey("c")));
         assertTrue(ocinfo.get().equals(1) || ocinfo.get().equals(2) || ocinfo.get().equals(3));
         count.incrementAndGet();
       }
@@ -197,11 +197,11 @@ public class TestAbstractExoCache extends BasicTestCase {
   public void testGetHitsNMisses() throws Exception {
     int hits = cache.getCacheHit();
     int misses = cache.getCacheMiss();
-    cache.put("a", "a");
-    cache.get("a");
-    cache.remove("a");
-    cache.get("a");
-    cache.get("z");
+    cache.put(new MyKey("a"), "a");
+    cache.get(new MyKey("a"));
+    cache.remove(new MyKey("a"));
+    cache.get(new MyKey("a"));
+    cache.get(new MyKey("z"));
     assertEquals(1, cache.getCacheHit() - hits);
     assertEquals(2, cache.getCacheMiss() - misses);
   }
@@ -228,9 +228,9 @@ public class TestAbstractExoCache extends BasicTestCase {
     MyCacheListener listener3 = new MyCacheListener();
     cache3.addCacheListener(listener3);
     try {
-      cache1.put("a", "b");
+      cache1.put(new MyKey("a"), "b");
       assertEquals(1, cache1.getCacheSize());
-      assertEquals("b", cache2.get("a"));
+      assertEquals("b", cache2.get(new MyKey("a")));
       assertEquals(1, cache2.getCacheSize());
       assertEquals(0, cache3.getCacheSize());
       assertEquals(1, listener1.put);
@@ -239,10 +239,10 @@ public class TestAbstractExoCache extends BasicTestCase {
       assertEquals(0, listener1.get);
       assertEquals(1, listener2.get);
       assertEquals(0, listener3.get);
-      cache2.put("b", "c");
+      cache2.put(new MyKey("b"), "c");
       assertEquals(2, cache1.getCacheSize());
       assertEquals(2, cache2.getCacheSize());
-      assertEquals("c", cache1.get("b"));
+      assertEquals("c", cache1.get(new MyKey("b")));
       assertEquals(0, cache3.getCacheSize());
       assertEquals(2, listener1.put);
       assertEquals(2, listener2.put);
@@ -250,28 +250,28 @@ public class TestAbstractExoCache extends BasicTestCase {
       assertEquals(1, listener1.get);
       assertEquals(1, listener2.get);
       assertEquals(0, listener3.get);
-      cache3.put("c", "d");
+      cache3.put(new MyKey("c"), "d");
       assertEquals(2, cache1.getCacheSize());
       assertEquals(2, cache2.getCacheSize());
       assertEquals(1, cache3.getCacheSize());
-      assertEquals("d", cache3.get("c"));
+      assertEquals("d", cache3.get(new MyKey("c")));
       assertEquals(2, listener1.put);
       assertEquals(2, listener2.put);
       assertEquals(1, listener3.put);
       assertEquals(1, listener1.get);
       assertEquals(1, listener2.get);
       assertEquals(1, listener3.get);
-      cache2.put("a", "a");
+      cache2.put(new MyKey("a"), "a");
       assertEquals(2, cache1.getCacheSize());
       assertEquals(2, cache2.getCacheSize());
-      assertEquals("a", cache1.get("a"));
+      assertEquals("a", cache1.get(new MyKey("a")));
       assertEquals(3, listener1.put);
       assertEquals(3, listener2.put);
       assertEquals(1, listener3.put);
       assertEquals(2, listener1.get);
       assertEquals(1, listener2.get);
       assertEquals(1, listener3.get);    
-      cache2.remove("a");
+      cache2.remove(new MyKey("a"));
       assertEquals(1, cache1.getCacheSize());
       assertEquals(1, cache2.getCacheSize());   
       assertEquals(3, listener1.put);
@@ -285,7 +285,7 @@ public class TestAbstractExoCache extends BasicTestCase {
       assertEquals(0, listener3.remove);    
       cache1.clearCache();
       assertEquals(0, cache1.getCacheSize());
-      assertEquals(null, cache2.get("b"));
+      assertEquals(null, cache2.get(new MyKey("b")));
       assertEquals(0, cache2.getCacheSize());
       assertEquals(3, listener1.put);
       assertEquals(3, listener2.put);
@@ -300,13 +300,13 @@ public class TestAbstractExoCache extends BasicTestCase {
       assertEquals(0, listener2.clearCache);
       assertEquals(0, listener3.clearCache);    
       Map<Serializable, Object> values = new HashMap<Serializable, Object>();
-      values.put("a", "a");
-      values.put("b", "b");
+      values.put(new MyKey("a"), "a");
+      values.put(new MyKey("b"), "b");
       cache1.putMap(values);
       assertEquals(2, cache1.getCacheSize());
       Thread.sleep(40);
-      assertEquals("a", cache2.get("a"));
-      assertEquals("b", cache2.get("b"));
+      assertEquals("a", cache2.get(new MyKey("a")));
+      assertEquals("b", cache2.get(new MyKey("b")));
       assertEquals(2, cache2.getCacheSize());
       assertEquals(5, listener1.put);
       assertEquals(5, listener2.put);
@@ -340,8 +340,8 @@ public class TestAbstractExoCache extends BasicTestCase {
           return set;
         }
       };
-      values.put("e", "e"); 
-      values.put("d", "d");
+      values.put(new MyKey("e"), "e"); 
+      values.put(new MyKey("d"), "d");
       try {
         cache1.putMap(values);
         assertTrue("An error was expected", false);
@@ -388,7 +388,7 @@ public class TestAbstractExoCache extends BasicTestCase {
             startSignalWriter.await();
             for (int j = 0; j < totalTimes; j++) {
               for (int i = 0; i < totalElement; i++) {
-                cache.put("key" + i, "value" + i);
+                cache.put(new MyKey("key" + i), "value" + i);
               }
               if (index == 0 && j == 0) {
                 // The cache is full, we can launch the others
@@ -412,7 +412,7 @@ public class TestAbstractExoCache extends BasicTestCase {
             startSignalOthers.await();
             for (int j = 0; j < totalTimes; j++) {
               for (int i = 0; i < totalElement; i++) {
-                cache.get("key" + i);
+                cache.get(new MyKey("key" + i));
               }
               sleep(50);
             }
@@ -431,7 +431,7 @@ public class TestAbstractExoCache extends BasicTestCase {
             startSignalOthers.await();
             for (int j = 0; j < totalTimes; j++) {
               for (int i = 0; i < totalElement; i++) {
-                cache.remove("key" + i);
+                cache.remove(new MyKey("key" + i));
               }
               sleep(50);
             }
@@ -445,7 +445,7 @@ public class TestAbstractExoCache extends BasicTestCase {
     }
     doneSignal.await();
     for (int i = 0; i < totalElement; i++) {
-      cache.put("key" + i, "value" + i);
+      cache.put(new MyKey("key" + i), "value" + i);
     }
     assertEquals(totalElement, cache.getCacheSize());
     final CountDownLatch startSignal = new CountDownLatch(1);
@@ -457,7 +457,7 @@ public class TestAbstractExoCache extends BasicTestCase {
             startSignal.await();
             for (int j = 0; j < totalTimes; j++) {
               for (int i = 0; i < totalElement; i++) {
-                cache.put("key" + i, "value" + i);
+                cache.put(new MyKey("key" + i), "value" + i);
               }
               sleep(50);
             }
@@ -523,6 +523,24 @@ public class TestAbstractExoCache extends BasicTestCase {
 
     public void onRemove(ExoCache cache, Serializable key, Object obj) throws Exception {
       remove++;
+    }
+  }
+  
+  public static class MyKey implements Serializable {
+    public String value;
+    
+    public MyKey(String value) {
+      this.value = value;
+    }
+
+    @Override
+    public boolean equals(Object paramObject) {
+      return paramObject instanceof MyKey && ((MyKey) paramObject).value.endsWith(value);
+    }
+
+    @Override
+    public int hashCode() {
+      return value.hashCode();
     }
   }
 }
