@@ -182,7 +182,7 @@
 		run.
 	-->
 
-	<eviction wakeUpInterval="500">
+	<eviction wakeUpInterval="50">
 
 		<default algorithmClass="org.jboss.cache.eviction.LRUAlgorithm"
 			eventQueueSize="200000">
