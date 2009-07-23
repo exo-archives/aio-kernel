@@ -27,6 +27,8 @@
     <module>component/common</module>
     <module>component/remote</module>
     <module>component/cache</module>
+    <module>component/ext/cache/impl/jboss/v1</module>
+    <module>component/ext/cache/impl/jboss/v3</module>
     <module>component/command</module>
   </modules>
 
