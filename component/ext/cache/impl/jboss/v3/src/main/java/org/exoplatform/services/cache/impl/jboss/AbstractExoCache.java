@@ -49,7 +49,6 @@ import org.jboss.cache.notifications.event.NodeEvent;
  *          exo@exoplatform.com
  * 20 juil. 2009  
  */
-@org.jboss.cache.notifications.annotation.CacheListener
 public abstract class AbstractExoCache implements ExoCache {
   
   /**
