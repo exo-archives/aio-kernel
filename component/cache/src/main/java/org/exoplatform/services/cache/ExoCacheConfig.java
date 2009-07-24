@@ -17,25 +17,53 @@
 package org.exoplatform.services.cache;
 
 /**
+ * This class defines the main configuration properties of an {@link org.exoplatform.services.cache.ExoCache}
+ * 
  * @author Tuan Nguyen (tuan08@users.sourceforge.net)
  * @since Feb 20, 2005
  * @version $Id: ExoCacheConfig.java 5799 2006-05-28 17:55:42Z geaz $
  */
 public class ExoCacheConfig implements Cloneable {
+  
+  /**
+   * The name of the cache
+   */
   private String  name;
 
+  /**
+   * The label of the cache
+   */
   private String  label;
 
+  /**
+   * The maximum number of elements in your cache
+   */
   private int     maxSize;
 
+  /**
+   * The amount of time (in milliseconds) an element is not written or
+   * read before it is evicted. 
+   */
   private long    liveTime;
 
+  /**
+   * Indicates if the cache is distributed
+   */
   private boolean distributed;
 
+  /**
+   * Indicates if the cache is replicated
+   */
   private boolean replicated;
 
+  /**
+   * The full qualified name of the cache implementation to use
+   */
   private String  implementation;
   
+  /**
+   * Indicates if the log is enabled
+   */
   private boolean logEnabled;
 
   public String getName() {
@@ -77,8 +105,6 @@ public class ExoCacheConfig implements Cloneable {
   public void setDistributed(boolean b) {
     distributed = b;
   }
-
-  // public void setDistributed(String b) { distributed_ = "true".equals(b) ; }
 
   public boolean isRepicated() {
     return replicated;
