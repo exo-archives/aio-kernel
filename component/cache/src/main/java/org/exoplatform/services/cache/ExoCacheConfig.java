@@ -36,11 +36,6 @@ public class ExoCacheConfig implements Cloneable {
 
   private String  implementation;
   
-  /**
-   * The type of cache
-   */
-  private String type;
-  
   private boolean logEnabled;
 
   public String getName() {
@@ -99,14 +94,6 @@ public class ExoCacheConfig implements Cloneable {
 
   public void setImplementation(String alg) {
     implementation = alg;
-  }
-  
-  public String getType() {
-    return type;
-  }
-
-  public void setType(String type) {
-    this.type = type;
   }
 
   public boolean isLogEnabled() {
