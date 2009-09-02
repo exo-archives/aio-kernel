@@ -31,8 +31,8 @@
   </component>  
   
   <component>
-    <key>org.exoplatform.services.cache.CacheService</key>
-    <type>org.exoplatform.services.cache.impl.CacheServiceImpl</type>
+  	<key>org.exoplatform.services.cache.CacheService</key>
+  	<type>org.exoplatform.services.cache.impl.CacheServiceImpl</type>
     <!--
     <component-plugins>
       <component-plugin>
@@ -99,10 +99,6 @@
     </init-params>	
   </component>  
 
-  <component>
-    <key>org.exoplatform.container.PropertyManagerManaged</key>
-    <type>org.exoplatform.container.PropertyManagerManaged</type>
-  </component>
   
   <external-component-plugins>
     <target-component>org.exoplatform.services.cache.CacheService</target-component>

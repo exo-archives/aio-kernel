@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <configuration>
-
-  <!-- component>
+  <component>
     <key>org.exoplatform.services.cache.CacheService</key>
     <jmx-name>cache:type=CacheService</jmx-name>
     <type>org.exoplatform.services.cache.impl.CacheServiceImpl</type>
@@ -18,5 +17,5 @@
         </object>
       </object-param>
     </init-params>  
-  </component -->
+  </component>
 </configuration>
