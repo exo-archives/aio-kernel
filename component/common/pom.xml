@@ -2,13 +2,13 @@
   <parent>
     <groupId>org.exoplatform.kernel</groupId>
     <artifactId>kernel-parent</artifactId>
-    <version>2.0.8</version>
+    <version>2.0.8-SNAPSHOT</version>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
   <artifactId>exo.kernel.component.common</artifactId>
   <packaging>jar</packaging>
-  <version>2.0.8</version>
+  <version>2.0.8-SNAPSHOT</version>
   <name>Common service</name>
   <description>exoplatform common services implementation</description>
 
@@ -16,7 +16,7 @@
     <dependency>
       <groupId>org.exoplatform.kernel</groupId>
       <artifactId>exo.kernel.container</artifactId>
-      <version>2.0.8</version>
+      <version>2.0.8-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
 
