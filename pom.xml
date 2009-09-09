@@ -99,6 +99,14 @@
             <exclude>**/TestSimpleThreadPoolService.java</exclude><!-- no such service in *config*.xml -->
             <exclude>**/TestCommunicationService.java</exclude><!--need to tune firewall-->
             <exclude>**/TestNetService.java</exclude><!--need to tune firewall-->
+            
+            <exclude>**/TestLRUCache.java</exclude>
+            <exclude>**/TestAbstractExoCache.java</exclude>
+            <exclude>**/TestExoCacheFactoryImpl.java</exclude>
+            
+            
+            
+            
           </excludes>
           <systemProperties>
             <property>
