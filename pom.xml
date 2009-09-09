@@ -100,12 +100,9 @@
             <exclude>**/TestCommunicationService.java</exclude><!--need to tune firewall-->
             <exclude>**/TestNetService.java</exclude><!--need to tune firewall-->
             
-            <exclude>**/TestLRUCache.java</exclude>
-            <exclude>**/TestAbstractExoCache.java</exclude>
-            <exclude>**/TestExoCacheFactoryImpl.java</exclude>
-            
-            
-            
+            <exclude>**/TestLRUCache.java</exclude><!--http://jira.exoplatform.org/browse/KER-124-->
+            <exclude>**/TestAbstractExoCache.java</exclude><!--http://jira.exoplatform.org/browse/KER-124-->
+            <exclude>**/TestExoCacheFactoryImpl.java</exclude><!--http://jira.exoplatform.org/browse/KER-124-->
             
           </excludes>
           <systemProperties>
