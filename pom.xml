@@ -99,6 +99,10 @@
             <exclude>**/TestSimpleThreadPoolService.java</exclude><!-- no such service in *config*.xml -->
             <exclude>**/TestCommunicationService.java</exclude><!--need to tune firewall-->
             <exclude>**/TestNetService.java</exclude><!--need to tune firewall-->
+            
+            <exclude>**/TestLRUCache.java</exclude><!--http://jira.exoplatform.org/browse/KER-124-->
+            <exclude>**/TestAbstractExoCache.java</exclude><!--http://jira.exoplatform.org/browse/KER-124-->
+            <exclude>**/TestExoCacheFactoryImpl.java</exclude><!--http://jira.exoplatform.org/browse/KER-124-->
           </excludes>
           <systemProperties>
             <property>
