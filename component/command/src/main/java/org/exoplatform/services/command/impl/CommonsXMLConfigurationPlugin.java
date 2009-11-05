@@ -19,15 +19,18 @@ package org.exoplatform.services.command.impl;
 import java.net.URL;
 
 import org.apache.commons.chain.config.ConfigParser;
+import org.apache.commons.logging.Log;
 
 import org.exoplatform.container.component.BaseComponentPlugin;
 import org.exoplatform.container.configuration.ConfigurationManager;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.ValueParam;
+import org.exoplatform.services.log.ExoLogger;
 
 /**
- * Created by The eXo Platform SAS.<br/> The plugin for configuring
- * command/chain catalog using "native" Apache Commons Chain's XML file
+ * Created by The eXo Platform SAS.<br/>
+ * The plugin for configuring command/chain catalog using "native" Apache
+ * Commons Chain's XML file
  * 
  * @author <a href="mailto:gennady.azarenkov@exoplatform.com">Gennady
  *         Azarenkov</a>
@@ -38,6 +41,8 @@ import org.exoplatform.container.xml.ValueParam;
 public class CommonsXMLConfigurationPlugin extends BaseComponentPlugin {
 
   // protected Catalog defaultCatalog;
+
+  private static Log log = ExoLogger.getLogger(CommonsXMLConfigurationPlugin.class);
 
   public CommonsXMLConfigurationPlugin(InitParams params, ConfigurationManager configurationManager) throws Exception {
     ValueParam confFile = params.getValueParam("config-file");
@@ -52,7 +57,7 @@ public class CommonsXMLConfigurationPlugin extends BaseComponentPlugin {
         res = configurationManager.getResource(path);
       if (res == null)
         throw new Exception("Resource not found " + path);
-      System.out.println("Catalog configuration found at " + res);
+      log.info("Catalog configuration found at " + res);
       parser.parse(res);
     }
 
