@@ -232,7 +232,6 @@ public class RootContainer extends ExoContainer {
             throw new IllegalStateException("Already booting by the same thread");
           } else {
             booting = true;
-            log.error("Booting root container with id " + RootContainer.class.hashCode() + "");
             log.info("Building root container");
             long time = - System.currentTimeMillis();
             result = buildRootContainer();
