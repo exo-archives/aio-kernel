@@ -110,9 +110,8 @@ public class RootContainer extends ExoContainer {
       try {
         cService.addConfiguration(ContainerUtil.getConfigurationURL("conf/portal/configuration.xml"));
       } catch (Exception ex) {
-        System.err.println("ERROR: cannot add configuration conf/portal/configuration.xml. ServletContext: "
-            + context);
-        ex.printStackTrace();
+        log.error("Cannot add configuration conf/portal/configuration.xml. ServletContext: "
+                  + context, ex);
       }
 
       // Add configuration that depends on the environment
@@ -127,18 +126,16 @@ public class RootContainer extends ExoContainer {
         cService.addConfiguration(envConf);
       }
       catch (Exception ex) {
-        System.err.println("ERROR: cannot add configuration " + uri + ". ServletContext: "
-            + context);
-        ex.printStackTrace();
+        log.error("Cannot add configuration " + uri + ". ServletContext: "
+            + context, ex);
       }
 
       // add configs from web apps
       try {
         cService.addConfiguration("war:/conf/configuration.xml");
       } catch (Exception ex) {
-        System.err.println("ERROR: cannot add configuration war:/conf/configuration.xml. ServletContext: "
-            + context);
-        ex.printStackTrace();
+        log.error("Cannot add configuration war:/conf/configuration.xml. ServletContext: "
+            + context, ex);
       }
 
       // add config from application server,
@@ -151,9 +148,8 @@ public class RootContainer extends ExoContainer {
         if (file.exists())
           cService.addConfiguration(file.toURI().toURL());
       } catch (Exception ex) {
-        System.err.println("ERROR: cannot add configuration " + overrideConfig
-            + ". ServletContext: " + context);
-        ex.printStackTrace();
+        log.error("Cannot add configuration " + overrideConfig
+            + ". ServletContext: " + context, ex);
       }
 
       cService.processRemoveConfiguration();
@@ -170,8 +166,7 @@ public class RootContainer extends ExoContainer {
       //
       return pcontainer;
     } catch (Exception ex) {
-      System.err.println("ERROR: cannot create portal container. ServletContext: " + context);
-      ex.printStackTrace();
+      log.error("Cannot create portal container. ServletContext: " + context, ex);
     }
     return null;
   }
