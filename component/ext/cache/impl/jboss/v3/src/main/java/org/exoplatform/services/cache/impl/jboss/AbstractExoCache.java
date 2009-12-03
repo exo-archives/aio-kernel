@@ -35,7 +35,7 @@ import org.jboss.cache.Cache;
 import org.jboss.cache.CacheSPI;
 import org.jboss.cache.Fqn;
 import org.jboss.cache.Node;
-import org.jboss.cache.notifications.annotation.NodeCreated;
+import org.jboss.cache.NodeSPI;
 import org.jboss.cache.notifications.annotation.NodeEvicted;
 import org.jboss.cache.notifications.annotation.NodeModified;
 import org.jboss.cache.notifications.annotation.NodeRemoved;
@@ -56,10 +56,8 @@ public abstract class AbstractExoCache implements ExoCache {
    */
   private static final Log LOG  = ExoLogger.getLogger(AbstractExoCache.class);
   
-  protected final AtomicInteger size = new AtomicInteger();
-  
-  private volatile int hits;
-  private volatile int misses;
+  private final AtomicInteger hits = new AtomicInteger(0);
+  private final AtomicInteger misses = new AtomicInteger(0);
   private String label;
   private String name;
   private boolean distributed;
@@ -68,24 +66,18 @@ public abstract class AbstractExoCache implements ExoCache {
   
   private final CopyOnWriteArrayList<CacheListener> listeners;
 
-  protected final Cache<Serializable, Object> cache;
-  protected final boolean isCacheSPI; 
+  protected final CacheSPI<Serializable, Object> cache;
   
-  @SuppressWarnings("unchecked")
   public AbstractExoCache(ExoCacheConfig config, Cache<Serializable, Object> cache) {
-    this.cache = cache;
-    this.isCacheSPI = cache instanceof CacheSPI;
+    this.cache = (CacheSPI<Serializable, Object>)cache;
     this.listeners = new CopyOnWriteArrayList<CacheListener>();
-    if (!isCacheSPI) {
-      LOG.warn("The cache is not an instance of CacheSPI, the cache size will be evaluated but won't be accurate");
-    }
     setDistributed(config.isDistributed());
     setLabel(config.getLabel());
     setName(config.getName());
     setLogEnabled(config.isLogEnabled());
     setReplicated(config.isRepicated());
     cache.getConfiguration().setInvocationBatchingEnabled(true);
-    cache.addCacheListener(new SizeManager());
+    cache.addCacheListener(new CacheEventListener());
   }
   
   /**
@@ -116,11 +108,11 @@ public abstract class AbstractExoCache implements ExoCache {
    * {@inheritDoc}
    */
   public Object get(Serializable name) throws Exception {
-    final Object result = cache.get(Fqn.fromElements(name), name);
+    final Object result = cache.get(getFqn(name), name);
     if (result == null) {
-      misses++;
+      misses.incrementAndGet();
     } else {
-      hits++;
+      hits.incrementAndGet();
     }
     onGet(name, result);
     return result;
@@ -130,25 +122,21 @@ public abstract class AbstractExoCache implements ExoCache {
    * {@inheritDoc}
    */
   public int getCacheHit() {
-    return hits;
+    return hits.get();
   }
 
   /**
    * {@inheritDoc}
    */
   public int getCacheMiss() {
-    return misses;
+    return misses.get();
   }
 
   /**
    * {@inheritDoc}
    */
-  @SuppressWarnings("unchecked")
   public int getCacheSize() {
-    if (isCacheSPI) {
-      return ((CacheSPI) cache).getNumberOfNodes();
-    }
-    return size.intValue();
+    return cache.getNumberOfNodes();
   }
 
   /**
@@ -215,7 +203,7 @@ public abstract class AbstractExoCache implements ExoCache {
    * Only puts the data into the cache nothing more
    */
   private Object putOnly(Serializable name, Object obj) throws Exception {
-    return cache.put(Fqn.fromElements(name), name, obj);
+    return cache.put(getFqn(name), name, obj);
   }
   
   /**
@@ -238,7 +226,6 @@ public abstract class AbstractExoCache implements ExoCache {
         onPut(entry.getKey(), entry.getValue());       
       }
     } catch (Exception e) {
-      if (!isCacheSPI) size.addAndGet(-total);
       cache.endBatch(false);
       throw e;
     }
@@ -248,16 +235,16 @@ public abstract class AbstractExoCache implements ExoCache {
    * {@inheritDoc}
    */
   public Object remove(Serializable name) throws Exception {
-    final Fqn<Serializable> fqn = Fqn.fromElements(name);
-    final Node<Serializable, Object> node = cache.getNode(fqn);
+    final Fqn<Serializable> fqn = getFqn(name);
+    final NodeSPI<Serializable, Object> node = cache.getNode(fqn);
+    Object result = null;
     if (node != null) {
-      final Object result = node.get(name);
+      result = node.getDirect(name);
       if (cache.removeNode(fqn)) {        
         onRemove(name, result);
       }
-      return result;
     }
-    return null;
+    return result;
   }
 
   /**
@@ -345,6 +332,13 @@ public abstract class AbstractExoCache implements ExoCache {
     return (Serializable) fqn.get(0);
   }
   
+  /**
+   * Returns the Fqn related to the given name
+   */
+  private Fqn<Serializable> getFqn(Serializable name) {
+    return Fqn.fromElements(name);
+  }
+  
   void onExpire(Serializable key, Object obj) {
     if (listeners.isEmpty()) {
       return;      
@@ -413,7 +407,7 @@ public abstract class AbstractExoCache implements ExoCache {
   }
   
   @org.jboss.cache.notifications.annotation.CacheListener
-  public class SizeManager {
+  public class CacheEventListener {
  
     @NodeEvicted
     public void nodeEvicted(NodeEvent ne) {
@@ -422,28 +416,15 @@ public abstract class AbstractExoCache implements ExoCache {
         // since it disturbs the eviction
         // algorithms
         onExpire(getKey(ne.getFqn()), null);        
-      } else if (!isCacheSPI) { 
-        size.decrementAndGet();        
       }
     }    
     
     @NodeRemoved
     public void nodeRemoved(NodeEvent ne) {
-      if (ne.isPre()) {
-        if (!ne.isOriginLocal()) {
-          final Node<Serializable, Object> node = cache.getNode(ne.getFqn());
-          final Serializable key = getKey(ne.getFqn());
-          onRemove(key, node.get(key));          
-        }
-      } else if (!isCacheSPI) { 
-        size.decrementAndGet();          
-      }
-    }
-    
-    @NodeCreated
-    public void nodeCreated(NodeEvent ne) {
-      if (!ne.isPre() && !isCacheSPI) {
-        size.incrementAndGet(); 
+      if (ne.isPre() && !ne.isOriginLocal()) {
+        final Node<Serializable, Object> node = cache.getNode(ne.getFqn());
+        final Serializable key = getKey(ne.getFqn());
+        onRemove(key, node.get(key));          
       }
     }
     

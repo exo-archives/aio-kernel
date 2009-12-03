@@ -369,6 +369,7 @@ public class TestAbstractExoCache extends BasicTestCase {
   } 
   
   public void testMultiThreading() throws Exception {
+    long time = System.currentTimeMillis();
     final ExoCache cache = service.getCacheInstance("test-multi-threading");    
     final int totalElement = 100;
     final int totalTimes = 100;
@@ -396,9 +397,10 @@ public class TestAbstractExoCache extends BasicTestCase {
               }
               sleep(50);
             }
-            doneSignal.countDown();
           } catch (Exception e) {
             errors.add(e);
+          } finally {
+            doneSignal.countDown();            
           }
         }
       };
@@ -416,9 +418,10 @@ public class TestAbstractExoCache extends BasicTestCase {
               }
               sleep(50);
             }
-            doneSignal.countDown();
           } catch (Exception e) {
             errors.add(e);
+          } finally {
+            doneSignal.countDown();            
           }
         }
       };
@@ -435,9 +438,10 @@ public class TestAbstractExoCache extends BasicTestCase {
               }
               sleep(50);
             }
-            doneSignal.countDown();
           } catch (Exception e) {
             errors.add(e);
+          } finally {
+            doneSignal.countDown();            
           }
         }
       };
@@ -461,9 +465,10 @@ public class TestAbstractExoCache extends BasicTestCase {
               }
               sleep(50);
             }
-            doneSignal2.countDown();
           } catch (Exception e) {
             errors.add(e);
+          } finally {
+            doneSignal2.countDown();            
           }
         }
       };
@@ -478,9 +483,10 @@ public class TestAbstractExoCache extends BasicTestCase {
               sleep(150);
               cache.clearCache();
             }
-            doneSignal2.countDown();
           } catch (Exception e) {
             errors.add(e);
+          } finally {
+            doneSignal2.countDown();            
           }
         }
       };
@@ -494,7 +500,7 @@ public class TestAbstractExoCache extends BasicTestCase {
       }
       throw errors.get(0);
     }
-    
+    System.out.println("Total Time = " + (System.currentTimeMillis() - time));
   }
   
   public static class MyCacheListener implements CacheListener {
