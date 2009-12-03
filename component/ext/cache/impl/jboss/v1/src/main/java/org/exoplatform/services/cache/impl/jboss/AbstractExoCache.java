@@ -58,10 +58,8 @@ public abstract class AbstractExoCache implements ExoCache {
    */
   private static final Log LOG  = ExoLogger.getLogger(AbstractExoCache.class);
   
-  protected final AtomicInteger size = new AtomicInteger();
-  
-  private volatile int hits;
-  private volatile int misses;
+  private final AtomicInteger hits = new AtomicInteger(0);
+  private final AtomicInteger misses = new AtomicInteger(0);
   private String label;
   private String name;
   private boolean distributed;
@@ -80,7 +78,7 @@ public abstract class AbstractExoCache implements ExoCache {
     setName(config.getName());
     setLogEnabled(config.isLogEnabled());
     setReplicated(config.isRepicated());
-    cache.addTreeCacheListener(new SizeManager());
+    cache.addTreeCacheListener(new CacheEventListener());
   }
   
   /**
@@ -121,9 +119,9 @@ public abstract class AbstractExoCache implements ExoCache {
   public Object get(Serializable name) throws Exception {
     final Object result = cache.get(new Fqn(name), name);
     if (result == null) {
-      misses++;
+      misses.incrementAndGet();
     } else {
-      hits++;
+      hits.incrementAndGet();
     }
     onGet(name, result);
     return result;
@@ -133,14 +131,14 @@ public abstract class AbstractExoCache implements ExoCache {
    * {@inheritDoc}
    */
   public int getCacheHit() {
-    return hits;
+    return hits.get();
   }
 
   /**
    * {@inheritDoc}
    */
   public int getCacheMiss() {
-    return misses;
+    return misses.get();
   }
 
   /**
@@ -422,7 +420,7 @@ public abstract class AbstractExoCache implements ExoCache {
       }
   }
   
-  public class SizeManager extends AbstractTreeCacheListener {
+  public class CacheEventListener extends AbstractTreeCacheListener {
  
     public void cacheStarted(TreeCache cache) {}
     public void cacheStopped(TreeCache cache) {}
