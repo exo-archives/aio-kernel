@@ -22,14 +22,14 @@
   </scm>
 
   <modules>
-    <module>container</module>
-    <module>commons</module>
-    <module>component/common</module>
-    <module>component/remote</module>
-    <module>component/cache</module>
-    <module>component/ext/cache/impl/jboss/v1</module>
-    <module>component/ext/cache/impl/jboss/v3</module>
-    <module>component/command</module>
+    <module>exo.kernel.container</module>
+    <module>exo.kernel.commons</module>
+    <module>exo.kernel.component.common</module>
+    <module>exo.kernel.component.remote</module>
+    <module>exo.kernel.component.cache</module>
+    <module>exo.kernel.component.ext.cache.impl.jboss.v1</module>
+    <module>exo.kernel.component.ext.cache.impl.jboss.v3</module>
+    <module>exo.kernel.component.command</module>
   </modules>
 
   <dependencyManagement>
