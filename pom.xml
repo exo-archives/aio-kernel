@@ -1,37 +1,21 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.exoplatform</groupId>
     <artifactId>parent</artifactId>
     <version>1.1.1</version>
   </parent>
-
   <groupId>org.exoplatform.kernel</groupId>
   <artifactId>exo.kernel</artifactId>
+  <packaging>pom</packaging>
   <name>eXo Kernel</name>
   <version>2.0.9-SNAPSHOT</version>
-  <packaging>pom</packaging>
-  <properties>
-     <exo.product.name>exo-kernel</exo.product.name>
-     <exo.product.specification>2.0.7</exo.product.specification>
-  </properties>
   <scm>
     <connection>scm:svn:http://svn.exoplatform.org/svnroot/exoplatform/projects/kernel/branches/2.0.x</connection>
     <developerConnection>scm:svn:http://svn.exoplatform.org/svnroot/exoplatform/projects/kernel/branches/2.0.x</developerConnection>
     <url>http://fisheye.exoplatform.org/browse/projects/kernel/branches/2.0.x</url>
   </scm>
-
-  <modules>
-    <module>exo.kernel.container</module>
-    <module>exo.kernel.commons</module>
-    <module>exo.kernel.component.common</module>
-    <module>exo.kernel.component.remote</module>
-    <module>exo.kernel.component.cache</module>
-    <module>exo.kernel.component.ext.cache.impl.jboss.v1</module>
-    <module>exo.kernel.component.ext.cache.impl.jboss.v3</module>
-    <module>exo.kernel.component.command</module>
-  </modules>
-
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -48,14 +32,16 @@
       </dependency>
     </dependencies>
   </dependencyManagement>
-
-  <dependencies>
-    <dependency>
-      <groupId>emma</groupId>
-      <artifactId>emma</artifactId>
-    </dependency>
-  </dependencies>
-
+  <modules>
+    <module>exo.kernel.container</module>
+    <module>exo.kernel.commons</module>
+    <module>exo.kernel.component.common</module>
+    <module>exo.kernel.component.remote</module>
+    <module>exo.kernel.component.cache</module>
+    <module>exo.kernel.component.ext.cache.impl.jboss.v1</module>
+    <module>exo.kernel.component.ext.cache.impl.jboss.v3</module>
+    <module>exo.kernel.component.command</module>
+  </modules>
   <build>
     <resources>
       <resource>
@@ -78,7 +64,6 @@
       </testResource>
     </testResources>
     <plugins>
-
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
@@ -94,16 +79,23 @@
           <excludes>
             <exclude>**/*$*</exclude>
             <exclude>**/SchedulerServiceTestBase.java</exclude>
-            <exclude>**/TestCompressData.java</exclude><!-- need to add test resources -->
-            <exclude>**/LogTest.java</exclude><!-- need to review test logic -->
-            <exclude>**/TestSimpleThreadPoolService.java</exclude><!-- no such service in *config*.xml -->
-            <exclude>**/TestCommunicationService.java</exclude><!--need to tune firewall-->
-            <exclude>**/TestNetService.java</exclude><!--need to tune firewall-->
-            
-            <exclude>**/TestLRUCache.java</exclude><!--http://jira.exoplatform.org/browse/KER-124-->
-            <exclude>**/TestAbstractExoCache.java</exclude><!--http://jira.exoplatform.org/browse/KER-124-->
-            <exclude>**/TestExoCacheFactoryImpl.java</exclude><!--http://jira.exoplatform.org/browse/KER-124-->
+            <exclude>**/TestCompressData.java</exclude>
+            <!-- need to add test resources -->
+            <exclude>**/LogTest.java</exclude>
+            <!-- need to review test logic -->
+            <exclude>**/TestSimpleThreadPoolService.java</exclude>
+            <!-- no such service in *config*.xml -->
+            <exclude>**/TestCommunicationService.java</exclude>
+            <!--need to tune firewall-->
+            <exclude>**/TestNetService.java</exclude>
+            <!--need to tune firewall-->
+            <exclude>**/TestLRUCache.java</exclude>
+            <!--http://jira.exoplatform.org/browse/KER-124-->
+            <exclude>**/TestAbstractExoCache.java</exclude>
+            <!--http://jira.exoplatform.org/browse/KER-124-->
+            <exclude>**/TestExoCacheFactoryImpl.java</exclude>
           </excludes>
+          <!--http://jira.exoplatform.org/browse/KER-124-->
           <systemProperties>
             <property>
               <name>emma.coverage.out.file</name>
@@ -122,22 +114,22 @@
             <phase>test-compile</phase>
             <configuration>
               <tasks if="emma.run">
-                <echo message="[EMMA] Start classes instrumentation ..." />
-                <taskdef resource="emma_ant.properties" classpathref="maven.dependency.classpath" />
-                <mkdir dir="target" />
-                <mkdir dir="target/classes" />
-                <mkdir dir="target/emma/classes" />
+                <echo message="[EMMA] Start classes instrumentation ..."/>
+                <taskdef resource="emma_ant.properties" classpathref="maven.dependency.classpath"/>
+                <mkdir dir="target"/>
+                <mkdir dir="target/classes"/>
+                <mkdir dir="target/emma/classes"/>
                 <!-- Do nothing if the directory already exist-->
                 <copy todir="target/emma/classes" verbose="false" overwrite="true">
-                  <fileset dir="target/classes" />
+                  <fileset dir="target/classes"/>
                 </copy>
                 <emma enabled="true">
                   <instr mode="overwrite" metadatafile="target/emma/metadata.em">
-                    <filter excludes="*.xml.*" />
-                    <filter excludes="*JiBX*" />
+                    <filter excludes="*.xml.*"/>
+                    <filter excludes="*JiBX*"/>
                     <instrpath>
                       <dirset dir="target">
-                        <include name="emma/classes" />
+                        <include name="emma/classes"/>
                       </dirset>
                     </instrpath>
                   </instr>
@@ -153,29 +145,29 @@
             <phase>test</phase>
             <configuration>
               <tasks if="emma.run">
-                <echo message="[EMMA] Start report generation..." />
-                <taskdef resource="emma_ant.properties" classpathref="maven.dependency.classpath" />
+                <echo message="[EMMA] Start report generation..."/>
+                <taskdef resource="emma_ant.properties" classpathref="maven.dependency.classpath"/>
                 <emma enabled="true">
                   <!-- merged file will be rewritted by last project -->
                   <merge outfile="${exo.projects.directory.src}/kernel/branches/2.0.x/target/coverage.es">
                     <fileset dir="${exo.projects.directory.src}/kernel/branches/2.0.x/">
-                      <include name="**/target/emma/*.e*" />
-                      <include name="**/target/emma/*.e*" />
+                      <include name="**/target/emma/*.e*"/>
+                      <include name="**/target/emma/*.e*"/>
                     </fileset>
                     <!-- just for the first launnch -->
-                    <fileset file="${exo.projects.directory.config}/coverage.es" />
+                    <fileset file="${exo.projects.directory.config}/coverage.es"/>
                   </merge>
                   <report>
                     <sourcepath>
                       <dirset dir="${exo.projects.directory.src}/kernel/tags/">
-                        <include name="**/src/**/java" />
+                        <include name="**/src/**/java"/>
                       </dirset>
                     </sourcepath>
                     <fileset dir="${exo.projects.directory.src}/kernel/branches/2.0.x/target/">
-                      <include name="*.es" />
+                      <include name="*.es"/>
                     </fileset>
-                    <html outfile="${exo.projects.directory.src}/kernel/branches/2.0.x/target/coverage.html" />
-                    <xml outfile="${exo.projects.directory.src}/kernel/branches/2.0.x/target/coverage.xml" />
+                    <html outfile="${exo.projects.directory.src}/kernel/branches/2.0.x/target/coverage.html"/>
+                    <xml outfile="${exo.projects.directory.src}/kernel/branches/2.0.x/target/coverage.xml"/>
                   </report>
                 </emma>
               </tasks>
@@ -202,7 +194,12 @@
       </plugin>
     </plugins>
   </build>
-
+  <dependencies>
+    <dependency>
+      <groupId>emma</groupId>
+      <artifactId>emma</artifactId>
+    </dependency>
+  </dependencies>
   <reporting>
     <plugins>
       <plugin>
@@ -215,5 +212,8 @@
       </plugin>
     </plugins>
   </reporting>
-
+  <properties>
+    <exo.product.name>exo-kernel</exo.product.name>
+    <exo.product.specification>2.0.7</exo.product.specification>
+  </properties>
 </project>
