@@ -8,9 +8,8 @@
   </parent>
   <artifactId>exo.kernel.component.cache</artifactId>
   <packaging>jar</packaging>
-  <name>Cache service api</name>
+  <name>eXo Kernel :: Component :: Cache Service</name>
   <version>2.0.9-SNAPSHOT</version>
-  <description>exoplatform Cache services implementation</description>
   <build>
     <plugins>
       <!-- To use in conjonctin with

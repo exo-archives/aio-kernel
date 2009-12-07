@@ -24,10 +24,10 @@ import org.apache.commons.chain.Context;
  * 
  * @author <a href="mailto:gennady.azarenkov@exoplatform.com">Gennady
  *         Azarenkov</a>
- * @version $Id: TestCommand1.java 5799 2006-05-28 17:55:42Z geaz $
+ * @version $Id: ACommand1.java 5799 2006-05-28 17:55:42Z geaz $
  */
 
-public class TestCommand1 implements Command {
+public class ACommand1 implements Command {
 
   public boolean execute(Context ctx) throws Exception {
     int tval = ((Integer) ctx.get("test")).intValue() + 1;

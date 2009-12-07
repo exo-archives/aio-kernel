@@ -8,10 +8,8 @@
   </parent>
   <artifactId>exo.kernel.commons</artifactId>
   <packaging>jar</packaging>
-  <name>eXo Kernel Commons</name>
+  <name>eXo Kernel :: Commons Utils</name>
   <version>2.0.9-SNAPSHOT</version>
-  <description>eXo Commons</description>
-  <url>http://www.exoplatform.org</url>
   <dependencies>
     <dependency>
       <groupId>commons-lang</groupId>

@@ -8,9 +8,8 @@
   </parent>
   <artifactId>exo.kernel.component.remote</artifactId>
   <packaging>jar</packaging>
-  <name>Remote service implementation</name>
+  <name>eXo Kernel :: Component :: Remote Service</name>
   <version>2.0.9-SNAPSHOT</version>
-  <description>exoplatform remote services implementation</description>
   <dependencies>
     <dependency>
       <groupId>org.exoplatform.kernel</groupId>

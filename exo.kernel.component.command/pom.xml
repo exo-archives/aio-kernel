@@ -8,9 +8,8 @@
   </parent>
   <artifactId>exo.kernel.component.command</artifactId>
   <packaging>jar</packaging>
-  <name>Command service impl</name>
+  <name>eXo Kernel :: Component :: Command Service</name>
   <version>2.0.9-SNAPSHOT</version>
-  <description>exoplatform command services implementation</description>
   <dependencies>
     <dependency>
       <groupId>org.exoplatform.kernel</groupId>

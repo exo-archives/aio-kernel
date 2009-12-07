@@ -8,10 +8,8 @@
   </parent>
   <artifactId>exo.kernel.container</artifactId>
   <packaging>jar</packaging>
-  <name>eXo Container</name>
+  <name>eXo Kernel :: Container</name>
   <version>2.0.9-SNAPSHOT</version>
-  <description>eXo Kernel Container</description>
-  <url>http://www.exoplatform.org</url>
   <build>
     <plugins>
       <plugin>

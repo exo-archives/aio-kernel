@@ -30,13 +30,13 @@ import org.exoplatform.services.command.impl.CommandService;
  * @author <a href="mailto:geaz@users.sourceforge.net">Gennady Azarenkov </a>
  * @version $Id:$
  */
-public class MultiConfigServiceTest extends TestCase {
+public class TestMultiConfigService extends TestCase {
 
   private StandaloneContainer container;
 
   private static final String IS                             = "<catalog name='fromput'>"
                                                                  + "<command name='put'"
-                                                                 + " className='org.exoplatform.services.command.TestCommand1'/>"
+                                                                 + " className='org.exoplatform.services.command.ACommand1'/>"
                                                                  + "</catalog>";
 
   // amount of commands configured in multiple plugins
@@ -47,7 +47,7 @@ public class MultiConfigServiceTest extends TestCase {
 
   public void setUp() throws Exception {
 
-    StandaloneContainer.setConfigurationPath("src/java/conf/standalone/test-multi-configuration.xml");
+    StandaloneContainer.setConfigurationPath("src/main/java/conf/standalone/test-multi-configuration.xml");
 
     container = StandaloneContainer.getInstance();
   }

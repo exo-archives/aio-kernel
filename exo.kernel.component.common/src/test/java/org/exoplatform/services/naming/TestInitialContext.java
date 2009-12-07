@@ -17,9 +17,9 @@ import org.exoplatform.container.StandaloneContainer;
  * = org.exoplatform.services.naming.impl.SimpleContextFactory
  * 
  * @author <a href="mailto:geaz@users.sourceforge.net">Gennady Azarenkov </a>
- * @version $Id: InitialContextTest.java 5655 2006-05-22 14:19:41Z geaz $
+ * @version $Id: TestInitialContext.java 5655 2006-05-22 14:19:41Z geaz $
  */
-public class InitialContextTest extends TestCase {
+public class TestInitialContext extends TestCase {
 
   private static String       TEST_CONTEXT_FACTORY = "org.exoplatform.services.naming.SimpleContextFactory";
 

@@ -34,18 +34,18 @@ import org.exoplatform.services.command.impl.CommandService;
  * @author <a href="mailto:geaz@users.sourceforge.net">Gennady Azarenkov </a>
  * @version $Id: CommandServiceTest.java 9296 2006-10-04 13:13:29Z geaz $
  */
-public class CommandServiceTest extends TestCase {
+public class TestCommandService extends TestCase {
 
   private static final String IS = "<catalog>"
                                      + "<command name='StrCommand'"
-                                     + " className='org.exoplatform.services.command.TestCommand1'/>"
+                                     + " className='org.exoplatform.services.command.ACommand1'/>"
                                      + "</catalog>";
 
   private StandaloneContainer container;
 
   public void setUp() throws Exception {
 
-    StandaloneContainer.setConfigurationPath("src/java/conf/standalone/test-configuration.xml");
+    StandaloneContainer.setConfigurationPath("src/main/java/conf/standalone/test-configuration.xml");
 
     container = StandaloneContainer.getInstance();
   }

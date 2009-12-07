@@ -2,9 +2,9 @@
 
   <!-- Single command "chains" from CatalogBaseTestCase -->
   <command   name="Command2"
-        className="org.exoplatform.services.command.TestCommand1"/>
+        className="org.exoplatform.services.command.ACommand1"/>
 
   <command   name="Command3"
-        className="org.exoplatform.services.command.TestCommand1"/>
+        className="org.exoplatform.services.command.ACommand1"/>
 
 </catalog>

@@ -8,9 +8,8 @@
   </parent>
   <artifactId>exo.kernel.component.ext.cache.impl.jboss.v3</artifactId>
   <packaging>jar</packaging>
-  <name>JBoss Cache 3 implementation</name>
+  <name>eXo Kernel :: Component :: Ext :: JBoss Cache 3 Impl</name>
   <version>2.0.9-SNAPSHOT</version>
-  <description>JBoss Cache 3 implementation for the cache service</description>
   <dependencies>
     <dependency>
       <groupId>org.exoplatform.kernel</groupId>

@@ -2,14 +2,14 @@
 
   <!-- Single command "chains" from CatalogBaseTestCase -->
   <command   name="Command1"
-        className="org.exoplatform.services.command.TestCommand1"/>
+        className="org.exoplatform.services.command.ACommand1"/>
 
   <!-- Chains with nested commands -->
   <chain     name="Execute2">
     <command   id="1"
-        className="org.exoplatform.services.command.TestCommand1"/>
+        className="org.exoplatform.services.command.ACommand1"/>
     <command   id="2"
-        className="org.exoplatform.services.command.TestCommand1"/>
+        className="org.exoplatform.services.command.ACommand1"/>
   </chain>
 
 </catalog>
