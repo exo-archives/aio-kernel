@@ -94,7 +94,7 @@
     </plugins>
   </build>
   <properties>
-    <exo.product.name>exo-kernel</exo.product.name>
-    <exo.product.specification>2.0.7</exo.product.specification>
+    <exo.product.name>eXo Kernel</exo.product.name>
+    <exo.product.specification>2.0</exo.product.specification>
   </properties>
 </project>
