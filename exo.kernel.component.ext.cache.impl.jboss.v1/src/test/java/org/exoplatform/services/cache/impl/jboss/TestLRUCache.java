@@ -75,7 +75,7 @@ public class TestLRUCache extends BasicTestCase {
     cache.put("f", "a");
     Thread.sleep(1100);
     assertEquals(3, cache.getCacheSize());
-    Thread.sleep(1500);
+    Thread.sleep(1700);
     assertEquals(0, cache.getCacheSize());
   }
 }
