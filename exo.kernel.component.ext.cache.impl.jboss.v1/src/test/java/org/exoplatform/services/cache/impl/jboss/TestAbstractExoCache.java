@@ -208,6 +208,7 @@ public class TestAbstractExoCache extends BasicTestCase {
   
   
   public void testDistributedCache() throws Exception {
+    System.out.println("WARNING: For Linux distributions the following JVM parameter must be set to true, java.net.preferIPv4Stack = " + System.getProperty("java.net.preferIPv4Stack"));    
     ExoCacheConfig config = new ExoCacheConfig();
     config.setName("MyCacheDistributed");
     config.setMaxSize(5);
@@ -372,7 +373,7 @@ public class TestAbstractExoCache extends BasicTestCase {
     long time = System.currentTimeMillis();
     final ExoCache cache = service.getCacheInstance("test-multi-threading");    
     final int totalElement = 100;
-    final int totalTimes = 5;
+    final int totalTimes = 1;
     int reader = 20;
     int writer = 10;
     int remover = 5;

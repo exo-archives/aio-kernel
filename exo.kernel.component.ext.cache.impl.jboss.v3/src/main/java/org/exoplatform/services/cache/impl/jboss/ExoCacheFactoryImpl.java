@@ -202,7 +202,12 @@ public class ExoCacheFactoryImpl implements ExoCacheFactory {
   protected void cleanConfigurationTemplate(Cache<Serializable, Object> cache, String region) {
     final Configuration config = cache.getConfiguration();
     // Reset the eviction policies 
-    final EvictionConfig evictionConfig = config.getEvictionConfig();
+    EvictionConfig evictionConfig = config.getEvictionConfig();
+    if (evictionConfig == null) {
+      // If not eviction config exists, we create an empty one
+      evictionConfig = new EvictionConfig();
+      config.setEvictionConfig(evictionConfig);
+    }
     evictionConfig.setEvictionRegionConfigs(new LinkedList<EvictionRegionConfig>());
     // Rename the cluster name
     String clusterName = config.getClusterName();
