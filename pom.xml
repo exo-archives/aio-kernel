@@ -35,6 +35,7 @@
     <module>exo.kernel.component.ext.cache.impl.jboss.v1</module>
     <module>exo.kernel.component.ext.cache.impl.jboss.v3</module>
     <module>exo.kernel.component.command</module>
+    <module>packaging</module>
   </modules>
   <build>
     <resources>
