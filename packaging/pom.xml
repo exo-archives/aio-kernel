@@ -6,7 +6,7 @@
    </parent>
 
    <modelVersion>4.0.0</modelVersion>
-   <artifactId>kernel.packaging</artifactId>
+   <artifactId>exo.kernel.packaging</artifactId>
    <packaging>pom</packaging>
    <name>eXo Kernel Packaging Parent</name>
 
