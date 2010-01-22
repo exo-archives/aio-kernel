@@ -64,7 +64,5 @@
     <exo.product.specification>2.0</exo.product.specification>
     <!-- maven-surefire-plugin settings -->
     <forkMode>always</forkMode>
-    <!-- A BIG CLEANUP MUST BE DONE IN TESTS -->
-    <maven.test.skip>true</maven.test.skip>
   </properties>
 </project>
