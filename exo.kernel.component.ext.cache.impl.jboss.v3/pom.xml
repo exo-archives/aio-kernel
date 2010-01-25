@@ -1,5 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<!--
+
+    Copyright (C) 2003-2010 eXo Platform SAS.
+
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Affero General Public License
+    as published by the Free Software Foundation; either version 3
+    of the License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, see <http://www.gnu.org/licenses/>.
+
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.exoplatform.kernel</groupId>
@@ -7,9 +25,9 @@
     <version>2.0.10-SNAPSHOT</version>
   </parent>
   <artifactId>exo.kernel.component.ext.cache.impl.jboss.v3</artifactId>
+  <version>2.0.10-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>eXo Kernel :: Component :: Ext :: JBoss Cache 3 Impl</name>
-  <version>2.0.10-SNAPSHOT</version>
   <dependencies>
     <dependency>
       <groupId>org.exoplatform.kernel</groupId>
@@ -28,34 +46,34 @@
       <version>2.6.7.GA</version>
     </dependency>
   </dependencies>
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<configuration>
-					<systemProperties>
-						<!--
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <systemProperties>
+            <!--
 							We add this system property due to some incompatibility between
 							IPv6 and some JVM of Linux distributions such as Ubuntu and
 							Fedora
 						-->
-						<property>
-							<name>java.net.preferIPv4Stack</name>
-							<value>true</value>
-						</property>
-						<!-- Avoid the firewall -->
-						<property>
-							<name>bind.address</name>
-							<value>127.0.0.1</value>
-						</property>
-						<property>
-							<name>jgroups.stack</name>
-							<value>udp</value>
-						</property>
-					</systemProperties>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+            <property>
+              <name>java.net.preferIPv4Stack</name>
+              <value>true</value>
+            </property>
+            <!-- Avoid the firewall -->
+            <property>
+              <name>bind.address</name>
+              <value>127.0.0.1</value>
+            </property>
+            <property>
+              <name>jgroups.stack</name>
+              <value>udp</value>
+            </property>
+          </systemProperties>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>

@@ -1,5 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<!--
+
+    Copyright (C) 2003-2010 eXo Platform SAS.
+
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Affero General Public License
+    as published by the Free Software Foundation; either version 3
+    of the License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, see <http://www.gnu.org/licenses/>.
+
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.exoplatform</groupId>
@@ -8,14 +26,24 @@
   </parent>
   <groupId>org.exoplatform.kernel</groupId>
   <artifactId>exo.kernel</artifactId>
+  <version>2.0.10-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>eXo Kernel</name>
-  <version>2.0.10-SNAPSHOT</version>
   <scm>
-    <connection>scm:svn:http://svn.exoplatform.org/svnroot/exoplatform/projects/kernel/branches/2.0.x</connection>
-    <developerConnection>scm:svn:http://svn.exoplatform.org/svnroot/exoplatform/projects/kernel/branches/2.0.x</developerConnection>
+    <connection>scm:svn:http://svn.exoplatform.org/projects/kernel/branches/2.0.x</connection>
+    <developerConnection>scm:svn:http://svn.exoplatform.org/projects/kernel/branches/2.0.x</developerConnection>
     <url>http://fisheye.exoplatform.org/browse/projects/kernel/branches/2.0.x</url>
   </scm>
+  <ciManagement>
+    <system>hudson</system>
+    <url>http://builder.exoplatform.org/hudson/job/kernel-2.0.x-ci/</url>
+  </ciManagement>
+  <properties>
+    <exo.product.name>eXo Kernel</exo.product.name>
+    <exo.product.specification>2.0</exo.product.specification>
+    <!-- maven-surefire-plugin settings -->
+    <forkMode>always</forkMode>
+  </properties>
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -26,17 +54,6 @@
       </dependency>
     </dependencies>
   </dependencyManagement>
-  <modules>
-    <module>exo.kernel.container</module>
-    <module>exo.kernel.commons</module>
-    <module>exo.kernel.component.common</module>
-    <module>exo.kernel.component.remote</module>
-    <module>exo.kernel.component.cache</module>
-    <module>exo.kernel.component.ext.cache.impl.jboss.v1</module>
-    <module>exo.kernel.component.ext.cache.impl.jboss.v3</module>
-    <module>exo.kernel.component.command</module>
-    <module>packaging</module>
-  </modules>
   <build>
     <resources>
       <resource>
@@ -59,10 +76,15 @@
       </testResource>
     </testResources>
   </build>
-  <properties>
-    <exo.product.name>eXo Kernel</exo.product.name>
-    <exo.product.specification>2.0</exo.product.specification>
-    <!-- maven-surefire-plugin settings -->
-    <forkMode>always</forkMode>
-  </properties>
+  <modules>
+    <module>exo.kernel.container</module>
+    <module>exo.kernel.commons</module>
+    <module>exo.kernel.component.common</module>
+    <module>exo.kernel.component.remote</module>
+    <module>exo.kernel.component.cache</module>
+    <module>exo.kernel.component.ext.cache.impl.jboss.v1</module>
+    <module>exo.kernel.component.ext.cache.impl.jboss.v3</module>
+    <module>exo.kernel.component.command</module>
+    <module>packaging</module>
+  </modules>
 </project>
