@@ -19,6 +19,7 @@ package org.exoplatform.services.scheduler;
 import org.exoplatform.commons.utils.ExoProperties;
 import org.exoplatform.container.component.BaseComponentPlugin;
 import org.exoplatform.container.xml.InitParams;
+import org.quartz.JobDataMap;
 
 /**
  * Created by The eXo Platform SAS Author : Hoa Pham
@@ -28,6 +29,8 @@ public class CronJob extends BaseComponentPlugin {
   private String  expression_;
 
   private JobInfo jinfo_;
+  
+  private JobDataMap jdatamap_;
 
   public CronJob(InitParams params) throws Exception {
     ExoProperties props = params.getPropertiesParam("cronjob.info").getProperties();
@@ -48,4 +51,9 @@ public class CronJob extends BaseComponentPlugin {
   public String getExpression() {
     return expression_;
   }
+  
+  public JobDataMap getJobDataMap() {
+    return jdatamap_;
+  }
+
 }
