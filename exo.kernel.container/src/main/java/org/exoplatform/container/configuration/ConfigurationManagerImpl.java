@@ -26,10 +26,6 @@ import java.util.List;
 
 import javax.servlet.ServletContext;
 
-import org.jibx.runtime.BindingDirectory;
-import org.jibx.runtime.IBindingFactory;
-import org.jibx.runtime.IUnmarshallingContext;
-
 import org.exoplatform.container.xml.Component;
 import org.exoplatform.container.xml.Configuration;
 
@@ -114,9 +110,9 @@ public class ConfigurationManagerImpl implements ConfigurationManager {
       currentURL.set(url);
     }
     try {
-      IBindingFactory bfact = BindingDirectory.getFactory(Configuration.class);
-      IUnmarshallingContext uctx = bfact.createUnmarshallingContext();
-      Configuration conf = (Configuration) uctx.unmarshalDocument(url.openStream(), null);
+      ConfigurationUnmarshaller unmarshaller = new ConfigurationUnmarshaller();
+      Configuration conf = unmarshaller.unmarshall(url);
+
       if (configurations_ == null)
         configurations_ = conf;
       else
@@ -127,8 +123,7 @@ public class ConfigurationManagerImpl implements ConfigurationManager {
           String uri = (String) urls.get(i);
           URL urlObject = getURL(uri);
           if (urlObject != null) {
-            InputStream is = urlObject.openStream();
-            conf = (Configuration) uctx.unmarshalDocument(is, null);
+            conf = unmarshaller.unmarshall(urlObject);
             configurations_.mergeConfiguration(conf);
             if (LOG_DEBUG)
               System.out.println("\timport " + urlObject);

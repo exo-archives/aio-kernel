@@ -31,6 +31,9 @@ import java.util.Map;
  * @version: $Id: Configuration.java 5799 2006-05-28 17:55:42Z geaz $
  */
 public class Configuration {
+  
+  public static final String KERNEL_CONFIGURATION_1_0_URI = "http://www.exoplaform.org/xml/ns/kernel_1_0.xsd";
+  
   private Map<String, ContainerLifecyclePlugin> containerLifecyclePlugin_ = new HashMap<String, ContainerLifecyclePlugin>();
 
   private Map<String, ComponentLifecyclePlugin> componentLifecyclePlugin_ = new HashMap<String, ComponentLifecyclePlugin>();
