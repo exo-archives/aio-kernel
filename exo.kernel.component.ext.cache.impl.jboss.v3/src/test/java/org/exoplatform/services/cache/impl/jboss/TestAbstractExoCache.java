@@ -369,7 +369,7 @@ public class TestAbstractExoCache extends BasicTestCase {
     } 
   } 
   
-  public void _testMultiThreading() throws Exception {
+  public void testMultiThreading() throws Exception {
     long time = System.currentTimeMillis();
     final ExoCache cache = service.getCacheInstance("test-multi-threading");    
     final int totalElement = 100;
