@@ -41,6 +41,11 @@
       <version>1.4.1.SP13</version>
     </dependency>
     <dependency>
+      <groupId>jboss</groupId>
+      <artifactId>jboss-system</artifactId>
+      <version>4.0.3</version>
+    </dependency>    
+    <dependency>
       <groupId>jgroups</groupId>
       <artifactId>jgroups</artifactId>
       <version>2.4.1</version>
