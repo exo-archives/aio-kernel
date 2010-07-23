@@ -22,17 +22,17 @@
   <parent>
     <groupId>org.exoplatform.kernel</groupId>
     <artifactId>exo.kernel</artifactId>
-    <version>2.0.12-SNAPSHOT</version>
+    <version>2.0.12</version>
   </parent>
   <artifactId>exo.kernel.component.common</artifactId>
-  <version>2.0.12-SNAPSHOT</version>
+  <version>2.0.12</version>
   <packaging>jar</packaging>
   <name>eXo Kernel :: Component :: Common Service</name>
   <dependencies>
     <dependency>
       <groupId>org.exoplatform.kernel</groupId>
       <artifactId>exo.kernel.container</artifactId>
-      <version>2.0.12-SNAPSHOT</version>
+      <version>2.0.12</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
@@ -91,7 +91,7 @@
     <dependency>
       <groupId>org.exoplatform.kernel</groupId>
       <artifactId>exo.kernel.commons</artifactId>
-      <version>2.0.12-SNAPSHOT</version>
+      <version>2.0.12</version>
     </dependency>
     <dependency>
       <groupId>picocontainer</groupId>
