@@ -22,23 +22,23 @@
   <parent>
     <groupId>org.exoplatform.kernel</groupId>
     <artifactId>exo.kernel</artifactId>
-    <version>2.0.17-SNAPSHOT</version>
+    <version>2.0.17</version>
   </parent>
   <artifactId>exo.kernel.component.command</artifactId>
-  <version>2.0.17-SNAPSHOT</version>
+  <version>2.0.17</version>
   <packaging>jar</packaging>
   <name>eXo Kernel :: Component :: Command Service</name>
   <dependencies>
     <dependency>
       <groupId>org.exoplatform.kernel</groupId>
       <artifactId>exo.kernel.component.common</artifactId>
-      <version>2.0.17-SNAPSHOT</version>
+      <version>2.0.17</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.kernel</groupId>
       <artifactId>exo.kernel.container</artifactId>
-      <version>2.0.17-SNAPSHOT</version>
+      <version>2.0.17</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
