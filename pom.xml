@@ -30,9 +30,9 @@
   <packaging>pom</packaging>
   <name>eXo Kernel</name>
   <scm>
-    <connection>scm:svn:http://svn.exoplatform.org/projects/kernel/branches/2.0.x</connection>
-    <developerConnection>scm:svn:http://svn.exoplatform.org/projects/kernel/branches/2.0.x</developerConnection>
-    <url>http://fisheye.exoplatform.org/browse/projects/kernel/branches/2.0.x</url>
+    <connection>scm:git:ssh://github.com/exodev/aio-kernel.git</connection>
+    <developerConnection>scm:git:ssh://github.com/exodev/aio-kernel.git<developerConnection>
+    <url>http://fisheye.exoplatform.org/browse/projects/kernel</url>
   </scm>
   <ciManagement>
     <system>hudson</system>
