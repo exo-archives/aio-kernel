@@ -43,6 +43,8 @@
     <exo.product.specification>2.0</exo.product.specification>
     <!-- maven-surefire-plugin settings -->
     <forkMode>always</forkMode>
+    <version.release.plugin>2.2.1</version.release.plugin>
+    <version.buildnumber.plugin>1.0</version.buildnumber.plugin>
   </properties>
   <dependencyManagement>
     <dependencies>
