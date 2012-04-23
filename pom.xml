@@ -30,8 +30,8 @@
   <packaging>pom</packaging>
   <name>eXo Kernel</name>
   <scm>
-    <connection>scm:git:ssh://github.com/exodev/aio-kernel.git</connection>
-    <developerConnection>scm:git:ssh://github.com/exodev/aio-kernel.git<developerConnection>
+    <connection>scm:git:git://github.com/exoplatform/aio-kernel.git</connection>
+    <developerConnection>scm:git:git@github.com/exoplatform/aio-kernel.git<developerConnection>
     <url>http://fisheye.exoplatform.org/browse/projects/kernel</url>
   </scm>
   <ciManagement>
